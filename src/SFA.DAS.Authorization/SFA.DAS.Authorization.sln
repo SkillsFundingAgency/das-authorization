@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization", "SFA.DAS.Authorization\SFA.DAS.Authorization.csproj", "{E03E43CA-7FEA-4CF1-A142-276268C05889}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E03E43CA-7FEA-4CF1-A142-276268C05889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E03E43CA-7FEA-4CF1-A142-276268C05889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E03E43CA-7FEA-4CF1-A142-276268C05889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E03E43CA-7FEA-4CF1-A142-276268C05889}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E98D09A-8D14-42A0-8B8A-16CAC957C69F}
+	EndGlobalSection
+EndGlobal
