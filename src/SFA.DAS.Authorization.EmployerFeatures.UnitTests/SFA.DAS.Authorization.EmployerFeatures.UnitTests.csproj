@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerWhitelists\SFA.DAS.Authorization.EmployerWhitelists.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
     <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
   </ItemGroup>
 
