@@ -11,60 +11,60 @@ namespace SFA.DAS.Authorization.UnitTests
     public class AuthorizationServiceTests : FluentTest<AuthorizationServiceTestsFixture>
     {
         [Test]
-        public Task IsAuthorizedAsync_WhenOptionsAreAuthorized_ThenShouldReturnTrue()
+        public Task IsAuthorizedAsync_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
             return RunAsync(f => f.SetAuthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
-        public Task IsAuthorizedAsync_WhenOptionsAreUnauthorized_ThenShouldReturnTrue()
+        public Task IsAuthorizedAsync_WhenOperationIsUnauthorized_ThenShouldReturnTrue()
         {
             return RunAsync(f => f.SetUnauthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeFalse());
         }
 
         [Test]
-        public void IsAuthorized_WhenOptionsAreAuthorized_ThenShouldReturnTrue()
+        public void IsAuthorized_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
             Run(f => f.SetAuthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
-        public void IsAuthorized_WhenOptionsAreUnauthorized_ThenShouldReturnTrue()
+        public void IsAuthorized_WhenOperationIsUnauthorized_ThenShouldReturnTrue()
         {
             Run(f => f.SetUnauthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeFalse());
         }
 
         [Test]
-        public Task GetAuthorizationResultAsync_WhenOptionsAreAuthorized_ThenShouldReturnValidAuthorizationResult()
+        public Task GetAuthorizationResultAsync_WhenOperationIsAuthorized_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsValid));
+            return RunAsync(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResultAsync_WhenOptionsAreUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
+        public Task GetAuthorizationResultAsync_WhenOperationIsUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
         {
             return RunAsync(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabledAuthorizationError).And.Contain(f.ProviderPermissionNotGrantedAuthorizationError);
+                r.IsAuthorized.Should().BeFalse();
+                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabled).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
 
         [Test]
-        public void GetAuthorizationResult_WhenOptionsAreAuthorized_ThenShouldReturnValidAuthorizationResult()
+        public void GetAuthorizationResult_WhenOperationIsAuthorized_ThenShouldReturnValidAuthorizationResult()
         {
-            Run(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsValid));
+            Run(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public void GetAuthorizationResult_WhenOptionsAreUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
+        public void GetAuthorizationResult_WhenOperationIsUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
         {
             Run(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabledAuthorizationError).And.Contain(f.ProviderPermissionNotGrantedAuthorizationError);
+                r.IsAuthorized.Should().BeFalse();
+                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabled).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
     }
@@ -72,24 +72,30 @@ namespace SFA.DAS.Authorization.UnitTests
     public class AuthorizationServiceTestsFixture
     {
         public string[] Options { get; set; }
+        public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
+        public Mock<IAuthorizationContext> AuthorizationContext { get; set; }
         public IAuthorizationService AuthorizationService { get; set; }
         public Mock<IAuthorizationHandler> EmployerFeatureAuthorizationHandler { get; set; }
-        public EmployerFeatureDisabledAuthorizationError EmployerFeatureDisabledAuthorizationError { get; set; }
+        public EmployerFeatureDisabled EmployerFeatureDisabled { get; set; }
         public Mock<IAuthorizationHandler> ProviderOperationAuthorizationHandler { get; set; }
-        public ProviderPermissionNotGrantedAuthorizationError ProviderPermissionNotGrantedAuthorizationError { get; set; }
+        public ProviderPermissionNotGranted ProviderPermissionNotGranted { get; set; }
 
         public AuthorizationServiceTestsFixture()
         {
             Options = new []
             {
                 EmployerFeatures.Transfers,
-                ProviderOperations.CreateCohort
+                ProviderPermissions.CreateCohort
             };
 
+            AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();
+            AuthorizationContext = new Mock<IAuthorizationContext>();
             EmployerFeatureAuthorizationHandler = new Mock<IAuthorizationHandler>();
             ProviderOperationAuthorizationHandler = new Mock<IAuthorizationHandler>();
 
-            AuthorizationService = new AuthorizationService(new List<IAuthorizationHandler>
+            AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(AuthorizationContext.Object);
+
+            AuthorizationService = new AuthorizationService(AuthorizationContextProvider.Object, new List<IAuthorizationHandler>
             {
                 EmployerFeatureAuthorizationHandler.Object,
                 ProviderOperationAuthorizationHandler.Object
@@ -108,19 +114,19 @@ namespace SFA.DAS.Authorization.UnitTests
 
         public AuthorizationServiceTestsFixture SetAuthorizedOptions()
         {
-            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult());
-            ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult());
+            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+            ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
 
             return this;
         }
 
         public AuthorizationServiceTestsFixture SetUnauthorizedOptions()
         {
-            EmployerFeatureDisabledAuthorizationError = new EmployerFeatureDisabledAuthorizationError();
-            ProviderPermissionNotGrantedAuthorizationError = new ProviderPermissionNotGrantedAuthorizationError();
+            EmployerFeatureDisabled = new EmployerFeatureDisabled();
+            ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
-            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult(EmployerFeatureDisabledAuthorizationError));
-            ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult(ProviderPermissionNotGrantedAuthorizationError));
+            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(EmployerFeatureDisabled));
+            ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(ProviderPermissionNotGranted));
 
             return this;
         }

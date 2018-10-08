@@ -5,7 +5,7 @@ namespace SFA.DAS.Authorization
 {
     public class AuthorizationResult
     {
-        public bool IsValid => !Errors.Any();
+        public bool IsAuthorized => !Errors.Any();
         public IEnumerable<AuthorizationError> Errors => _errors;
 
         private readonly List<AuthorizationError> _errors = new List<AuthorizationError>();

@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.UnitTests
             Run(f => new AuthorizationResult(), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeTrue();
+                r.IsAuthorized.Should().BeTrue();
                 r.Errors.Should().BeEmpty();
             });
         }
@@ -22,11 +22,11 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Constructor_WhenConstructingAnAuthorizationResultWithAnError_ThenShouldConstructAnInvalidAuthorizationResult()
         {
-            Run(f => new AuthorizationResult(f.EmployerFeatureDisabledAuthorizationError), (f, r) =>
+            Run(f => new AuthorizationResult(f.EmployerFeatureDisabled), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
-                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabledAuthorizationError);
+                r.IsAuthorized.Should().BeFalse();
+                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabled);
             });
         }
 
@@ -36,7 +36,7 @@ namespace SFA.DAS.Authorization.UnitTests
             Run(f => new AuthorizationResult(f.Errors), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
+                r.IsAuthorized.Should().BeFalse();
                 r.Errors.Should().HaveCount(f.Errors.Count).And.Contain(f.Errors);
             });
         }
@@ -44,21 +44,21 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void AddError_WhenAddingAnError_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabledAuthorizationError), (f, r) =>
+            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabled), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
-                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabledAuthorizationError);
+                r.IsAuthorized.Should().BeFalse();
+                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabled);
             });
         }
 
         [Test]
         public void AddError_WhenAddingAErrors_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabledAuthorizationError).AddError(f.ProviderPermissionNotGrantedAuthorizationError), (f, r) =>
+            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabled).AddError(f.ProviderPermissionNotGranted), (f, r) =>
             {
                 r.Should().NotBeNull();
-                r.IsValid.Should().BeFalse();
+                r.IsAuthorized.Should().BeFalse();
                 r.Errors.Should().HaveCount(f.Errors.Count).And.Contain(f.Errors);
             });
         }
@@ -66,19 +66,19 @@ namespace SFA.DAS.Authorization.UnitTests
 
     public class AuthorizationResultTestsFixture
     {
-        public EmployerFeatureDisabledAuthorizationError EmployerFeatureDisabledAuthorizationError { get; set; }
-        public ProviderPermissionNotGrantedAuthorizationError ProviderPermissionNotGrantedAuthorizationError { get; set; }
+        public EmployerFeatureDisabled EmployerFeatureDisabled { get; set; }
+        public ProviderPermissionNotGranted ProviderPermissionNotGranted { get; set; }
         public List<AuthorizationError> Errors { get; set; }
 
         public AuthorizationResultTestsFixture()
         {
-            EmployerFeatureDisabledAuthorizationError = new EmployerFeatureDisabledAuthorizationError();
-            ProviderPermissionNotGrantedAuthorizationError = new ProviderPermissionNotGrantedAuthorizationError();
+            EmployerFeatureDisabled = new EmployerFeatureDisabled();
+            ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
             Errors = new List<AuthorizationError>
             {
-                EmployerFeatureDisabledAuthorizationError,
-                ProviderPermissionNotGrantedAuthorizationError
+                EmployerFeatureDisabled,
+                ProviderPermissionNotGranted
             };
         }
     }

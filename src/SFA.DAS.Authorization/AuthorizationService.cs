@@ -6,10 +6,12 @@ namespace SFA.DAS.Authorization
 {
     public class AuthorizationService : IAuthorizationService
     {
+        private readonly IAuthorizationContextProvider _authorizationContextProvider;
         private readonly IEnumerable<IAuthorizationHandler> _handlers;
 
-        public AuthorizationService(IEnumerable<IAuthorizationHandler> handlers)
+        public AuthorizationService(IAuthorizationContextProvider authorizationContextProvider, IEnumerable<IAuthorizationHandler> handlers)
         {
+            _authorizationContextProvider = authorizationContextProvider;
             _handlers = handlers;
         }
 
@@ -20,7 +22,8 @@ namespace SFA.DAS.Authorization
 
         public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
         {
-            var authorizationResults = await Task.WhenAll(_handlers.Select(h => h.GetAuthorizationResultAsync(options))).ConfigureAwait(false);
+            var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
+            var authorizationResults = await Task.WhenAll(_handlers.Select(h => h.GetAuthorizationResultAsync(options, authorizationContext))).ConfigureAwait(false);
             var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
 
             return authorizationResult;
@@ -35,7 +38,7 @@ namespace SFA.DAS.Authorization
         {
             var authorizationResult = await GetAuthorizationResultAsync(options).ConfigureAwait(false);
 
-            return authorizationResult.IsValid;
+            return authorizationResult.IsAuthorized;
         }
     }
 }
