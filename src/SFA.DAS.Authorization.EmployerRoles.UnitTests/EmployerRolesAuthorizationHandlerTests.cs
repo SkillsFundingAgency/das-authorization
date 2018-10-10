@@ -18,13 +18,13 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndNonEmployerRoleOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.SetNonEmployerRoleOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return RunAsync(f => f.SetNonEmployerRolesOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetEmployerRoleOptions().SetNonEmployerRoleContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return RunAsync(f => f.SetEmployerRolesOptions().SetNonEmployerRolesContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
     }
 
@@ -46,21 +46,21 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return Handler.GetAuthorizationResultAsync(Options, AuthorizationContext);
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRoleOptions()
+        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesOptions()
         {
             Options.AddRange(new [] { "Foo", "Bar" });
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetEmployerRoleOptions()
+        public EmployerRolesAuthorizationHandlerTestsFixture SetEmployerRolesOptions()
         {
             Options.AddRange(new [] { EmployerRoles.Owner, EmployerRoles.Transactor });
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRoleContext()
+        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesContext()
         {
             AuthorizationContext.Set("Foo", 123);
             AuthorizationContext.Set("Bar", 456);

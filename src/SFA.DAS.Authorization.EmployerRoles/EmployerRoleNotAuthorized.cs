@@ -2,7 +2,7 @@
 {
     public class EmployerRoleNotAuthorized : AuthorizationError
     {
-        public EmployerRoleNotAuthorized() : base("Employer role was not authorized")
+        public EmployerRoleNotAuthorized() : base("Employer role is not authorized")
         {
         }
     }

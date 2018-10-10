@@ -3,13 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>DAS</Authors>
-    <Description>Provider relationships integration for SFA.DAS.Authorization</Description>
+    <Description>Provider permissions integration for SFA.DAS.Authorization</Description>
     <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>$(MSBuildProjectName).UnitTests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
