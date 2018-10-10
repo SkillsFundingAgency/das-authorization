@@ -19,7 +19,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
                 var accountId = authorizationContext.Get<int>(ContextKeys.AccountId);
                 var userId = authorizationContext.Get<Guid>(ContextKeys.UserId);
 
-                authorizationResult.AddError(new EmployerRoleNotAuthorized());
+                //authorizationResult.AddError(new EmployerRoleNotAuthorized());
             }
 
             return Task.FromResult(authorizationResult);
