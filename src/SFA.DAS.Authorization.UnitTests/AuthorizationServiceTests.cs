@@ -47,7 +47,7 @@ namespace SFA.DAS.Authorization.UnitTests
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabled).And.Contain(f.ProviderPermissionNotGranted);
+                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
 
@@ -64,7 +64,7 @@ namespace SFA.DAS.Authorization.UnitTests
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerFeatureDisabled).And.Contain(f.ProviderPermissionNotGranted);
+                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
     }
@@ -76,7 +76,7 @@ namespace SFA.DAS.Authorization.UnitTests
         public Mock<IAuthorizationContext> AuthorizationContext { get; set; }
         public IAuthorizationService AuthorizationService { get; set; }
         public Mock<IAuthorizationHandler> EmployerFeatureAuthorizationHandler { get; set; }
-        public EmployerFeatureDisabled EmployerFeatureDisabled { get; set; }
+        public EmployerRoleNotAuthorized EmployerRoleNotAuthorized { get; set; }
         public Mock<IAuthorizationHandler> ProviderOperationAuthorizationHandler { get; set; }
         public ProviderPermissionNotGranted ProviderPermissionNotGranted { get; set; }
 
@@ -122,10 +122,10 @@ namespace SFA.DAS.Authorization.UnitTests
 
         public AuthorizationServiceTestsFixture SetUnauthorizedOptions()
         {
-            EmployerFeatureDisabled = new EmployerFeatureDisabled();
+            EmployerRoleNotAuthorized = new EmployerRoleNotAuthorized();
             ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
-            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(EmployerFeatureDisabled));
+            EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(EmployerRoleNotAuthorized));
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(ProviderPermissionNotGranted));
 
             return this;

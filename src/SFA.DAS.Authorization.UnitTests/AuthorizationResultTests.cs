@@ -22,11 +22,11 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Constructor_WhenConstructingAnAuthorizationResultWithAnError_ThenShouldConstructAnInvalidAuthorizationResult()
         {
-            Run(f => new AuthorizationResult(f.EmployerFeatureDisabled), (f, r) =>
+            Run(f => new AuthorizationResult(f.EmployerRoleNotAuthorized), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabled);
+                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerRoleNotAuthorized);
             });
         }
 
@@ -44,18 +44,18 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void AddError_WhenAddingAnError_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabled), (f, r) =>
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerFeatureDisabled);
+                r.Errors.Should().HaveCount(1).And.Contain(f.EmployerRoleNotAuthorized);
             });
         }
 
         [Test]
         public void AddError_WhenAddingAErrors_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerFeatureDisabled).AddError(f.ProviderPermissionNotGranted), (f, r) =>
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -66,18 +66,18 @@ namespace SFA.DAS.Authorization.UnitTests
 
     public class AuthorizationResultTestsFixture
     {
-        public EmployerFeatureDisabled EmployerFeatureDisabled { get; set; }
+        public EmployerRoleNotAuthorized EmployerRoleNotAuthorized { get; set; }
         public ProviderPermissionNotGranted ProviderPermissionNotGranted { get; set; }
         public List<AuthorizationError> Errors { get; set; }
 
         public AuthorizationResultTestsFixture()
         {
-            EmployerFeatureDisabled = new EmployerFeatureDisabled();
+            EmployerRoleNotAuthorized = new EmployerRoleNotAuthorized();
             ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
             Errors = new List<AuthorizationError>
             {
-                EmployerFeatureDisabled,
+                EmployerRoleNotAuthorized,
                 ProviderPermissionNotGranted
             };
         }
