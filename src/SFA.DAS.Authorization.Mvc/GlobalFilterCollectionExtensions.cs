@@ -9,6 +9,11 @@ namespace SFA.DAS.Authorization.Mvc
         {
             filters.Add(new AuthorizationFilter(() => DependencyResolver.Current.GetService<IAuthorizationService>()));
         }
+
+        public static void AddUnauthorizedAccessExceptionFilter(this GlobalFilterCollection filters)
+        {
+            filters.Add(new UnauthorizedAccessExceptionFilter());
+        }
     }
 }
 #endif
