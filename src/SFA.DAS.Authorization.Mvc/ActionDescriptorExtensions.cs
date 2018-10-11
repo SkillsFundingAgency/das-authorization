@@ -17,8 +17,8 @@ namespace SFA.DAS.Authorization.Mvc
             return Cache.GetOrAdd(key, k =>
             {
                 var attributes = new List<DasAuthorizeAttribute>();
-                var actionAttribute = actionDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>().SingleOrDefault();
-                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>().SingleOrDefault();
+                var actionAttribute = actionDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), false).Cast<DasAuthorizeAttribute>().SingleOrDefault();
+                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), false).Cast<DasAuthorizeAttribute>().SingleOrDefault();
 
                 if (actionAttribute != null)
                 {

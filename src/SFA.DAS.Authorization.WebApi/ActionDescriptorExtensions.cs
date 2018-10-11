@@ -17,8 +17,8 @@ namespace SFA.DAS.Authorization.WebApi
             return Cache.GetOrAdd(key, k =>
             {
                 var attributes = new List<DasAuthorizeAttribute>();
-                var actionAttribute = actionDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true).SingleOrDefault();
-                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true).SingleOrDefault();
+                var actionAttribute = actionDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(false).SingleOrDefault();
+                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(false).SingleOrDefault();
 
                 if (actionAttribute != null)
                 {
