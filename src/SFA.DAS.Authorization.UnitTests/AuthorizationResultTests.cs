@@ -62,6 +62,18 @@ namespace SFA.DAS.Authorization.UnitTests
                 r.Errors.Should().HaveCount(f.Errors.Count).And.Contain(f.Errors);
             });
         }
+
+        [Test]
+        public void ContainsError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
+        {
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).ContainsError<EmployerRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());
+        }
+
+        [Test]
+        public void ContainsError_WhenAnErrorOfTypeDoesNotExist_ThenShouldReturnFalse()
+        {
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).ContainsError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
+        }
     }
 
     public class AuthorizationResultTestsFixture

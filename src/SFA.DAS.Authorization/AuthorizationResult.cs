@@ -30,5 +30,10 @@ namespace SFA.DAS.Authorization
 
             return this;
         }
+
+        public bool ContainsError<T>() where T : AuthorizationError
+        {
+            return Errors.OfType<T>().Any();
+        }
     }
 }
