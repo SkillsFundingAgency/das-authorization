@@ -17,7 +17,27 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Get_WhenGettingDataAndKeyDoesNotExist_ThenShouldThrowException()
         {
-            Run(f => f.GetData(), (f, a) => a.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the dictionary"));
+            Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the dictionary"));
+        }
+
+        [Test]
+        public void TryGet_WhenTryingToGetDataAndKeyDoesExist_ThenShouldReturnTrueAndValueShouldNotBeNull()
+        {
+            Run(f => f.SetData(), f => f.TryGetData(), (f, r) =>
+            {
+                r.Should().BeTrue();
+                f.Value.Should().NotBeNull().And.Be(f.Data);
+            });
+        }
+
+        [Test]
+        public void TryGet_WhenTryingToGetDataAndKeyDoesNotExist_ThenShouldReturnFalseAndValueShouldBeNull()
+        {
+            Run(f => f.TryGetData(), (f, r) =>
+            {
+                r.Should().BeFalse();
+                f.Value.Should().BeNull();
+            });
         }
     }
 
@@ -25,6 +45,7 @@ namespace SFA.DAS.Authorization.UnitTests
     {
         public string Key { get; set; }
         public object Data { get; set; }
+        public object Value { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
 
         public AuthorizationContextTestsFixture()
@@ -44,6 +65,15 @@ namespace SFA.DAS.Authorization.UnitTests
             AuthorizationContext.Set(Key, Data);
 
             return this;
+        }
+
+        public bool TryGetData()
+        {
+            var exists = AuthorizationContext.TryGet(Key, out object value);
+
+            Value = value;
+
+            return exists;
         }
     }
 }
