@@ -24,6 +24,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         {
             Run(f => f.SetNoActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetIsAuthorized(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
+
         [Test]
         public void OnActionExecuting_WhenAnActionIsExecutingAndActionAndControllerAreDecoratedWithADasAuthorizeAttributeAndTheOperationIsAuthorized_ThenShouldNotSetResult()
         {
@@ -80,7 +81,8 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             ActionExecutingContext = new ActionExecutingContext { ActionDescriptor = ActionDescriptor.Object };
             AuthorizationService = new Mock<IAuthorizationService>();
 
-            ActionDescriptor.Setup(d => d.UniqueId).Returns(Guid.NewGuid().ToString);
+            ActionDescriptor.Setup(d => d.ControllerDescriptor.ControllerName).Returns(Guid.NewGuid().ToString());
+            ActionDescriptor.Setup(d => d.ActionName).Returns(Guid.NewGuid().ToString());
 
             AuthorizationFilter = new AuthorizationFilter(() => AuthorizationService.Object);
         }
@@ -130,7 +132,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public AuthorizationFilterTestsFixture SetNoControllerDasAuthorizeAttribute()
         {
             ControllerOptions = new string[0];
-            ActionDescriptor.Setup(d => d.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] { });
+            ActionDescriptor.Setup(d => d.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
 
             return this;
         }

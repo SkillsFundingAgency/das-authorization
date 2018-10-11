@@ -17,13 +17,21 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
-            Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationContextMessageStub>(m => m.UserRef == f.UserRef));
+            Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
+            {
+                r.Should().NotBeNull();
+                r.UserRef.Should().Be(f.UserRef);
+            });
         }
 
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
-            Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationContextMessageStub>(m => m.Foo == null));
+            Run(f => f.BindModel(), (f, r) =>
+            {
+                r.Should().NotBeNull();
+                r.UserRef.Should().BeNull();
+            });
         }
     }
 
@@ -32,7 +40,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public Guid UserRef { get; set; }
         public ControllerContext ControllerContext { get; set; }
         public ModelBindingContext BindingContext { get; set; }
-        public NameValueCollectionValueProvider ValueProvider { get; set; }
+        public IValueProvider ValueProvider { get; set; }
         public DefaultModelBinder ModelBinder { get; set; }
         public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
         public AuthorizationContext AuthorizationContext { get; set; }
@@ -45,9 +53,9 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
             BindingContext = new ModelBindingContext
             {
+                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(AuthorizationContextMessageStub)),
                 ModelName = "",
-                ValueProvider = ValueProvider,
-                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(AuthorizationContextMessageStub))
+                ValueProvider = ValueProvider
             };
 
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();

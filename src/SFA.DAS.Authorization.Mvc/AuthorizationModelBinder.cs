@@ -28,9 +28,9 @@ namespace SFA.DAS.Authorization.Mvc
 
                     propertyDescriptor.SetValue(bindingContext.Model, value);
                     bindingContext.ModelState.SetModelValue(key, valueProviderResult);
-                }
 
-                return;
+                    return;
+                }
             }
 
             base.BindProperty(controllerContext, bindingContext, propertyDescriptor);

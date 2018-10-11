@@ -2,23 +2,23 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using System.Web.Http.Controllers;
 
-namespace SFA.DAS.Authorization.Mvc
+namespace SFA.DAS.Authorization.WebApi
 {
     public static class ActionDescriptorExtensions
     {
         private static readonly ConcurrentDictionary<string, List<DasAuthorizeAttribute>> Cache = new ConcurrentDictionary<string, List<DasAuthorizeAttribute>>();
 
-        public static IEnumerable<DasAuthorizeAttribute> GetDasAuthorizeAttributes(this ActionDescriptor actionDescriptor)
+        public static IEnumerable<DasAuthorizeAttribute> GetDasAuthorizeAttributes(this HttpActionDescriptor actionDescriptor)
         {
             var key = $"{actionDescriptor.ControllerDescriptor.ControllerName}.{actionDescriptor.ActionName}";
 
             return Cache.GetOrAdd(key, k =>
             {
                 var attributes = new List<DasAuthorizeAttribute>();
-                var actionAttribute = actionDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>().SingleOrDefault();
-                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>().SingleOrDefault();
+                var actionAttribute = actionDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true).SingleOrDefault();
+                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true).SingleOrDefault();
 
                 if (actionAttribute != null)
                 {
