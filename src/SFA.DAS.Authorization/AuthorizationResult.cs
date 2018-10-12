@@ -5,7 +5,7 @@ namespace SFA.DAS.Authorization
 {
     public class AuthorizationResult
     {
-        public bool IsAuthorized => !Errors.Any();
+        public bool IsAuthorized => !_errors.Any();
         public IEnumerable<AuthorizationError> Errors => _errors;
 
         private readonly List<AuthorizationError> _errors = new List<AuthorizationError>();
@@ -31,9 +31,9 @@ namespace SFA.DAS.Authorization
             return this;
         }
 
-        public bool ContainsError<T>() where T : AuthorizationError
+        public bool HasError<T>() where T : AuthorizationError
         {
-            return Errors.OfType<T>().Any();
+            return _errors.OfType<T>().Any();
         }
     }
 }

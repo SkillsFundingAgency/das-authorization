@@ -64,15 +64,15 @@ namespace SFA.DAS.Authorization.UnitTests
         }
 
         [Test]
-        public void ContainsError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
+        public void HasError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).ContainsError<EmployerRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<EmployerRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
-        public void ContainsError_WhenAnErrorOfTypeDoesNotExist_ThenShouldReturnFalse()
+        public void HasError_WhenAnErrorOfTypeDoesNotExist_ThenShouldReturnFalse()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).ContainsError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
+            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
         }
     }
 
