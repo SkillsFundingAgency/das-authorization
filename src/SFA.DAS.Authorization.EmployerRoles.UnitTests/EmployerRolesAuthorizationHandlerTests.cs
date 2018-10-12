@@ -16,13 +16,13 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndNonEmployerRoleOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
+        public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndNonEmployerRolesOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
         {
             return RunAsync(f => f.SetNonEmployerRolesOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndEmployerRolesOptionsAreAvailableAndEmployerRoleContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
             return RunAsync(f => f.SetEmployerRolesOptions().SetNonEmployerRolesContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
