@@ -17,18 +17,11 @@ namespace SFA.DAS.Authorization.WebApi
             return Cache.GetOrAdd(key, k =>
             {
                 var attributes = new List<DasAuthorizeAttribute>();
-                var actionAttribute = actionDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(false).SingleOrDefault();
-                var controllerAttribute = actionDescriptor.ControllerDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(false).SingleOrDefault();
+                var actionAttributes = actionDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true);
+                var controllerAttributes = actionDescriptor.ControllerDescriptor.GetCustomAttributes<DasAuthorizeAttribute>(true);
 
-                if (actionAttribute != null)
-                {
-                    attributes.Add(actionAttribute);
-                }
-
-                if (controllerAttribute != null)
-                {
-                    attributes.Add(controllerAttribute);
-                }
+                attributes.AddRange(actionAttributes);
+                attributes.AddRange(controllerAttributes);
 
                 return attributes;
             });

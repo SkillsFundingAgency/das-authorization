@@ -14,49 +14,49 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
     public class AuthorizationFilterTests : FluentTest<AuthorizationFilterTestsFixture>
     {
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndActionIsDecoratedWithADasAuthorizeAttributeAndTheOperationIsAuthorized_ThenShouldNotSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheActionIsDecoratedWithADasAuthorizeAttributeAndTheActionOptionsAreAuthorized_ThenShouldNotSetTheResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetNoControllerDasAuthorizeAttribute().SetIsAuthorized(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Run(f => f.SetActionDasAuthorizeAttribute().SetAuthorizedActionOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndControllerIsDecoratedWithADasAuthorizeAttributeAndTheOperationIsAuthorized_ThenShouldNotSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheControllerIsDecoratedWithADasAuthorizeAttributeAndTheControllerOptionsAreAuthorized_ThenShouldNotSetTheResult()
         {
-            Run(f => f.SetNoActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetIsAuthorized(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Run(f => f.SetControllerDasAuthorizeAttribute().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndActionAndControllerAreDecoratedWithADasAuthorizeAttributeAndTheOperationIsAuthorized_ThenShouldNotSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheActionAndControllerAreDecoratedWithADasAuthorizeAttributeAndTheActionAndControllerOptionsAreAuthorized_ThenShouldNotSetTheResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetIsAuthorized(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetAuthorizedActionOptions().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndActionIsDecoratedWithADasAuthorizeAttributeAndTheOperationIsNotAuthorized_ThenShouldSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheActionIsDecoratedWithADasAuthorizeAttributeAndTheActionOptionsAreNotAuthorized_ThenShouldSetTheResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetNoControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Run(f => f.SetActionDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndControllerIsDecoratedWithADasAuthorizeAttributeAndTheOperationIsNotAuthorized_ThenShouldSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheControllerIsDecoratedWithADasAuthorizeAttributeAndTheControllerOptionsAreNotAuthorized_ThenShouldSetTheResult()
         {
-            Run(f => f.SetNoActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Run(f => f.SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndActionAndControllerAreDecoratedWithADasAuthorizeAttributeAndTheOperationIsNotAuthorized_ThenShouldSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheActionAndControllerAreDecoratedWithADasAuthorizeAttributeAndTheActionAndControllerOptionsAreNotAuthorized_ThenShouldSetTheResult()
         {
             Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingAndActionAndControllerAreNotDecoratedWithADasAuthorizeAttribute_ThenShouldNotSetResult()
+        public void OnActionExecuting_WhenAnActionIsExecutingAndTheActionAndControllerAreNotDecoratedWithADasAuthorizeAttribute_ThenShouldNotSetTheResult()
         {
-            Run(f => f.SetNoActionDasAuthorizeAttribute().SetNoControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Run(f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
-        public void OnActionExecuting_WhenAnActionIsExecutingMoreThanOnce_ThenShouldNotGetDasAuthorizeAttributeMoreThanOnce()
+        public void OnActionExecuting_WhenAnActionIsExecutingMoreThanOnce_ThenShouldNotGetTheDasAuthorizeAttributeMoreThanOnce()
         {
             Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecutingMoreThanOnce(), f =>
             {
@@ -80,10 +80,14 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             ActionDescriptor = new Mock<ActionDescriptor>();
             ActionExecutingContext = new ActionExecutingContext { ActionDescriptor = ActionDescriptor.Object };
             AuthorizationService = new Mock<IAuthorizationService>();
+            ActionOptions = new string[0];
+            ControllerOptions = new string[0];
 
             ActionDescriptor.Setup(d => d.ControllerDescriptor.ControllerName).Returns(Guid.NewGuid().ToString());
+            ActionDescriptor.Setup(d => d.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
             ActionDescriptor.Setup(d => d.ActionName).Returns(Guid.NewGuid().ToString());
-
+            ActionDescriptor.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
+            
             AuthorizationFilter = new AuthorizationFilter(() => AuthorizationService.Object);
         }
 
@@ -114,25 +118,16 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             return this;
         }
 
-        public AuthorizationFilterTestsFixture SetIsAuthorized()
+        public AuthorizationFilterTestsFixture SetAuthorizedActionOptions()
         {
-            AuthorizationService.Setup(a => a.IsAuthorized(It.Is<string[]>(o => ActionOptions.Concat(ControllerOptions).All(o.Contains)))).Returns(true);
+            AuthorizationService.Setup(a => a.IsAuthorized(It.Is<string[]>(o => ActionOptions.All(o.Contains)))).Returns(true);
 
             return this;
         }
 
-        public AuthorizationFilterTestsFixture SetNoActionDasAuthorizeAttribute()
+        public AuthorizationFilterTestsFixture SetAuthorizedControllerOptions()
         {
-            ActionOptions = new string[0];
-            ActionDescriptor.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
-
-            return this;
-        }
-
-        public AuthorizationFilterTestsFixture SetNoControllerDasAuthorizeAttribute()
-        {
-            ControllerOptions = new string[0];
-            ActionDescriptor.Setup(d => d.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
+            AuthorizationService.Setup(a => a.IsAuthorized(It.Is<string[]>(o => ControllerOptions.All(o.Contains)))).Returns(true);
 
             return this;
         }

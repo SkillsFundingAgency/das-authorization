@@ -18,6 +18,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
+    <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="WebApi.StructureMap" Version="1.0.22" />
   </ItemGroup>
 

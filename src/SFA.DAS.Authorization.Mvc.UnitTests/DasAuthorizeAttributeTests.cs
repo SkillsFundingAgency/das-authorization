@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if NET462
+using System;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.Authorization.UnitTests
+namespace SFA.DAS.Authorization.Mvc.UnitTests
 {
     [TestFixture]
     public class DasAuthorizeAttributeTests : FluentTest<DasAuthorizeAttributeTestsFixture>
@@ -35,3 +36,4 @@ namespace SFA.DAS.Authorization.UnitTests
         }
     }
 }
+#endif
