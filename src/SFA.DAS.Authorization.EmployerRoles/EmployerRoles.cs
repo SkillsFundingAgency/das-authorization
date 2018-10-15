@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Authorization.EmployerRoles
 {
-    public struct EmployerRoles
+    public static class EmployerRoles
     {
         public const string Any = "EmployerRoles.Any";
         public const string Owner = "EmployerRoles.Owner";
