@@ -17,7 +17,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Get_WhenGettingDataAndKeyDoesNotExist_ThenShouldThrowException()
         {
-            Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the dictionary"));
+            Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the authorization context"));
         }
 
         [Test]

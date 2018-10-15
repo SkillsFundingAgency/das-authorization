@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization
                 return (T)value;
             }
 
-            throw new KeyNotFoundException($"The key '{key}' was not present in the dictionary");
+            throw new KeyNotFoundException($"The key '{key}' was not present in the authorization context");
         }
 
         public void Set<T>(string key, T value)
