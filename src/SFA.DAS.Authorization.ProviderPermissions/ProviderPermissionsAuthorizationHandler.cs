@@ -16,8 +16,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions
 
             if (providerPermissions.Any())
             {
-                var accountId = authorizationContext.Get<int>(ContextKeys.AccountId);
-                var providerId = authorizationContext.Get<Guid>(ContextKeys.ProviderId);
+                var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
+                var providerId = authorizationContext.Get<Guid>(AuthorizationContextKeys.ProviderId);
 
                 //authorizationResult.AddError(new ProviderPermissionNotGranted());
             }
