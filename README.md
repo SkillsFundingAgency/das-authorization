@@ -79,6 +79,8 @@ The `IAuthorizationService` interface can be used to check users' authorization.
 ```c#
 public interface IAuthorizationService
 {
+    void Authorize(params string[] options);
+    Task AuthorizeAsync(params string[] options);
     AuthorizationResult GetAuthorizationResult(params string[] options);
     Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options);
     bool IsAuthorized(params string[] options);

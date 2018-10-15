@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -10,6 +11,30 @@ namespace SFA.DAS.Authorization.UnitTests
     [TestFixture]
     public class AuthorizationServiceTests : FluentTest<AuthorizationServiceTestsFixture>
     {
+        [Test]
+        public void Authorize_WhenOperationIsAuthorized_ThenShouldNotThrowException()
+        {
+            Run(f => f.SetAuthorizedOptions(), f => f.Authorize(), f => {});
+        }
+        
+        [Test]
+        public void Authorize_WhenOperationIsUnauthorized_ThenShouldThrowException()
+        {
+            Run(f => f.SetUnauthorizedOptions(), f => f.Authorize(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
+        }
+        
+        [Test]
+        public Task AuthorizeAsync_WhenOperationIsAuthorized_ThenShouldNotThrowException()
+        {
+            return RunAsync(f => f.SetAuthorizedOptions(), f => f.AuthorizeAsync(), f => {});
+        }
+        
+        [Test]
+        public Task AuthorizeAsync_WhenOperationIsUnauthorized_ThenShouldThrowException()
+        {
+            return RunAsync(f => f.SetUnauthorizedOptions(), f => f.AuthorizeAsync(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
+        }
+        
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
@@ -102,9 +127,29 @@ namespace SFA.DAS.Authorization.UnitTests
             });
         }
 
+        public void Authorize()
+        {
+            AuthorizationService.Authorize(Options);
+        }
+
+        public Task AuthorizeAsync()
+        {
+            return AuthorizationService.AuthorizeAsync(Options);
+        }
+
+        public bool IsAuthorized()
+        {
+            return AuthorizationService.IsAuthorized(Options);
+        }
+
         public Task<bool> IsAuthorizedAsync()
         {
             return AuthorizationService.IsAuthorizedAsync(Options);
+        }
+
+        public AuthorizationResult GetAuthorizationResult()
+        {
+            return AuthorizationService.GetAuthorizationResult(Options);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync()
@@ -129,16 +174,6 @@ namespace SFA.DAS.Authorization.UnitTests
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult(ProviderPermissionNotGranted));
 
             return this;
-        }
-
-        public bool IsAuthorized()
-        {
-            return AuthorizationService.IsAuthorized(Options);
-        }
-
-        public AuthorizationResult GetAuthorizationResult()
-        {
-            return AuthorizationService.GetAuthorizationResult(Options);
         }
     }
 }

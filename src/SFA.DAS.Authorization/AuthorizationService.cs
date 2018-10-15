@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,21 @@ namespace SFA.DAS.Authorization
         {
             _authorizationContextProvider = authorizationContextProvider;
             _handlers = handlers;
+        }
+
+        public void Authorize(params string[] options)
+        {
+            AuthorizeAsync(options).GetAwaiter().GetResult();
+        }
+
+        public async Task AuthorizeAsync(params string[] options)
+        {
+            var isAuthorized = await IsAuthorizedAsync(options).ConfigureAwait(false);
+
+            if (!isAuthorized)
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         public AuthorizationResult GetAuthorizationResult(params string[] options)
