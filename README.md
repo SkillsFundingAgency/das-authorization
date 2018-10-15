@@ -118,7 +118,7 @@ if (!authorizationResult.IsAuthorized)
 }
 ```
 
-> `AccountId` & `UserRef` authorization context keys are required for this package.
+> `AccountId` & `UserEmail` authorization context keys are required for this package.
 
 
 ### SFA.DAS.Authorization.EmployerRoles
