@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.EmployerRoles;
+using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.UnitTests
@@ -109,8 +111,8 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeatures.Transfers,
-                ProviderPermissions.CreateCohort
+                EmployerFeatures.EmployerFeatures.ProviderRelationships,
+                ProviderPermissions.ProviderPermissions.CreateCohort
             };
 
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();

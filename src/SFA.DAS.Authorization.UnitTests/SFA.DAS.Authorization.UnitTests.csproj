@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerRoles\SFA.DAS.Authorization.EmployerRoles.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj" />
     <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Authorization.EmployerRoles;
+using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.UnitTests
