@@ -8,7 +8,7 @@ namespace SFA.DAS.Authorization.Mvc
 {
     public static class ActionDescriptorExtensions
     {
-        private static readonly ConcurrentDictionary<string, List<DasAuthorizeAttribute>> Cache = new ConcurrentDictionary<string, List<DasAuthorizeAttribute>>();
+        private static readonly ConcurrentDictionary<string, IEnumerable<DasAuthorizeAttribute>> Cache = new ConcurrentDictionary<string, IEnumerable<DasAuthorizeAttribute>>();
 
         public static IEnumerable<DasAuthorizeAttribute> GetDasAuthorizeAttributes(this ActionDescriptor actionDescriptor)
         {
@@ -18,7 +18,7 @@ namespace SFA.DAS.Authorization.Mvc
             {
                 var actionAttributes = actionDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>();
                 var controllerAttributes = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<DasAuthorizeAttribute>();
-                var attributes = actionAttributes.Concat(controllerAttributes).ToList();
+                var attributes = actionAttributes.Concat(controllerAttributes);
                 
                 return attributes;
             });
