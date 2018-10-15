@@ -17,7 +17,7 @@ namespace SFA.DAS.Authorization.Mvc
     
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var dasAuthorizeAttributes = filterContext.ActionDescriptor.GetDasAuthorizeAttributes().ToList();
+            var dasAuthorizeAttributes = filterContext.ActionDescriptor.GetDasAuthorizeAttributes();
 
             if (dasAuthorizeAttributes.Any())
             {

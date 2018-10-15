@@ -12,7 +12,7 @@ namespace SFA.DAS.Authorization.WebApi
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            var dasAuthorizeAttributes = actionContext.ActionDescriptor.GetDasAuthorizeAttributes().ToList();
+            var dasAuthorizeAttributes = actionContext.ActionDescriptor.GetDasAuthorizeAttributes();
 
             if (dasAuthorizeAttributes.Any())
             {
