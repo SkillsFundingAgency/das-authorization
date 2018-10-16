@@ -29,6 +29,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.WebAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.WebApi.UnitTests", "SFA.DAS.Authorization.WebApi.UnitTests\SFA.DAS.Authorization.WebApi.UnitTests.csproj", "{EB53E2B8-3A40-4756-A748-98D264989FAC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B1C078B-4675-4B83-A2C4-E5CEC4636F98}"
+ProjectSection(SolutionItems) = preProject
+	..\README.md = ..\README.md
+	..\LICENSE = ..\LICENSE
+	..\.gitignore = ..\.gitignore
+	..\.editorconfig = ..\.editorconfig
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
