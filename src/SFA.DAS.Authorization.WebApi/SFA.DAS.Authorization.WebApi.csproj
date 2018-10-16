@@ -1,29 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net462</TargetFrameworks>
+    <TargetFramework>net462</TargetFramework>
     <Authors>DAS</Authors>
     <Description>WebApi integration for SFA.DAS.Authorization</Description>
     <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <DefineConstants>NETCOREAPP2_0</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <DefineConstants>NET462</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="WebApi.StructureMap" Version="1.0.22" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StructureMap" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
