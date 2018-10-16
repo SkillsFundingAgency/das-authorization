@@ -1,33 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="Moq" Version="4.10.0" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="SFA.DAS.Testing" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Authorization.EmployerRoles\SFA.DAS.Authorization.EmployerRoles.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+        <PackageReference Include="Moq" Version="4.10.0" />
+        <PackageReference Include="NUnit" Version="3.10.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+        <PackageReference Include="SFA.DAS.Testing" Version="2.0.2" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
+        <ProjectReference Include="..\SFA.DAS.Authorization.EmployerRoles\SFA.DAS.Authorization.EmployerRoles.csproj" />
+        <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj" />
+        <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
+    </ItemGroup>
 
 </Project>
