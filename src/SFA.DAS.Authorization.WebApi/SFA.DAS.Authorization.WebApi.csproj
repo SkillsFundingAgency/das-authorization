@@ -3,10 +3,13 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <TargetFramework>net462</TargetFramework>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <Authors>DAS</Authors>
     <Description>WebApi integration for SFA.DAS.Authorization</Description>
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
     <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,6 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="WebApi.StructureMap" Version="1.0.22" />
   </ItemGroup>
