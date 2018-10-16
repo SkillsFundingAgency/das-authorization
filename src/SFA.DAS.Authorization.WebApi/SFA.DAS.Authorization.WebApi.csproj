@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <TargetFramework>net462</TargetFramework>
     <Authors>DAS</Authors>
     <Description>WebApi integration for SFA.DAS.Authorization</Description>

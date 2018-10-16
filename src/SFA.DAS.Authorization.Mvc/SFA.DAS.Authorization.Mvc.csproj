@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <TargetFrameworks>netcoreapp2.0;net462</TargetFrameworks>
     <Authors>DAS</Authors>
     <Description>MVC integration for SFA.DAS.Authorization</Description>
