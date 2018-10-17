@@ -58,8 +58,8 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
         var accountId = 123456; // e.g. From the URL querystring
         var userRef = "abcdef" // e.g. From the authentication claims
 
-        authorizationContext.Add("AccountId", accountId);
-        authorizationContext.Add("USerRef", userRef);
+        authorizationContext.Set("AccountId", accountId);
+        authorizationContext.Set("USerRef", userRef);
 
         return authorizationContext;
     }
