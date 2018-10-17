@@ -52,22 +52,16 @@ Each authorization package needs to know the context of the current operation it
 ```c#
 public class AuthorizationContextProvider : IAuthorizationContextProvider
 {
-    private readonly IAuthorizationContext _authorizationContext;
-
-    public AuthorizationContextProvider(IAuthorizationContext authorizationContext)
-    {
-        _authorizationContext = authorizationContext;
-    }
-
     public IAuthorizationContext GetAuthorizationContext()
     {
+        var authorizationContext = new AuthorizationContext();
         var accountId = 123456; // e.g. From the URL querystring
         var userRef = "abcdef" // e.g. From the authentication claims
 
-        _authorizationContext.Add("AccountId", accountId);
-        _authorizationContext.Add("USerRef", userRef);
+        authorizationContext.Add("AccountId", accountId);
+        authorizationContext.Add("USerRef", userRef);
 
-        return _authorizationContext;
+        return authorizationContext;
     }
 }
 ```
