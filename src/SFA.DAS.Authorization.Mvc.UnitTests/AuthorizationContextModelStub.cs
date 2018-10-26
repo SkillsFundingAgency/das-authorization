@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Authorization.Mvc.UnitTests
 {
-    public class AuthorizationContextMessageStub : IAuthorizationContextMessage
+    public class AuthorizationContextModelStub : IAuthorizationContextModel
     {
         public Guid? UserRef { get; set; }
     }

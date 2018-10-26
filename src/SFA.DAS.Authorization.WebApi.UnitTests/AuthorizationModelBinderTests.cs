@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
     public class AuthorizationModelBinderTests : FluentTest<AuthorizationModelBinderTestsFixture>
     {
         [Test]
-        public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
             Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
             {
@@ -31,7 +31,7 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
         }
 
         [Test]
-        public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
             Run(f => f.BindModel(), (f, r) =>
             {
@@ -69,7 +69,7 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
 
             BindingContext = new ModelBindingContext
             {
-                ModelMetadata = MetadataProvider.GetMetadataForProperty(null, typeof(AuthorizationContextMessageStub), nameof(UserRef)),
+                ModelMetadata = MetadataProvider.GetMetadataForProperty(null, typeof(AuthorizationContextModelStub), nameof(UserRef)),
                 ModelName = "",
                 ValueProvider = ValueProvider
             };
