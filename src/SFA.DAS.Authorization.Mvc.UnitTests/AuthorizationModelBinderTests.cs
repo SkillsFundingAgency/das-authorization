@@ -73,7 +73,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
         {
-            AuthorizationContext.Set(nameof(UserRef), UserRef);
+            AuthorizationContext.Add(nameof(UserRef), UserRef);
 
             return this;
         }

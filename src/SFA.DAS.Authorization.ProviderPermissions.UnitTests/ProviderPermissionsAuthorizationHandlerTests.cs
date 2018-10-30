@@ -93,16 +93,16 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
 
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetNonProviderPermissionsContext()
         {
-            AuthorizationContext.Set("Foo", 123);
-            AuthorizationContext.Set("Bar", 456);
+            AuthorizationContext.Add("Foo", 123);
+            AuthorizationContext.Add("Bar", 456);
 
             return this;
         }
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext()
         {
-            AuthorizationContext.Set("AccountLegalEntityId", AccountLegalEntityId);
-            AuthorizationContext.Set("ProviderId", ProviderId);
+            AuthorizationContext.Add("AccountLegalEntityId", AccountLegalEntityId);
+            AuthorizationContext.Add("ProviderId", ProviderId);
             
             return this;
         }

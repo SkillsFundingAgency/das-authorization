@@ -62,7 +62,7 @@ namespace SFA.DAS.Authorization.UnitTests
 
         public AuthorizationContextTestsFixture SetData()
         {
-            AuthorizationContext.Set(Key, Data);
+            AuthorizationContext.Add(Key, Data);
 
             return this;
         }

@@ -62,8 +62,8 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesContext()
         {
-            AuthorizationContext.Set("Foo", 123);
-            AuthorizationContext.Set("Bar", 456);
+            AuthorizationContext.Add("Foo", 123);
+            AuthorizationContext.Add("Bar", 456);
 
             return this;
         }

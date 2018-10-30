@@ -20,7 +20,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
-            var providerPermissions = options.Intersect(ProviderPermissions).ToList();
+            var providerPermissions = options.Intersect(ProviderPermissions);
 
             if (providerPermissions.Any())
             {
@@ -28,7 +28,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                 var providerId = authorizationContext.Get<long>(AuthorizationContextKeys.ProviderId);
 
                 //todo: add indexer to IAuthorizationContext?
-                //todo: initialise authcontext with collection literal
                 
                 //UserRef for auditing/logging?
 
