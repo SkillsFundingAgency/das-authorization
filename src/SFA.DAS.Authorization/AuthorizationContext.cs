@@ -26,7 +26,7 @@ namespace SFA.DAS.Authorization
         {
             var exists = _data.TryGetValue(key, out var obj);
 
-            value = exists ? (T)obj : default(T);
+            value = exists ? (T)obj : default;
 
             return exists;
         }
