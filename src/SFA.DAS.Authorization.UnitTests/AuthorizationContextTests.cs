@@ -136,12 +136,6 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             return AuthorizationContext.Get<object>(Key);
         }
-
-//        public AuthorizationContextTestsFixture SetData(object data)
-//        {
-//            Data = data;
-//            return this;
-//        }
         
         public AuthorizationContextTestsFixture AddData()
         {
