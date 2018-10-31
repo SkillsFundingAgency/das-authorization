@@ -10,6 +10,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions
     public static class AuthorizationContextExtensions
     {
         //how does this work when multiple handlers want the same thing. centralise?
+        //if centralise, could just add these methods to authcontext!?
+        //have an extensions class in each handler - think its ok to have >1 using with same names extensions : doesn't enforce same type for common values though
         public static void AddProviderId(this IAuthorizationContext authorizationContext, long? providerId)
         {
             authorizationContext.Add("ProviderId", providerId);

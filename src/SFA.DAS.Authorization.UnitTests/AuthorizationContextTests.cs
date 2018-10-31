@@ -33,6 +33,13 @@ namespace SFA.DAS.Authorization.UnitTests
         }
 
         [Test]
+        public void Get_WhenGettingDataAndDataIsNullableAndNull_ThenShouldThrowException()
+        {
+            long? data = null;
+            Run(f => f.AddData(data), f => f.GetData(), (f, r) => r.Should().Throw<ArgumentNullException>().WithMessage($"The key '{f.Key}' was present in the authorization context but its value was null*"));
+        }
+
+        [Test]
         public void Get_WhenGettingDataButKeyDoesNotExist_ThenShouldThrowException()
         {
             Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the authorization context"));
@@ -78,6 +85,17 @@ namespace SFA.DAS.Authorization.UnitTests
             {
                 r.Should().BeTrue();
                 f.Value.Should().NotBeNull().And.Be(data);
+            });
+        }
+
+        [Test]
+        public void TryGet_WhenTryingToGetDataAndDataIsNullableAndNullAndKeyDoesExist_ThenShouldReturnTrueAndValueShouldBeNull()
+        {
+            long? data = null;
+            Run(f => f.AddData(data), f => f.TryGetData(), (f, r) =>
+            {
+                r.Should().BeTrue();
+                f.Value.Should().BeNull();
             });
         }
 
