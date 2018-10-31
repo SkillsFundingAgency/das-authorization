@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -11,24 +12,73 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
     [TestFixture]
     public class ProviderPermissionsAuthorizationHandler_GetAuthorizationResultAsync_Tests : FluentTest<ProviderPermissionsAuthorizationHandlerTestsFixture>
     {
+        #region No Provider Permissions Options
+
         [Test]
-        public Task WhenOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
+        public Task WhenNoOptions_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return RunAsync(f => f.GetAuthorizationResultAsync(), 
+                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task WhenProviderPermissionsOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
+        public Task WhenOnlyNonProviderPermissionsOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.SetNonProviderPermissionsOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return RunAsync(f => f.SetNonProviderPermissionsOptions(), 
+                f => f.GetAuthorizationResultAsync(), 
+                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
+
+        #endregion No Provider Permissions Options
+        
+        #region Missing Context
+        
+        [TestCase(1L, null)]
+        [TestCase(null, 1L)]
+        [TestCase(null, null)]
+        public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableButContainsNulls_ThenShouldThrowArgumentNullException(
+            long? accountLegalEntityId, long? providerId)
+        {
+            return RunAsync(
+                f => f.SetProviderPermissionsCreateCohortOption()
+                    .SetProviderPermissionsContext(accountLegalEntityId, providerId),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<ArgumentNullException>());
+//                (f, r) => r.Should().Throw<ArgumentNullException>().WithMessage("**"));
+//                (f, r) => r.Should().Throw<ArgumentNullException>().And.Message.MatchRegex(""));
+//                (f, r) => r.Should().Throw<ArgumentNullException>().And.Message.Should().MatchRegex(""));
+//                (f, r) => r.Should().Throw<ArgumentNullException>().Which.Message.Should().MatchRegex(""));
+//                (f, r) => r.Should().Throw<ArgumentNullException>().Where(ex => ex.Message.Should().MatchRegex("")));
         }
 
         [Test]
-        public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        public Task WhenProviderPermissionsOptionsAreAvailableButOnlyNonProviderPermissionsContextIsAvailable_ThenShouldThrowKeyNotFoundException()
         {
-            return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetNonProviderPermissionsContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetNonProviderPermissionsContext(), 
+                f => f.GetAuthorizationResultAsync(), 
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
+        [Test]
+        public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsMissingAccountLegalEntityId_ThenShouldThrowKeyNotFoundException()
+        {
+            return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetProviderIdProviderPermissionsContext(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+
+        [Test]
+        public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsMissingProviderId_ThenShouldReturnNotAuthorizedAuthorizationResult()
+        {
+            return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetAccountLegalEntityIdProviderPermissionsContext(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+
+        #endregion Missing Context
+        
+        #region Permission Checked
+        
         [Test]
         public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
@@ -52,6 +102,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
                 f => f.GetAuthorizationResultAsync(),
                 (f, r) => r.Errors.Should().NotBeNull().And.BeEquivalentTo(new ProviderPermissionNotGranted()));
         }
+        
+        #endregion Permission Checked
     }
 
     public class ProviderPermissionsAuthorizationHandlerTestsFixture
@@ -80,14 +132,12 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetNonProviderPermissionsOptions()
         {
             Options.AddRange(new [] { "Foo", "Bar" });
-
             return this;
         }
 
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsCreateCohortOption()
         {
             Options.AddRange(new [] { ProviderPermissions.CreateCohort });
-
             return this;
         }
 
@@ -95,15 +145,25 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         {
             AuthorizationContext.Add("Foo", 123);
             AuthorizationContext.Add("Bar", 456);
-
             return this;
         }
         
-        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext()
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId, long? providerId = ProviderId)
         {
-            AuthorizationContext.Add("AccountLegalEntityId", AccountLegalEntityId);
-            AuthorizationContext.Add("ProviderId", ProviderId);
-            
+            AuthorizationContext.Add("AccountLegalEntityId", accountLegalEntityId);
+            AuthorizationContext.Add("ProviderId", providerId);
+            return this;
+        }
+        
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetAccountLegalEntityIdProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId)
+        {
+            AuthorizationContext.Add("AccountLegalEntityId", accountLegalEntityId);
+            return this;
+        }
+
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderIdProviderPermissionsContext(long? providerId = ProviderId)
+        {
+            AuthorizationContext.Add("ProviderId", providerId);
             return this;
         }
         
