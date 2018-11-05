@@ -25,19 +25,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         }
     }
     #endif
-
-    public class MissingRequiredContextException : Exception
-    {
-        public MissingRequiredContextException(params (string keyName, object value)[] keysWithValues)
-            : base(CreateMessage(keysWithValues))
-        {
-        }
-
-        private static string CreateMessage(IEnumerable<(string keyName, object value)> keysWithValues)
-        {
-            return $"Missing required context: {string.Join(", ", keysWithValues.Where(kv => kv.value == null).Select(kv => kv.keyName))}";
-        }
-    }
     
     public class ProviderPermissionsAuthorizationHandler : IAuthorizationHandler
     {
@@ -73,10 +60,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             //how does consumer know what type to use? can we help? introduce type safety. type safe-extensions on ContextProvider?
             var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKeys.AccountLegalEntityId);
             var providerId = authorizationContext.Get<long?>(AuthorizationContextKeys.ProviderId);
-
-            // already handled by Get...
-//            if (accountLegalEntityId == null || providerId == null)
-//                throw new MissingRequiredContextException((AuthorizationContextKeys.AccountLegalEntityId, accountLegalEntityId), (AuthorizationContextKeys.ProviderId, providerId));
 
             // todo: unit test to check that values in ProviderOperation match Operation enum names
             
