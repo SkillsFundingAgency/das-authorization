@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.ProviderRelationships.Api.Client;
+using SFA.DAS.ProviderRelationships.Types.Dtos;
+using SFA.DAS.ProviderRelationships.Types.Models;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
@@ -137,7 +140,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
 
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsCreateCohortOption()
         {
-            Options.AddRange(new [] { ProviderPermissions.CreateCohort });
+            Options.AddRange(new [] { ProviderOperation.CreateCohort });
             return this;
         }
 
@@ -169,12 +172,11 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture MakeCreateCohortPermissionCheckReturn(bool result)
         {
-//            ProviderRelationshipsApiClient.Setup(c => c.HasPermissions(It.Is<HasPermissionsRequest>(
-//                    r => r.AccountLegalEntityId == AccountLegalEntityId
-//                         && r.ProviderId == ProviderId
-//                         && r.Permissions != null && r.Permissions.Count == 1 &&
-//                         r.Permissions[0] == "ProviderPermissions.CreateCohort")))
-//                .ReturnsAsync(result);
+            ProviderRelationshipsApiClient.Setup(c => c.HasPermission(It.Is<PermissionRequest>(
+                    r => r.EmployerAccountLegalEntityId == AccountLegalEntityId
+                         && r.Ukprn == ProviderId
+                         && r.Operation == Operation.CreateCohort), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
             
             return this;
         }

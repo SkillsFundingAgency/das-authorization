@@ -112,7 +112,7 @@ namespace SFA.DAS.Authorization.UnitTests
             Options = new []
             {
                 EmployerFeatures.EmployerFeatures.ProviderRelationships,
-                ProviderPermissions.ProviderPermissions.CreateCohort
+                ProviderOperation.CreateCohort
             };
 
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();

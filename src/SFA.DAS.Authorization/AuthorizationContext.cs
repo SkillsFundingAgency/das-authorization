@@ -10,15 +10,13 @@ namespace SFA.DAS.Authorization
         
         public T Get<T>(string key)
         {
-            if (_data.TryGetValue(key, out var value))
-            {
-                if (value == null)
-                    throw new ArgumentNullException(key, $"The key '{key}' was present in the authorization context but its value was null");
+            if (!_data.TryGetValue(key, out var value))
+                throw new KeyNotFoundException($"The key '{key}' was not present in the authorization context");
 
-                return (T)value;
-            }
+            if (value == null)
+                throw new ArgumentNullException(key, $"The key '{key}' was present in the authorization context but its value was null");
 
-            throw new KeyNotFoundException($"The key '{key}' was not present in the authorization context");
+            return (T)value;
         }
 
         public void Add<T>(string key, T value)
