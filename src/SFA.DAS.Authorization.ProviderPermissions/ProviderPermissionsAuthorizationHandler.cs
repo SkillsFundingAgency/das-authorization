@@ -31,6 +31,9 @@ namespace SFA.DAS.Authorization.ProviderPermissions
     // we're going to have 1 extension method per handler, e.g. AddProviderPermissionsContext(long ukprn, long accountLegalEntityId)
     #endif
     
+    /// <remarks>
+    /// For mvs, we only support a single operation
+    /// </remarks>
     public class ProviderPermissionsAuthorizationHandler : IAuthorizationHandler
     {
         public string Namespace => ProviderOperation.Namespace;
@@ -51,8 +54,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             if (countOperations == 0)
                 return authorizationResult;
             
-            // for mvs, we only support a single operation
-
             if (countOperations != 1)
                 throw new NotImplementedException("Combining operations (to specify AND) is not currently supported");
 
@@ -83,7 +84,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             return authorizationResult;
         }
         
-        // todo: unit test to check that values in ProviderOperation match Operation enum names
         private Operation ToOperation(string operation)
         {
             return (Operation)Enum.Parse(typeof(Operation), operation);
