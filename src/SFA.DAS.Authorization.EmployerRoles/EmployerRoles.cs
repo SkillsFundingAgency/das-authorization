@@ -2,10 +2,12 @@
 {
     public static class EmployerRoles
     {
-        public const string Any = "EmployerRoles.Any";
-        public const string Owner = "EmployerRoles.Owner";
+        internal const string Namespace = "EmployerRoles";
+        
+        public const string Any = Namespace + ".Any";
+        public const string Owner = Namespace + ".Owner";
         public const string OwnerOrTransactor = Owner + "," + Transactor;
-        public const string Transactor = "EmployerRoles.Transactor";
-        public const string Viewer = "EmployerRoles.Viewer";
+        public const string Transactor = Namespace + ".Transactor";
+        public const string Viewer = Namespace + ".Viewer";
     }
 }

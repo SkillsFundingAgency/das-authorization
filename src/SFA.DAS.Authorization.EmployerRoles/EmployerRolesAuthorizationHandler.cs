@@ -7,13 +7,11 @@ namespace SFA.DAS.Authorization.EmployerRoles
 {
     public class EmployerRolesAuthorizationHandler : IAuthorizationHandler
     {
-        private static readonly IEnumerable<string> EmployerRoles = typeof(EmployerRoles).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().ToList();
+        public string Namespace => EmployerRoles.Namespace;
 
-        public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
+        public Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult,
+            IEnumerable<string> employerRoles, IAuthorizationContext authorizationContext)
         {
-            var authorizationResult = new AuthorizationResult();
-            var employerRoles = options.Intersect(EmployerRoles).ToList();
-
             if (employerRoles.Any())
             {
                 var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
@@ -22,7 +20,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
                 //authorizationResult.AddError(new EmployerRoleNotAuthorized());
             }
 
-            return Task.FromResult(authorizationResult);
+            return Task.CompletedTask;
         }
     }
 }

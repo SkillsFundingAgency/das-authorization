@@ -2,6 +2,8 @@
 {
     public static class ProviderOperation
     {
-        public const string CreateCohort = "ProviderOperation.CreateCohort";
+        internal const string Namespace = "ProviderOperation";
+
+        public const string CreateCohort = Namespace + ".CreateCohort";
     }
 }

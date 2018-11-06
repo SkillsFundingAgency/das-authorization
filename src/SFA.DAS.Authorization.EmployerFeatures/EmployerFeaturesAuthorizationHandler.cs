@@ -6,14 +6,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class EmployerFeaturesAuthorizationHandler : IAuthorizationHandler
     {
-        private static readonly IEnumerable<string> EmployerFeatures = typeof(EmployerFeatures).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().ToList();
-        
-        public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
-        {
-            var authorizationResult = new AuthorizationResult();
-            var providerPermissions = options.Intersect(EmployerFeatures).ToList();
+        public string Namespace => EmployerFeatures.Namespace;
 
-            if (providerPermissions.Any())
+        public Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult,
+            IEnumerable<string> employerFeatures, IAuthorizationContext authorizationContext)
+        {
+            if (employerFeatures.Any())
             {
                 var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
                 var userEmail = authorizationContext.Get<string>(AuthorizationContextKeys.UserEmail);
@@ -23,7 +21,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 authorizationResult.AddError(new EmployerFeatureAgreementNotSigned());*/
             }
 
-            return Task.FromResult(authorizationResult);
+            return Task.CompletedTask;
         }
     }
 }

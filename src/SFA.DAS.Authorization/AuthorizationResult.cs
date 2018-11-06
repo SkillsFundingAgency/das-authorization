@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Authorization
@@ -8,7 +9,7 @@ namespace SFA.DAS.Authorization
         public bool IsAuthorized => !_errors.Any();
         public IEnumerable<AuthorizationError> Errors => _errors;
 
-        private readonly List<AuthorizationError> _errors = new List<AuthorizationError>();
+        private readonly ConcurrentBag<AuthorizationError> _errors = new ConcurrentBag<AuthorizationError>();
 
         public AuthorizationResult()
         {
@@ -21,7 +22,8 @@ namespace SFA.DAS.Authorization
 
         public AuthorizationResult(IEnumerable<AuthorizationError> errors)
         {
-            _errors.AddRange(errors);
+            foreach( var error in errors)
+                _errors.Add(error);
         }
 
         public AuthorizationResult AddError(AuthorizationError error)
