@@ -3,7 +3,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     public static class EmployerFeatures
     {
         internal const string Namespace = "EmployerFeatures";
-
-        public const string ProviderRelationships = Namespace + ".ProviderRelationships";
+        internal const string ProviderRelationshipsOption = "ProviderRelationships";
+        
+        public const string ProviderRelationships = Namespace + "." + ProviderRelationshipsOption;
     }
 }
