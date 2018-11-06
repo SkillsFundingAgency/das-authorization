@@ -24,46 +24,45 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             authorizationContext.Add("AccountLegalEntityId", accountLegalEntityId);
         }
     }
+    
+    // we could use fluent style along the lines of authContext.ForProviderPermissions().AddProviderId().AddAccountX()
+    // and make Add on context internal, so you have to go through the extension methods
+    
+    // we're going to have 1 extension method per handler, e.g. AddProviderPermissionsContext(long ukprn, long accountLegalEntityId)
     #endif
     
     public class ProviderPermissionsAuthorizationHandler : IAuthorizationHandler
     {
+        public string Namespace => ProviderOperation.Namespace;
+        
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
         
         public ProviderPermissionsAuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient)
         {
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
         }
-        
-        private static readonly IEnumerable<string> ProviderPermissions = typeof(ProviderOperation).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().ToList();
 
-        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
+        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> operations, IAuthorizationContext authorizationContext)
         {
-            //todo: move this boilerplate into AuthorizationService? could also remove namespace from strings and select using namespace also, so no reflection and intersection
             var authorizationResult = new AuthorizationResult();
-            var providerPermissions = options.Intersect(ProviderPermissions);
 
-            var countProviderPermissions = providerPermissions.Count();
+            var countOperations = operations.Count();
 
-            if (countProviderPermissions == 0)
+            if (countOperations == 0)
                 return authorizationResult;
             
             // for mvs, we only support a single operation
 
-            if (countProviderPermissions != 1)
+            if (countOperations != 1)
                 throw new NotImplementedException("Combining operations (to specify AND) is not currently supported");
 
-            var permissionString = providerPermissions.First();
-            if (permissionString.Contains(','))
+            var operation = operations.First();
+            if (operation.Contains(','))
                 throw new NotImplementedException("Combining operations (to specify OR) by comma separating them is not currently supported");
 
             //how does consumer know what type to use? can we help? introduce type safety. type safe-extensions on ContextProvider?
             var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKeys.AccountLegalEntityId);
             var providerId = authorizationContext.Get<long?>(AuthorizationContextKeys.ProviderId);
-
-            // todo: unit test to check that values in ProviderOperation match Operation enum names
-            
-            var operation = ToOperation(permissionString);
             
             //todo: add indexer to IAuthorizationContext?
         
@@ -73,7 +72,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             {
                 Ukprn = providerId.Value,    //todo: check these are the same!
                 EmployerAccountLegalEntityId = accountLegalEntityId.Value,
-                Operation = operation
+                Operation = ToOperation(operation)
             };
 
             // should HasPermissions return which permissions are/aren't granted, and we could pass that on, or just a not-granted
@@ -84,10 +83,9 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             return authorizationResult;
         }
 
-        private Operation ToOperation(string namespacedOperation)
+        // todo: unit test to check that values in ProviderOperation match Operation enum names
+        private Operation ToOperation(string operation)
         {
-            // is there a better way than looking for '.' every time?
-            var operation = namespacedOperation.Substring(namespacedOperation.IndexOf('.')+1);
             return (Operation)Enum.Parse(typeof(Operation), operation);
         }
     }
