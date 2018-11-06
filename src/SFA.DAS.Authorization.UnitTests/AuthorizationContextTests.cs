@@ -8,6 +8,7 @@ using SFA.DAS.Testing;
 namespace SFA.DAS.Authorization.UnitTests
 {
     [TestFixture]
+    [Parallelizable]
     public class AuthorizationContextTests : FluentTest<AuthorizationContextTestsFixture>
     {
         #region Get

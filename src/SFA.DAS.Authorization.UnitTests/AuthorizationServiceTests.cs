@@ -11,6 +11,7 @@ using SFA.DAS.Testing;
 namespace SFA.DAS.Authorization.UnitTests
 {
     [TestFixture]
+    [Parallelizable]
     public class AuthorizationServiceTests : FluentTest<AuthorizationServiceTestsFixture>
     {
         [Test]
