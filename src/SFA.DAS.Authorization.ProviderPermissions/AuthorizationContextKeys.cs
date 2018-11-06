@@ -3,6 +3,6 @@
     internal static class AuthorizationContextKeys
     {
         public const string AccountLegalEntityId = "AccountLegalEntityId";
-        public const string ProviderId = "ProviderId";
+        public const string Ukprn = "Ukprn";
     }
 }

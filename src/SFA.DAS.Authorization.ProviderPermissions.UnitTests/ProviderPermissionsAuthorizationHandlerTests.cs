@@ -146,7 +146,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
         
         public const long AccountLegalEntityId = 22L;
-        public const long ProviderId = 333L;
+        public const long Ukprn = 333L;
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture()
         {
@@ -192,22 +192,22 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             return this;
         }
         
-        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId, long? providerId = ProviderId)
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId, long? ukprn = Ukprn)
         {
-            AuthorizationContext.Add("AccountLegalEntityId", accountLegalEntityId);
-            AuthorizationContext.Add("ProviderId", providerId);
+            AuthorizationContext.Add(AuthorizationContextKeys.AccountLegalEntityId, accountLegalEntityId);
+            AuthorizationContext.Add(AuthorizationContextKeys.Ukprn, ukprn);
             return this;
         }
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetAccountLegalEntityIdProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId)
         {
-            AuthorizationContext.Add("AccountLegalEntityId", accountLegalEntityId);
+            AuthorizationContext.Add(AuthorizationContextKeys.AccountLegalEntityId, accountLegalEntityId);
             return this;
         }
 
-        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderIdProviderPermissionsContext(long? providerId = ProviderId)
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderIdProviderPermissionsContext(long? ukprn = Ukprn)
         {
-            AuthorizationContext.Add("ProviderId", providerId);
+            AuthorizationContext.Add(AuthorizationContextKeys.Ukprn, ukprn);
             return this;
         }
         
@@ -215,7 +215,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         {
             ProviderRelationshipsApiClient.Setup(c => c.HasPermission(It.Is<PermissionRequest>(
                     r => r.EmployerAccountLegalEntityId == AccountLegalEntityId
-                         && r.Ukprn == ProviderId
+                         && r.Ukprn == Ukprn
                          && r.Operation == Operation.CreateCohort), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(result);
             
