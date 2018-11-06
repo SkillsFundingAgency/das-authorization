@@ -16,7 +16,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return RunAsync(f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
-        [Test]
+        [Test, Ignore("until handler written")]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndNonEmployerRolesOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
         {
             return RunAsync(f => f.SetNonEmployerRolesOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
@@ -56,7 +56,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetEmployerRolesOptions()
         {
-            Options.AddRange(new [] { EmployerRoles.Owner, EmployerRoles.Transactor });
+            Options.AddRange(new [] { EmployerRoles.OwnerOption, EmployerRoles.OwnerOption });
 
             return this;
         }
