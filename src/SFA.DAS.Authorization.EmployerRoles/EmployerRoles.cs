@@ -3,11 +3,15 @@
     public static class EmployerRoles
     {
         internal const string Namespace = "EmployerRoles";
+        internal const string AnyOption = "Any";
+        internal const string OwnerOption = "Owner";
+        internal const string TransactorOption = "Transactor";
+        internal const string ViewerOption = "Viewer";
         
-        public const string Any = Namespace + ".Any";
-        public const string Owner = Namespace + ".Owner";
+        public const string Any = Namespace + "." + AnyOption;
+        public const string Owner = Namespace + "." + OwnerOption;
         public const string OwnerOrTransactor = Owner + "," + Transactor;
-        public const string Transactor = Namespace + ".Transactor";
-        public const string Viewer = Namespace + ".Viewer";
+        public const string Transactor = Namespace + "." + TransactorOption;
+        public const string Viewer = Namespace + "." + ViewerOption;
     }
 }
