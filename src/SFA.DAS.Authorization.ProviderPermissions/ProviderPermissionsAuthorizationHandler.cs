@@ -40,10 +40,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
 
             var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKeys.AccountLegalEntityId);
             var ukprn = authorizationContext.Get<long?>(AuthorizationContextKeys.Ukprn);
-            
-            //todo: add indexer to IAuthorizationContext?
-        
-            //UserRef for auditing/logging?
 
             var hasPermissionRequest = new PermissionRequest
             {
