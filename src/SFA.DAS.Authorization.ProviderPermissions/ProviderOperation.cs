@@ -3,7 +3,8 @@
     public static class ProviderOperation
     {
         internal const string Namespace = "ProviderOperation";
-
-        public const string CreateCohort = Namespace + ".CreateCohort";
+        internal const string CreateCohortOption = "CreateCohort";
+        
+        public const string CreateCohort = Namespace + "." + CreateCohortOption;
     }
 }

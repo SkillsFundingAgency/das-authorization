@@ -16,7 +16,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
     [Parallelizable]
     public class ProviderPermissionsAuthorizationHandler_GetAuthorizationResultAsync_Tests : FluentTest<ProviderPermissionsAuthorizationHandlerTestsFixture>
     {
-        #region No Provider Permissions Options
+        #region No Options
 
         [Test]
         public Task WhenNoOptions_ThenShouldReturnValidAuthorizationResult()
@@ -24,16 +24,44 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             return RunAsync(f => f.GetAuthorizationResultAsync(), 
                 (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
+        
+        #endregion No Options
+        
+        #region Unsupported Options
 
         [Test]
-        public Task WhenOnlyNonProviderPermissionsOptionsAreAvailable_ThenShouldReturnValidAuthorizationResult()
+        public Task WhenMoreThanOneProviderOperationOptionIsSuppliedAndContextIsAvailable_ThenShouldThrowANotImplementedException()
         {
-            return RunAsync(f => f.SetNonProviderPermissionsOptions(), 
-                f => f.GetAuthorizationResultAsync(), 
-                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return RunAsync(f => f.SetTwoOptions().SetProviderPermissionsContext(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<NotImplementedException>());
         }
 
-        #endregion No Provider Permissions Options
+        [Test]
+        public Task WhenCommaSeparatedOptionIsSuppliedAndContextIsAvailable_ThenShouldThrowANotImplementedException()
+        {
+            return RunAsync(f => f.SetOredOption().SetProviderPermissionsContext(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<NotImplementedException>());
+        }
+        
+        [Test]
+        public Task WhenANonProviderPermissionsOptionIsIncorrectlySuppliedAndContextIsAvailable_ThenShouldThrowAnException()
+        {
+            return RunAsync(f => f.SetANonProviderOpertionOption().SetProviderPermissionsContext(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<Exception>()); //.WithMessage("Requested value 'Foo' was not found."));
+        }
+
+        [Test]
+        public Task WhenANonProviderPermissionsOptionIsIncorrectlySuppliedAndContextIsNotAvailable_ThenShouldThrowAnException()
+        {
+            return RunAsync(f => f.SetANonProviderOpertionOption(),
+                f => f.GetAuthorizationResultAsync(),
+                (f, r) => r.Should().Throw<Exception>());
+        }
+        
+        #endregion Unsupported Options
         
         #region Missing Context
         
@@ -91,7 +119,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
                 (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
         
-        [Test, Ignore("Until client has HasPermissions()")]
+        [Test]
         public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnNotAuthorizedAuthorizationResult()
         {
             return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetProviderPermissionsContext().MakeCreateCohortPermissionCheckReturn(false),
@@ -99,7 +127,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
                 (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized));
         }
         
-        [Test, Ignore("Until client has HasPermissions()")]
+        [Test]
         public Task WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnAuthorizationResultWithProviderPermissionNotGrantedError()
         {
             return RunAsync(f => f.SetProviderPermissionsCreateCohortOption().SetProviderPermissionsContext(),
@@ -133,15 +161,27 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             return Handler.GetAuthorizationResultAsync(Options, AuthorizationContext);
         }
         
-        public ProviderPermissionsAuthorizationHandlerTestsFixture SetNonProviderPermissionsOptions()
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetANonProviderOpertionOption()
         {
-            Options.AddRange(new [] { "Foo", "Bar" });
+            Options.Add("Foo");
             return this;
         }
 
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetTwoOptions()
+        {
+            Options.AddRange(new[] {ProviderOperation.CreateCohortOption, "TickleCohort"});
+            return this;
+        }
+
+        public ProviderPermissionsAuthorizationHandlerTestsFixture SetOredOption()
+        {
+            Options.Add($"{ProviderOperation.CreateCohortOption},{ProviderOperation.CreateCohortOption}");
+            return this;
+        }
+        
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsCreateCohortOption()
         {
-            Options.AddRange(new [] { ProviderOperation.CreateCohort });
+            Options.AddRange(new [] { ProviderOperation.CreateCohortOption });
             return this;
         }
 
