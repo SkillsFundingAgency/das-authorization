@@ -9,18 +9,19 @@ namespace SFA.DAS.Authorization.EmployerRoles
     {
         public string Namespace => EmployerRoles.Namespace;
 
-        public Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult,
-            IEnumerable<string> employerRoles, IAuthorizationContext authorizationContext)
+        public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> employerRoles, IAuthorizationContext authorizationContext)
         {
-            if (employerRoles.Any())
-            {
-                var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
-                var userRef = authorizationContext.Get<string>(AuthorizationContextKeys.UserRef);
+            var authorizationResult = new AuthorizationResult();
 
-                //authorizationResult.AddError(new EmployerRoleNotAuthorized());
-            }
+            if (!employerRoles.Any())
+                return Task.FromResult(authorizationResult);
 
-            return Task.CompletedTask;
+            var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
+            var userRef = authorizationContext.Get<string>(AuthorizationContextKeys.UserRef);
+
+            //authorizationResult.AddError(new EmployerRoleNotAuthorized());
+
+            return Task.FromResult(authorizationResult);
         }
     }
 }

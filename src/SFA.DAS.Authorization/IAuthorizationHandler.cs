@@ -6,6 +6,7 @@ namespace SFA.DAS.Authorization
     public interface IAuthorizationHandler
     {
         string Namespace { get; }
-        Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult, IEnumerable<string> options, IAuthorizationContext authorizationContext);
+
+        Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext);
     }
 }

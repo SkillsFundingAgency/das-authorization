@@ -42,12 +42,14 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
         }
 
-        public async Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult, IEnumerable<string> operations, IAuthorizationContext authorizationContext)
+        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> operations, IAuthorizationContext authorizationContext)
         {
+            var authorizationResult = new AuthorizationResult();
+            
             var countOperations = operations.Count();
 
             if (countOperations == 0)
-                return;
+                return authorizationResult;
             
             // for mvs, we only support a single operation
 
@@ -77,6 +79,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             // as is for mvs?
             if (!await _providerRelationshipsApiClient.HasPermission(hasPermissionRequest))
                 authorizationResult.AddError(new ProviderPermissionNotGranted());
+
+            return authorizationResult;
         }
         
         // todo: unit test to check that values in ProviderOperation match Operation enum names

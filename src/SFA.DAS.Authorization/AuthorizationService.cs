@@ -39,36 +39,16 @@ namespace SFA.DAS.Authorization
         public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
         {
             var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
-
-            var authorizationResult = new AuthorizationResult();
             
-            await Task.WhenAll(_handlers.Select(h => HandlerPopulateAuthorizationResultAsync(h, authorizationResult, options, authorizationContext))).ConfigureAwait(false);
-
-            return authorizationResult;
-        }
-            
-//        public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
-//        {
-//            var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
-//            
-//            // we could change AuthorizationResult to use a ConcurrentBag, new one up, and pass it to all handlers
-//            // then we wouldn't need the selectmany (so less work to do after last handler has finished)
-//            
-//            var authorizationResults = await Task.WhenAll(
-//                _handlers.Select(h => GetHandlerAuthorizationResultAsync(h, options, authorizationContext))).ConfigureAwait(false);
-//            return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
-//        }
-
-        private Task HandlerPopulateAuthorizationResultAsync(IAuthorizationHandler handler, AuthorizationResult authorizationResult, IEnumerable<string> allOptions, IAuthorizationContext authorizationContext)
-        {
-            return handler.PopulateAuthorizationResultAsync(authorizationResult, GetHandlerOptions(handler, allOptions), authorizationContext);
+            var authorizationResults = await Task.WhenAll(
+                _handlers.Select(h => GetHandlerAuthorizationResultAsync(h, options, authorizationContext))).ConfigureAwait(false);
+            return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
         }
         
-        // extensions on IAuthorizationHandler? abstract base?
-//        private Task<AuthorizationResult> GetHandlerAuthorizationResultAsync(IAuthorizationHandler handler, IEnumerable<string> allOptions, IAuthorizationContext authorizationContext)
-//        {
-//            return handler.GetAuthorizationResultAsync(GetHandlerOptions(handler, allOptions), authorizationContext);
-//        }
+        private Task<AuthorizationResult> GetHandlerAuthorizationResultAsync(IAuthorizationHandler handler, IEnumerable<string> allOptions, IAuthorizationContext authorizationContext)
+        {
+            return handler.GetAuthorizationResultAsync(GetHandlerOptions(handler, allOptions), authorizationContext);
+        }
         
         private IEnumerable<string> GetHandlerOptions(IAuthorizationHandler handler, IEnumerable<string> allOptions)
         {

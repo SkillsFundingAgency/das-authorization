@@ -8,20 +8,21 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     {
         public string Namespace => EmployerFeatures.Namespace;
 
-        public Task PopulateAuthorizationResultAsync(AuthorizationResult authorizationResult,
-            IEnumerable<string> employerFeatures, IAuthorizationContext authorizationContext)
+        public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> employerFeatures, IAuthorizationContext authorizationContext)
         {
-            if (employerFeatures.Any())
-            {
-                var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
-                var userEmail = authorizationContext.Get<string>(AuthorizationContextKeys.UserEmail);
-                
-                /*authorizationResult.AddError(new EmployerFeatureNotEnabled());
-                authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
-                authorizationResult.AddError(new EmployerFeatureAgreementNotSigned());*/
-            }
+            var authorizationResult = new AuthorizationResult();
 
-            return Task.CompletedTask;
+            if (!employerFeatures.Any())
+                return Task.FromResult(authorizationResult);
+
+            var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
+            var userEmail = authorizationContext.Get<string>(AuthorizationContextKeys.UserEmail);
+            
+            /*authorizationResult.AddError(new EmployerFeatureNotEnabled());
+            authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
+            authorizationResult.AddError(new EmployerFeatureAgreementNotSigned());*/
+
+            return Task.FromResult(authorizationResult);
         }
     }
 }

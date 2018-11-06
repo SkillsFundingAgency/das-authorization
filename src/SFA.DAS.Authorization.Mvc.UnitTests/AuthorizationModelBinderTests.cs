@@ -12,6 +12,7 @@ using SFA.DAS.Testing;
 namespace SFA.DAS.Authorization.Mvc.UnitTests
 {
     [TestFixture]
+    [Parallelizable]
     public class AuthorizationModelBinderTests : FluentTest<AuthorizationModelBinderTestsFixture>
     {
         [Test]
