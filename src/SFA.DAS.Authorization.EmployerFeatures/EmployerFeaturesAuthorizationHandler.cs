@@ -15,8 +15,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures
             if (!employerFeatures.Any())
                 return Task.FromResult(authorizationResult);
 
-            var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
-            var userEmail = authorizationContext.Get<string>(AuthorizationContextKeys.UserEmail);
+            var accountId = authorizationContext.Get<int>(AuthorizationContextKey.AccountId);
+            var userEmail = authorizationContext.Get<string>(AuthorizationContextKey.UserEmail);
             
             /*authorizationResult.AddError(new EmployerFeatureNotEnabled());
             authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());

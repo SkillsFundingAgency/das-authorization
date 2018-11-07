@@ -194,20 +194,20 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId, long? ukprn = Ukprn)
         {
-            AuthorizationContext.Add(AuthorizationContextKeys.AccountLegalEntityId, accountLegalEntityId);
-            AuthorizationContext.Add(AuthorizationContextKeys.Ukprn, ukprn);
+            AuthorizationContext.Add(AuthorizationContextKey.AccountLegalEntityId, accountLegalEntityId);
+            AuthorizationContext.Add(AuthorizationContextKey.Ukprn, ukprn);
             return this;
         }
         
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetAccountLegalEntityIdProviderPermissionsContext(long? accountLegalEntityId = AccountLegalEntityId)
         {
-            AuthorizationContext.Add(AuthorizationContextKeys.AccountLegalEntityId, accountLegalEntityId);
+            AuthorizationContext.Add(AuthorizationContextKey.AccountLegalEntityId, accountLegalEntityId);
             return this;
         }
 
         public ProviderPermissionsAuthorizationHandlerTestsFixture SetProviderIdProviderPermissionsContext(long? ukprn = Ukprn)
         {
-            AuthorizationContext.Add(AuthorizationContextKeys.Ukprn, ukprn);
+            AuthorizationContext.Add(AuthorizationContextKey.Ukprn, ukprn);
             return this;
         }
         

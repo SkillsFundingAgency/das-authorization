@@ -16,8 +16,8 @@ namespace SFA.DAS.Authorization.EmployerRoles
             if (!employerRoles.Any())
                 return Task.FromResult(authorizationResult);
 
-            var accountId = authorizationContext.Get<int>(AuthorizationContextKeys.AccountId);
-            var userRef = authorizationContext.Get<string>(AuthorizationContextKeys.UserRef);
+            var accountId = authorizationContext.Get<int>(AuthorizationContextKey.AccountId);
+            var userRef = authorizationContext.Get<string>(AuthorizationContextKey.UserRef);
 
             //authorizationResult.AddError(new EmployerRoleNotAuthorized());
 

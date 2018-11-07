@@ -38,8 +38,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             if (operation.Contains(','))
                 throw new NotImplementedException("Combining operations (to specify OR) by comma separating them is not currently supported");
 
-            var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKeys.AccountLegalEntityId);
-            var ukprn = authorizationContext.Get<long?>(AuthorizationContextKeys.Ukprn);
+            var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKey.AccountLegalEntityId);
+            var ukprn = authorizationContext.Get<long?>(AuthorizationContextKey.Ukprn);
 
             var hasPermissionRequest = new PermissionRequest
             {
