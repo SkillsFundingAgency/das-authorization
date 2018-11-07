@@ -44,7 +44,7 @@ namespace SFA.DAS.Authorization
                 from h in _handlers
                 let n = h.Namespace + "."
                 let hno = options.Where(o => o.StartsWith(n)).Select(o => o.Substring(n.Length)).ToList()
-                select h.GetAuthorizationResultAsync(hno, authorizationContext)).ConfigureAwait(false);
+                select h.GetAuthorizationResult(hno, authorizationContext)).ConfigureAwait(false);
             
             return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
         }

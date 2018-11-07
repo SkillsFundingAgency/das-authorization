@@ -7,20 +7,22 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class ProviderOperationsTests
+    public class ProviderOperationTests
     {
         /// <remarks>
-        /// All ProviderOperation const names must match a value's name in the api client's Operation enum
+        /// All EmployerFeature const names must match a value's name in the Feature enum
         /// (but we don't need a const name for every enum value)
         /// </remarks>
         [Test]
         public void EveryProviderOperationNameMustMatchAProviderRelationshipsApiOperationEnumValue()
         {
             var nakedOperationPos = ProviderOperation.Namespace.Length + 1;
-            var providerOperations = typeof(ProviderOperation).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().Select(o => o.Substring(nakedOperationPos));
+            var employerFeatures = typeof(ProviderOperation).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().Select(o => o.Substring(nakedOperationPos));
 
-            foreach (var providerOperation in providerOperations)
+            foreach (var providerOperation in employerFeatures)
+            {
                 Enum.Parse(typeof(Operation), providerOperation);
+            }
         }
     }
 }

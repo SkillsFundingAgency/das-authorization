@@ -44,7 +44,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync()
         {
-            return Handler.GetAuthorizationResultAsync(Options, AuthorizationContext);
+            return Handler.GetAuthorizationResult(Options, AuthorizationContext);
         }
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesOptions()
