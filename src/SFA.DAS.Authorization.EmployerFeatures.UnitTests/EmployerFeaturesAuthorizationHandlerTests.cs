@@ -56,7 +56,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetEmployerFeaturesOptions()
         {
-            Options.AddRange(new [] { EmployerFeatures.ProviderRelationshipsOption });
+            Options.AddRange(new [] { EmployerFeature.ProviderRelationshipsOption });
 
             return this;
         }

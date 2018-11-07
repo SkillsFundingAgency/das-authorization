@@ -112,7 +112,7 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeatures.EmployerFeatures.ProviderRelationships,
+                EmployerFeatures.EmployerFeature.ProviderRelationships,
                 ProviderOperation.CreateCohort
             };
 
@@ -120,7 +120,7 @@ namespace SFA.DAS.Authorization.UnitTests
             AuthorizationContext = new Mock<IAuthorizationContext>();
 
             EmployerFeatureAuthorizationHandler = new Mock<IAuthorizationHandler>();
-            EmployerFeatureAuthorizationHandler.Setup(h => h.Namespace).Returns(EmployerFeatures.EmployerFeatures.Namespace);
+            EmployerFeatureAuthorizationHandler.Setup(h => h.Namespace).Returns(EmployerFeatures.EmployerFeature.Namespace);
 
             ProviderOperationAuthorizationHandler = new Mock<IAuthorizationHandler>();
             ProviderOperationAuthorizationHandler.Setup(h => h.Namespace).Returns(ProviderOperation.Namespace);
@@ -167,7 +167,7 @@ namespace SFA.DAS.Authorization.UnitTests
         public AuthorizationServiceTestsFixture SetAuthorizedOptions()
         {
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(
-                new [] { EmployerFeatures.EmployerFeatures.ProviderRelationshipsOption }, AuthorizationContext.Object))
+                new [] { EmployerFeatures.EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult());
 
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(
@@ -183,7 +183,7 @@ namespace SFA.DAS.Authorization.UnitTests
             ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(
-                new [] { EmployerFeatures.EmployerFeatures.ProviderRelationshipsOption }, AuthorizationContext.Object))
+                new [] { EmployerFeatures.EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult(EmployerRoleNotAuthorized));
             
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResultAsync(

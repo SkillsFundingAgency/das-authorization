@@ -6,7 +6,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class EmployerFeaturesAuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => EmployerFeatures.Namespace;
+        public string Namespace => EmployerFeature.Namespace;
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> employerFeatures, IAuthorizationContext authorizationContext)
         {
