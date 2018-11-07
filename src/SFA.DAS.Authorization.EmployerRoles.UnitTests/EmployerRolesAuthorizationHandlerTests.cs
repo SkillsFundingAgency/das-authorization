@@ -56,7 +56,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetEmployerRolesOptions()
         {
-            Options.AddRange(new [] { EmployerRoles.OwnerOption, EmployerRoles.OwnerOption });
+            Options.AddRange(new [] { EmployerRole.OwnerOption, EmployerRole.OwnerOption });
 
             return this;
         }

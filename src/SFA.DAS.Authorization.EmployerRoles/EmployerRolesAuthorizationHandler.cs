@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
 {
     public class EmployerRolesAuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => EmployerRoles.Namespace;
+        public string Namespace => EmployerRole.Namespace;
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> employerRoles, IAuthorizationContext authorizationContext)
         {
