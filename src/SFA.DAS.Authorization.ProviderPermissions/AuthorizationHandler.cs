@@ -22,7 +22,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
         }
 
-        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
+        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
             

@@ -41,22 +41,14 @@ namespace SFA.DAS.Authorization
             var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
             
             var authorizationResults = await Task.WhenAll(
-                _handlers.Select(h => GetHandlerAuthorizationResultAsync(h, options, authorizationContext))).ConfigureAwait(false);
+                from h in _handlers
+                let n = h.Namespace + "."
+                let hno = options.Where(o => o.StartsWith(n)).Select(o => o.Substring(n.Length)).ToList()
+                select h.GetAuthorizationResultAsync(hno, authorizationContext)).ConfigureAwait(false);
+            
             return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
         }
-        
-        private Task<AuthorizationResult> GetHandlerAuthorizationResultAsync(IAuthorizationHandler handler, IEnumerable<string> allOptions, IAuthorizationContext authorizationContext)
-        {
-            return handler.GetAuthorizationResultAsync(GetHandlerOptions(handler, allOptions), authorizationContext);
-        }
-        
-        private IEnumerable<string> GetHandlerOptions(IAuthorizationHandler handler, IEnumerable<string> allOptions)
-        {
-            var nakedOptionStartPos = handler.Namespace.Length + 1;
-            return allOptions.Where(o => o.StartsWith(handler.Namespace))
-                .Select(ho => ho.Substring(nakedOptionStartPos));
-        }
-        
+
         public bool IsAuthorized(params string[] options)
         {
             return IsAuthorizedAsync(options).GetAwaiter().GetResult();

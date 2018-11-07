@@ -7,6 +7,6 @@ namespace SFA.DAS.Authorization
     {
         string Namespace { get; }
 
-        Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext);
+        Task<AuthorizationResult> GetAuthorizationResultAsync(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext);
     }
 }
