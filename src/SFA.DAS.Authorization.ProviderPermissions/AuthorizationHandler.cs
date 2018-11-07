@@ -11,22 +11,22 @@ namespace SFA.DAS.Authorization.ProviderPermissions
     /// <remarks>
     /// For mvs, we only support a single operation
     /// </remarks>
-    public class ProviderPermissionsAuthorizationHandler : IAuthorizationHandler
+    public class AuthorizationHandler : IAuthorizationHandler
     {
         public string Namespace => ProviderOperation.Namespace;
         
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
         
-        public ProviderPermissionsAuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient)
+        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient)
         {
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
         }
 
-        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> operations, IAuthorizationContext authorizationContext)
+        public async Task<AuthorizationResult> GetAuthorizationResultAsync(IEnumerable<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
             
-            var countOperations = operations.Count();
+            var countOperations = options.Count();
 
             if (countOperations == 0)
                 return authorizationResult;
@@ -34,17 +34,18 @@ namespace SFA.DAS.Authorization.ProviderPermissions
             if (countOperations != 1)
                 throw new NotImplementedException("Combining operations (to specify AND) is not currently supported");
 
-            var operation = operations.First();
+            var operation = options.First();
             if (operation.Contains(','))
                 throw new NotImplementedException("Combining operations (to specify OR) by comma separating them is not currently supported");
 
-            var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKey.AccountLegalEntityId);
-            var ukprn = authorizationContext.Get<long?>(AuthorizationContextKey.Ukprn);
+            /*var accountLegalEntityId = authorizationContext.Get<long?>(AuthorizationContextKey.AccountLegalEntityId);
+            var ukprn = authorizationContext.Get<long?>(AuthorizationContextKey.Ukprn);*/
+            var values = authorizationContext.GetProviderPermissionValues();
 
             var hasPermissionRequest = new PermissionRequest
             {
-                Ukprn = ukprn.Value,    //todo: check these are the same!
-                EmployerAccountLegalEntityId = accountLegalEntityId.Value,
+                Ukprn = values.Ukprn,    //todo: check these are the same!
+                EmployerAccountLegalEntityId = values.AccountLegalEntityId,
                 Operation = ToOperation(operation)
             };
 

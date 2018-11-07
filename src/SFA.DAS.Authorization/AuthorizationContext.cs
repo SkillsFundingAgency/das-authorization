@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace SFA.DAS.Authorization
 {
-    public class AuthorizationContext : IAuthorizationContext, IEnumerable<KeyValuePair<string, object>>
+    public class AuthorizationContext : IAuthorizationContext
     {
-        private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _data = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
         
         public T Get<T>(string key)
         {
             if (!_data.TryGetValue(key, out var value))
+            {
                 throw new KeyNotFoundException($"The key '{key}' was not present in the authorization context");
-
-            if (value == null)
-                throw new ArgumentNullException(key, $"The key '{key}' was present in the authorization context but its value was null");
+            }
 
             return (T)value;
         }
 
-        public void Add<T>(string key, T value)
+        public void Set<T>(string key, T value)
         {
-            _data.Add(key, value);
+            _data[key] = value;
         }
 
         public bool TryGet<T>(string key, out T value)
@@ -31,16 +29,6 @@ namespace SFA.DAS.Authorization
             value = exists ? (T)obj : default;
 
             return exists;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<KeyValuePair<string, object>>)this).GetEnumerator();
-        }
-        
-        IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
-        {
-            return ((IEnumerable<KeyValuePair<string, object>>) _data).GetEnumerator();
         }
     }
 }

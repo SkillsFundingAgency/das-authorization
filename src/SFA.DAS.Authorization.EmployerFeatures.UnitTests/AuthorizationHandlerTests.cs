@@ -8,7 +8,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class EmployerFeaturesAuthorizationHandlerTests : FluentTest<EmployerFeaturesAuthorizationHandlerTestsFixture>
+    public class AuthorizationHandlerTests : FluentTest<EmployerFeaturesAuthorizationHandlerTestsFixture>
     {
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
@@ -25,7 +25,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndEmployerFeaturesOptionsAreAvailableAndEmployerFeaturesContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetEmployerFeaturesOptions().SetNonEmployerRolesContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return RunAsync(f => f.SetEmployerFeaturesOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
     }
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
-            Handler = new EmployerFeaturesAuthorizationHandler();
+            Handler = new AuthorizationHandler();
         }
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync()
@@ -56,15 +56,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetEmployerFeaturesOptions()
         {
-            Options.AddRange(new [] { EmployerFeature.ProviderRelationshipsOption });
-
-            return this;
-        }
-
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetNonEmployerRolesContext()
-        {
-            AuthorizationContext.Add("Foo", 123);
-            AuthorizationContext.Add("Bar", 456);
+            Options.AddRange(new [] { EmployerFeature.ProviderRelationships });
 
             return this;
         }

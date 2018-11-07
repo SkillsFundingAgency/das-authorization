@@ -8,7 +8,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class EmployerRolesAuthorizationHandlerTests : FluentTest<EmployerRolesAuthorizationHandlerTestsFixture>
+    public class AuthorizationHandlerTests : FluentTest<EmployerRolesAuthorizationHandlerTestsFixture>
     {
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
@@ -25,7 +25,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         [Test]
         public Task GetAuthorizationResultAsync_WhenGettingAuthorizationResultAndEmployerRolesOptionsAreAvailableAndEmployerRoleContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetEmployerRolesOptions().SetNonEmployerRolesContext(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return RunAsync(f => f.SetEmployerRolesOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
     }
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
-            Handler = new EmployerRolesAuthorizationHandler();
+            Handler = new AuthorizationHandler();
         }
 
         public Task<AuthorizationResult> GetAuthorizationResultAsync()
@@ -56,15 +56,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetEmployerRolesOptions()
         {
-            Options.AddRange(new [] { EmployerRole.OwnerOption, EmployerRole.OwnerOption });
-
-            return this;
-        }
-
-        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesContext()
-        {
-            AuthorizationContext.Add("Foo", 123);
-            AuthorizationContext.Add("Bar", 456);
+            Options.AddRange(new [] { EmployerRole.Owner, EmployerRole.Transactor });
 
             return this;
         }

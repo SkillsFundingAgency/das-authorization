@@ -44,7 +44,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public IValueProvider ValueProvider { get; set; }
         public DefaultModelBinder ModelBinder { get; set; }
         public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
-        public AuthorizationContext AuthorizationContext { get; set; }
+        public IAuthorizationContext AuthorizationContext { get; set; }
 
         public AuthorizationModelBinderTestsFixture()
         {
@@ -74,7 +74,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
         {
-            AuthorizationContext.Add(nameof(UserRef), UserRef);
+            AuthorizationContext.Set(nameof(UserRef), UserRef);
 
             return this;
         }
