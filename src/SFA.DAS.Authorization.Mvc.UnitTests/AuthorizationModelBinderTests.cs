@@ -16,7 +16,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
     public class AuthorizationModelBinderTests : FluentTest<AuthorizationModelBinderTestsFixture>
     {
         [Test]
-        public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
             Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
             {
@@ -26,7 +26,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         }
 
         [Test]
-        public void BindModel_WhenBindingAnAuthorizationContextMessageAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
             Run(f => f.BindModel(), (f, r) =>
             {
@@ -54,7 +54,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
             BindingContext = new ModelBindingContext
             {
-                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(AuthorizationContextMessageStub)),
+                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(AuthorizationContextModelStub)),
                 ModelName = "",
                 ValueProvider = ValueProvider
             };
@@ -67,9 +67,9 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             ModelBinder = new AuthorizationModelBinder(() => AuthorizationContextProvider.Object);
         }
 
-        public AuthorizationContextMessageStub BindModel()
+        public AuthorizationContextModelStub BindModel()
         {
-            return ModelBinder.BindModel(ControllerContext, BindingContext) as AuthorizationContextMessageStub;
+            return ModelBinder.BindModel(ControllerContext, BindingContext) as AuthorizationContextModelStub;
         }
 
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()

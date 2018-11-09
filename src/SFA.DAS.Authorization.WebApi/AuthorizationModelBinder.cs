@@ -11,7 +11,7 @@ namespace SFA.DAS.Authorization.WebApi
     {
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
         {
-            if (typeof(IAuthorizationContextMessage).IsAssignableFrom(bindingContext.ModelMetadata.ContainerType))
+            if (typeof(IAuthorizationContextModel).IsAssignableFrom(bindingContext.ModelMetadata.ContainerType))
             {
                 var authorizationContext = actionContext.Request.GetService<IAuthorizationContextProvider>().GetAuthorizationContext();
 

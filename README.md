@@ -189,10 +189,10 @@ public class LegalEntitiesController : Controller
 }
 ```
 
-By adding the `IAuthorizationContextMessage` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
+By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextMessage
+public class AddLeglEntityCommand: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }
@@ -232,10 +232,10 @@ public class LegalEntitiesController : ApiController
 }
 ```
 
-By adding the `IAuthorizationContextMessage` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
+By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextMessage
+public class AddLeglEntityCommand: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }

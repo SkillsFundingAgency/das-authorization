@@ -17,7 +17,7 @@ namespace SFA.DAS.Authorization.Mvc
 
         protected override void BindProperty(ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor)
         {
-            if (typeof(IAuthorizationContextMessage).IsAssignableFrom(bindingContext.ModelType))
+            if (typeof(IAuthorizationContextModel).IsAssignableFrom(bindingContext.ModelType))
             {
                 var authorizationContext = _authorizationContextProvider().GetAuthorizationContext();
 

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Authorization.WebApi.UnitTests
 {
-    public class AuthorizationContextMessageStub : IAuthorizationContextMessage
+    public class AuthorizationContextModelStub : IAuthorizationContextModel
     {
         public string Foo { get; set; }
         public Guid? UserRef { get; set; }
