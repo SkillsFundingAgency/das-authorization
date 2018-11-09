@@ -10,9 +10,15 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
     public class FeatureTogglesServiceTests : FluentTest<FeatureTogglesServiceTestsFixture>
     {
         [Test]
-        public Task GetFeatureToggle_WhenGettingFeatureToggle_ThenShouldReturnFeatureToggle()
+        public Task GetFeatureToggle_WhenFeatureToggleExistsForFeature_ThenShouldReturnFeatureToggle()
         {
-            return RunAsync(f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.FeatureToggle));
+            return RunAsync(f => f.SetFeatureToggle(), f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.FeatureToggle));
+        }
+        
+        [Test]
+        public Task GetFeatureToggle_WhenFeatureToggleDoesNotExistForFeature_ThenShouldReturnDisabledFeatureToggle()
+        {
+            return RunAsync(f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.Match<FeatureToggle>(t => t.Feature == f.Feature && t.IsEnabled == false));
         }
     }
 
@@ -27,15 +33,24 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         public FeatureTogglesServiceTestsFixture()
         {
             Feature = Feature.ProviderRelationships;
-            FeatureToggle = new FeatureToggle(Feature, false, new List<string>());
-            FeatureToggles = new List<FeatureToggle> { FeatureToggle };
-            EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = FeatureToggles };
-            FeatureToggleService = new FeatureTogglesService(EmployerFeaturesConfiguration);
+            FeatureToggles = new List<FeatureToggle>();
+            EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
         }
 
         public Task<FeatureToggle> GetFeatureToggle()
         {
+            FeatureToggleService = new FeatureTogglesService(EmployerFeaturesConfiguration);
+            
             return FeatureToggleService.GetFeatureToggle(Feature);
+        }
+
+        public FeatureTogglesServiceTestsFixture SetFeatureToggle()
+        {
+            FeatureToggle = new FeatureToggle(Feature, true, new List<string> { "foo@bar.com" });
+            FeatureToggles.Add(FeatureToggle);
+            EmployerFeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
+            
+            return this;
         }
     }
 }
