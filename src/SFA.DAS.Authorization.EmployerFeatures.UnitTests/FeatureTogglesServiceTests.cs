@@ -10,15 +10,15 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
     public class FeatureTogglesServiceTests : FluentTest<FeatureTogglesServiceTestsFixture>
     {
         [Test]
-        public Task GetFeatureToggle_WhenFeatureToggleExistsForFeature_ThenShouldReturnFeatureToggle()
+        public void GetFeatureToggle_WhenFeatureToggleExistsForFeature_ThenShouldReturnFeatureToggle()
         {
-            return RunAsync(f => f.SetFeatureToggle(), f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.FeatureToggle));
+            Run(f => f.SetFeatureToggle(), f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.FeatureToggle));
         }
         
         [Test]
-        public Task GetFeatureToggle_WhenFeatureToggleDoesNotExistForFeature_ThenShouldReturnDisabledFeatureToggle()
+        public void GetFeatureToggle_WhenFeatureToggleDoesNotExistForFeature_ThenShouldReturnDisabledFeatureToggle()
         {
-            return RunAsync(f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.Match<FeatureToggle>(t => t.Feature == f.Feature && t.IsEnabled == false));
+            Run(f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.Match<FeatureToggle>(t => t.Feature == f.Feature && t.IsEnabled == false));
         }
     }
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
         }
 
-        public Task<FeatureToggle> GetFeatureToggle()
+        public FeatureToggle GetFeatureToggle()
         {
             FeatureToggleService = new FeatureTogglesService(EmployerFeaturesConfiguration);
             

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
@@ -15,9 +14,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 configuration.FeatureToggles.SingleOrDefault(t => t.Feature == f) ?? new FeatureToggle(f, false, new List<string>()));
         }
 
-        public Task<FeatureToggle> GetFeatureToggle(Feature feature)
+        public FeatureToggle GetFeatureToggle(Feature feature)
         {
-            return Task.FromResult(_featureToggles[feature]);
+            return _featureToggles[feature];
         }
     }
 }

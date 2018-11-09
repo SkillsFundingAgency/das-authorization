@@ -15,7 +15,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
             _featureTogglesService = featureTogglesService;
         }
 
-        public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
+        public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
 
@@ -26,7 +26,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 
                 var values = authorizationContext.GetEmployerFeatureValues();
                 var feature = options.Select(o => o.ToEnum<Feature>()).Single();
-                var featureToggle = await _featureTogglesService.GetFeatureToggle(feature).ConfigureAwait(false);
+                var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
                 if (!featureToggle.IsEnabled)
                 {
@@ -38,7 +38,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 }
             }
 
-            return authorizationResult;
+            return Task.FromResult(authorizationResult);
         }
     }
 }
