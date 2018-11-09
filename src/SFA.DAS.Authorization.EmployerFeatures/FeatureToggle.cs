@@ -19,7 +19,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 
         public bool IsUserEmailWhitelisted(string userEmail)
         {
-            return UserEmailWhitelist.Any() && UserEmailWhitelist.Any(e => e.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase));
+            return !UserEmailWhitelist.Any() || UserEmailWhitelist.Any(e => e.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

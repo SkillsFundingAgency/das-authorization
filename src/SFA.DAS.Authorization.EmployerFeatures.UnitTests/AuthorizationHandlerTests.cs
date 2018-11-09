@@ -151,11 +151,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             var option = Options.Select(o => o.ToEnum<Feature>()).Single();
             var userEmailWhitelist = new List<string>();
 
-            if (isUserEmailWhitelisted)
-            {
-                userEmailWhitelist.Add(UserEmail);
-            }
-            
+            userEmailWhitelist.Add(isUserEmailWhitelisted ? UserEmail : "_");
+
             FeatureTogglesService.Setup(s => s.GetFeatureToggle(option))
                 .ReturnsAsync(new FeatureToggle(Feature.ProviderRelationships, isEnabled, userEmailWhitelist));
             
