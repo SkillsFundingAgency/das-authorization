@@ -11,7 +11,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 
         public FeatureTogglesService(EmployerFeaturesConfiguration configuration)
         {
-            _featureToggles = Enum.GetValues(typeof(Feature)).Cast<Feature>().ToDictionary(f => f, f => configuration.FeatureToggles.Single(t => t.Feature == f));
+            _featureToggles = Enum.GetValues(typeof(Feature)).Cast<Feature>().ToDictionary(f => f, f => 
+                configuration.FeatureToggles.SingleOrDefault(t => t.Feature == f) ?? new FeatureToggle(f, false, new List<string>()));
         }
 
         public Task<FeatureToggle> GetFeatureToggle(Feature feature)
