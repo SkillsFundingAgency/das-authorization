@@ -1,25 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Authorization.EmployerRoles
 {
+    //todo remove this and remap onto the api client stub when it is available
+    public interface IEmployerRolesApiClientDummy
+    {
+        Task<bool> HasRole(RoleRequest roleRequest); //what to call this - has role hides the fact we might be passing multiple roles and accepting either or - HasAnyRole? AnyRoleRequest?
+    }
+
+    //todo remove this and remap onto the api client stub when it is available
+    public class RoleRequest
+    {
+        public Guid UserRef { get; set; }
+        public long EmployerAccountId { get; set; }
+        public string[] Roles { get; set; }
+    }
+
     public class AuthorizationHandler : IAuthorizationHandler
     {
         public string Namespace => EmployerRole.Namespace;
 
-        public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
+        private readonly IEmployerRolesApiClientDummy _employerRolesApiClient;
+
+        public AuthorizationHandler(IEmployerRolesApiClientDummy employerRolesApiClient)
+        {
+            _employerRolesApiClient = employerRolesApiClient;
+        }
+
+        public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
 
             if (options.Any())
             {
+                options.EnsureNoAndOptions();
+
                 var values = authorizationContext.GetEmployerRoleValues();
 
-                //authorizationResult.AddError(new EmployerRoleNotAuthorized());
+                var roles = options.Single().Split(',');
+
+                var roleRequest = new RoleRequest {
+                    UserRef = values.UserRef,
+                    EmployerAccountId = values.AccountId,
+                    Roles = roles
+                };
+
+                var hasRole = await _employerRolesApiClient.HasRole(roleRequest);
+
+                if (!hasRole)
+                {
+                    authorizationResult.AddError(new EmployerRoleNotAuthorized());
+                }
             }
 
-            return Task.FromResult(authorizationResult);
+            return authorizationResult;
         }
     }
 }
