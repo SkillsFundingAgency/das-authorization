@@ -62,6 +62,17 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
                 f.SetAuthorizationContextValues();
             }, f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
         }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidOredEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldCallApiCorrectly()
+        {
+            return RunAsync(f =>
+            {
+                f.SetValidOredEmployerRolesOptions();
+                f.SetAuthorizationContextValues();
+                f.SetHasRole(true);
+            }, f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
+        }
     }
 
     public class EmployerRolesAuthorizationHandlerTestsFixture
@@ -89,13 +100,6 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return Handler.GetAuthorizationResult(Options, AuthorizationContext);
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetNonEmployerRolesOptions()
-        {
-            Options.AddRange(new [] { "Foo", "Bar" });
-
-            return this;
-        }
-
         public EmployerRolesAuthorizationHandlerTestsFixture SetValidSingleEmployerRolesOptions()
         {
             Options.AddRange(new [] { EmployerRole.Owner });
@@ -104,16 +108,18 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAndedOptions()
+        public EmployerRolesAuthorizationHandlerTestsFixture SetValidOredEmployerRolesOptions()
         {
-            Options.AddRange(new[] { EmployerRole.Any, EmployerRole.Owner });
+            Options.AddRange(new[] { EmployerRole.Owner + "," + EmployerRole.Transactor });
+            ExpectedRoles.Add(EmployerRole.Owner);
+            ExpectedRoles.Add(EmployerRole.Transactor);
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(Guid? userRef, long? accountId = AccountId)
+        public EmployerRolesAuthorizationHandlerTestsFixture SetAndedOptions()
         {
-            AuthorizationContext.AddEmployerRoleValues(accountId, userRef);
+            Options.AddRange(new[] { EmployerRole.Any, EmployerRole.Owner });
 
             return this;
         }
