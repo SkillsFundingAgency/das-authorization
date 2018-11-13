@@ -56,10 +56,14 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
     {
         var authorizationContext = new AuthorizationContext();
         var accountId = 123456; // e.g. From the URL querystring
+        var accountLegalEntityId = 1; // e.g. From the URL querystring
+        var ukprn = 12345678 // e.g. From the URL querystring
         var userRef = "abcdef" // e.g. From the authentication claims
-
-        authorizationContext.Set("AccountId", accountId);
-        authorizationContext.Set("USerRef", userRef);
+        var userEmail = "foo@bar.com" // e.g. From the authentication claims
+        
+        authorizationContext.AddEmployerFeatureValues(accountId, userEmail);
+        authorizationContext.AddEmployerRoleValues(accountId, userRef);
+        authorizationContext.AddProviderPermissionValues(accountLegalEntityId, ukprn);
 
         return authorizationContext;
     }
@@ -114,7 +118,7 @@ if (!authorizationResult.IsAuthorized)
 }
 ```
 
-> `AccountId` & `UserEmail` authorization context keys are required for this package.
+> `AccountId` & `UserEmail` authorization context values are required for this package.
 
 
 ### SFA.DAS.Authorization.EmployerRoles
@@ -139,7 +143,7 @@ if (!authorizationResult.IsAuthorized)
 }
 ```
 
-> `AccountId` & `UserRef` authorization context keys are required for this package.
+> `AccountId` & `UserRef` authorization context values are required for this package.
 
 ### SFA.DAS.Authorization.ProviderPermissions
 
@@ -163,7 +167,7 @@ if (!authorizationResult.IsAuthorized)
 }
 ```
 
-> `AccountLegalEntityId` & `ProviderId` authorization context keys are required for this package.
+> `AccountLegalEntityId` & `Ukprn` authorization context values are required for this package.
 
 ### MVC
 

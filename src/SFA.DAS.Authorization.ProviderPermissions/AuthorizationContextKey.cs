@@ -1,8 +1,8 @@
 ﻿namespace SFA.DAS.Authorization.ProviderPermissions
 {
-    internal static class AuthorizationContextKeys
+    public static class AuthorizationContextKey
     {
         public const string AccountLegalEntityId = "AccountLegalEntityId";
-        public const string ProviderId = "ProviderId";
+        public const string Ukprn = "Ukprn";
     }
 }

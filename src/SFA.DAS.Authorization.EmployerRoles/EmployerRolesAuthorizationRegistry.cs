@@ -6,7 +6,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
     {
         public EmployerRolesAuthorizationRegistry()
         {
-            For<IAuthorizationHandler>().Add<EmployerRolesAuthorizationHandler>();
+            For<IAuthorizationHandler>().Add<AuthorizationHandler>();
         }
     }
 }

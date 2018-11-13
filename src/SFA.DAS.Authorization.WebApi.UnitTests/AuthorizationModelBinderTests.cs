@@ -18,6 +18,7 @@ using SFA.DAS.Testing;
 namespace SFA.DAS.Authorization.WebApi.UnitTests
 {
     [TestFixture]
+    [Parallelizable]
     public class AuthorizationModelBinderTests : FluentTest<AuthorizationModelBinderTestsFixture>
     {
         [Test]
@@ -54,7 +55,7 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
         public ModelBindingContext BindingContext { get; set; }
         public IModelBinder ModelBinder { get; set; }
         public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
-        public AuthorizationContext AuthorizationContext { get; set; }
+        public IAuthorizationContext AuthorizationContext { get; set; }
 
         public AuthorizationModelBinderTestsFixture()
         {

@@ -9,19 +9,19 @@ namespace SFA.DAS.Authorization.UnitTests
     public class AuthorizationContextTests : FluentTest<AuthorizationContextTestsFixture>
     {
         [Test]
-        public void Get_WhenGettingData_ThenShouldReturnData()
+        public void Get_WhenKeyExists_ThenShouldReturnData()
         {
             Run(f => f.SetData(), f => f.GetData(), (f, d) => d.Should().Be(f.Data));
         }
 
         [Test]
-        public void Get_WhenGettingDataAndKeyDoesNotExist_ThenShouldThrowException()
+        public void Get_WhenKeyDoesNotExist_ThenShouldThrowException()
         {
             Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the authorization context"));
         }
 
         [Test]
-        public void TryGet_WhenTryingToGetDataAndKeyDoesExist_ThenShouldReturnTrueAndValueShouldNotBeNull()
+        public void TryGet_WhenKeyExists_ThenShouldReturnTrueAndValueShouldNotBeNull()
         {
             Run(f => f.SetData(), f => f.TryGetData(), (f, r) =>
             {
@@ -31,7 +31,7 @@ namespace SFA.DAS.Authorization.UnitTests
         }
 
         [Test]
-        public void TryGet_WhenTryingToGetDataAndKeyDoesNotExist_ThenShouldReturnFalseAndValueShouldBeNull()
+        public void TryGet_WhenKeyDoesNotExist_ThenShouldReturnFalseAndValueShouldBeNull()
         {
             Run(f => f.TryGetData(), (f, r) =>
             {
