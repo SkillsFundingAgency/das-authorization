@@ -43,7 +43,7 @@ namespace SFA.DAS.Authorization
             var authorizationResults = await Task.WhenAll(
                 from h in _handlers
                 let n = h.Namespace + "."
-                let hno = options.Where(o => o.StartsWith(n)).Select(o => o.Substring(n.Length)).ToList()
+                let hno = options.Where(o => o.Contains(n)).Select(o => o.Replace(n, "")).ToList()
                 select h.GetAuthorizationResult(hno, authorizationContext)).ConfigureAwait(false);
             
             return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));

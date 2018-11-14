@@ -16,7 +16,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
     {
         public Guid UserRef { get; set; }
         public long EmployerAccountId { get; set; }
-        public Role[] Roles { get; set; }
+        public List<Role> Roles { get; set; }
     }
 
     //todo remove this and remap onto the api client stub when it is available
@@ -47,13 +47,13 @@ namespace SFA.DAS.Authorization.EmployerRoles
                 options.EnsureNoAndOptions();
 
                 var values = authorizationContext.GetEmployerRoleValues();
+                var roles = options.SelectMany(o => o.Split(',')).Select(o => o.ToEnum<Role>()).ToList();
 
-                var roles = options.Single().Split(',').Select(x => (Role)Enum.Parse(typeof(Role), x.Split('.').Last()));
-
-                var roleRequest = new RoleRequest {
+                var roleRequest = new RoleRequest
+                {
                     UserRef = values.UserRef,
                     EmployerAccountId = values.AccountId,
-                    Roles = roles.ToArray()
+                    Roles = roles
                 };
 
                 var hasRole = await _employerRolesApiClient.HasRole(roleRequest);

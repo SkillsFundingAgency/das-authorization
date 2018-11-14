@@ -93,7 +93,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetValidSingleEmployerRolesOptions()
         {
-            Options.AddRange(new [] { EmployerRole.Owner });
+            Options.AddRange(new [] { EmployerRole.OwnerOption });
             ExpectedRoles.Add(Role.Owner);
 
             return this;
@@ -101,7 +101,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetValidOredEmployerRolesOptions()
         {
-            Options.AddRange(new[] { EmployerRole.Owner + "," + EmployerRole.Transactor });
+            Options.AddRange(new[] { EmployerRole.OwnerOption + "," + EmployerRole.TransactorOption });
             ExpectedRoles.Add(Role.Owner);
             ExpectedRoles.Add(Role.Transactor);
 
@@ -110,7 +110,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetAndedOptions()
         {
-            Options.AddRange(new[] { EmployerRole.Any, EmployerRole.Owner });
+            Options.AddRange(new[] { EmployerRole.AnyOption, EmployerRole.OwnerOption });
 
             return this;
         }
@@ -156,7 +156,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
                 It.Is<RoleRequest>(r =>
                     r.UserRef == UserRef &&
                     r.EmployerAccountId == AccountId &&
-                    r.Roles.Length == ExpectedRoles.Count &&
+                    r.Roles.Count == ExpectedRoles.Count &&
                     r.Roles.All(role => ExpectedRoles.Any(expectedRole => expectedRole == role)))));
 
             return this;
