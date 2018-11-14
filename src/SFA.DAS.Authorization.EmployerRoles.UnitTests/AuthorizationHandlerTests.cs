@@ -63,7 +63,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
     public class EmployerRolesAuthorizationHandlerTestsFixture
     {
         public List<string> Options { get; set; }
-        public List<string> ExpectedRoles { get; set; }
+        public List<Role> ExpectedRoles { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
         public Mock<IEmployerRolesApiClientDummy> MockEmployerRolesApiClient { get; set; }
         public AuthorizationHandler Handler { get; set; }
@@ -74,7 +74,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         public EmployerRolesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
-            ExpectedRoles = new List<string>();
+            ExpectedRoles = new List<Role>();
             AuthorizationContext = new AuthorizationContext();
             MockEmployerRolesApiClient = new Mock<IEmployerRolesApiClientDummy>();
             Handler = new AuthorizationHandler(MockEmployerRolesApiClient.Object);
@@ -88,7 +88,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         public EmployerRolesAuthorizationHandlerTestsFixture SetValidSingleEmployerRolesOptions()
         {
             Options.AddRange(new [] { EmployerRole.Owner });
-            ExpectedRoles.Add(EmployerRole.Owner);
+            ExpectedRoles.Add(Role.Owner);
 
             return this;
         }
@@ -96,8 +96,8 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         public EmployerRolesAuthorizationHandlerTestsFixture SetValidOredEmployerRolesOptions()
         {
             Options.AddRange(new[] { EmployerRole.Owner + "," + EmployerRole.Transactor });
-            ExpectedRoles.Add(EmployerRole.Owner);
-            ExpectedRoles.Add(EmployerRole.Transactor);
+            ExpectedRoles.Add(Role.Owner);
+            ExpectedRoles.Add(Role.Transactor);
 
             return this;
         }
@@ -118,7 +118,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetHasRole(bool result)
         {
-            var roles = Options.Single().Split(',');
+            var roles = Options.Single().Split(',').Select(x => Enum.Parse<Role>(x.Split('.').Last()));
 
             MockEmployerRolesApiClient.Setup(c => c.HasRole(
                     It.Is<RoleRequest>(r =>
