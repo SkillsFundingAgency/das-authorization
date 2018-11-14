@@ -26,9 +26,15 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsNotAvailable_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingAccountId_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetValidSingleEmployerRolesOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingUserRef_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        {
+            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
@@ -109,9 +115,23 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountId = AccountId)
+        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues()
         {
-            AuthorizationContext.AddEmployerRoleValues(accountId, UserRef);
+            AuthorizationContext.AddEmployerRoleValues(AccountId, UserRef);
+
+            return this;
+        }
+
+        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingAccountId()
+        {
+            AuthorizationContext.Set(AuthorizationContextKey.UserRef, UserRef);
+
+            return this;
+        }
+
+        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingUserRef()
+        {
+            AuthorizationContext.Set(AuthorizationContextKey.AccountId, AccountId);
 
             return this;
         }
@@ -130,7 +150,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return this;
         }
 
-        public void VerifyHasRole()
+        public EmployerRolesAuthorizationHandlerTestsFixture VerifyHasRole()
         {
             MockEmployerRolesApiClient.Verify(c => c.HasRole(
                 It.Is<RoleRequest>(r =>
@@ -138,6 +158,8 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
                     r.EmployerAccountId == AccountId &&
                     r.Roles.Length == ExpectedRoles.Count &&
                     r.Roles.All(role => ExpectedRoles.Any(expectedRole => expectedRole == role)))));
+
+            return this;
         }
     }
 }
