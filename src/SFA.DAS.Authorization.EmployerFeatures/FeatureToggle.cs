@@ -6,20 +6,21 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class FeatureToggle
     {
-        public virtual Feature Feature { get; protected set; }
-        public virtual bool IsEnabled { get; protected set; }
-        public virtual List<string> UserEmailWhitelist { get; protected set; } = new List<string>();
+        public Feature Feature { get; }
+        public bool IsEnabled { get; }
+        public List<FeatureToggleWhitelistItem> Whitelist { get; }
+        public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Any();
 
-        public FeatureToggle(Feature feature, bool isEnabled, List<string> userEmailWhitelist)
+        public FeatureToggle(Feature feature, bool isEnabled, List<FeatureToggleWhitelistItem> whitelist)
         {
             Feature = feature;
             IsEnabled = isEnabled;
-            UserEmailWhitelist = userEmailWhitelist;
+            Whitelist = whitelist;
         }
 
-        public bool IsUserEmailWhitelisted(string userEmail)
+        public bool IsUserWhitelisted(long accountId, string userEmail)
         {
-            return !UserEmailWhitelist.Any() || UserEmailWhitelist.Any(e => e.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase));
+            return Whitelist.Any(w => w.AccountId == accountId && (w.UserEmails == null || !w.UserEmails.Any() || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
         }
     }
 }

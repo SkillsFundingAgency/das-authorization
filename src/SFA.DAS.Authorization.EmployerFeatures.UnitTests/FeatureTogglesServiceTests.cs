@@ -46,7 +46,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public FeatureTogglesServiceTestsFixture SetFeatureToggle()
         {
-            FeatureToggle = new FeatureToggle(Feature, true, new List<string> { "foo@bar.com" });
+            FeatureToggle = new FeatureToggle(Feature, true, null);
             FeatureToggles.Add(FeatureToggle);
             EmployerFeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
             
