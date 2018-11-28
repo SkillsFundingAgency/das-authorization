@@ -32,7 +32,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 {
                     authorizationResult.AddError(new EmployerFeatureNotEnabled());
                 }
-                else if (!featureToggle.IsUserEmailWhitelisted(values.UserEmail))
+                else if (featureToggle.IsWhitelistEnabled && !featureToggle.IsUserWhitelisted(values.AccountId, values.UserEmail))
                 {
                     authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                 }
