@@ -57,11 +57,11 @@ If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` 
         "Feature": "ProviderRelationships",
         "IsEnabled": true,
         "Whitelist": [{
-            "accountId": 111111111,
-            "userEmails": ["foo1@foo.com", "foo2@foo.com"]
+            "AccountId": 111111111,
+            "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
         }, {
-           "accountId": 222222222,
-           "userEmails": ["bar1@bar.com", "bar2@bar.com"]
+           "AccountId": 222222222,
+           "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
         }]
     }]
 }
