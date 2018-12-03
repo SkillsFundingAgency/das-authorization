@@ -7,6 +7,7 @@ using SFA.DAS.Testing;
 namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 {
     [TestFixture]
+    [Parallelizable]
     public class FeatureTogglesServiceTests : FluentTest<FeatureTogglesServiceTestsFixture>
     {
         [Test]

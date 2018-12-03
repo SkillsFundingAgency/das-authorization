@@ -30,10 +30,10 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                 var values = authorizationContext.GetProviderPermissionValues();
                 var operation = options.Select(o => o.ToEnum<Operation>()).Single();
 
-                var hasPermissionRequest = new PermissionRequest
+                var hasPermissionRequest = new HasPermissionRequest
                 {
                     Ukprn = values.Ukprn,
-                    EmployerAccountLegalEntityId = values.AccountLegalEntityId,
+                    AccountLegalEntityId = values.AccountLegalEntityId,
                     Operation = operation
                 };
 

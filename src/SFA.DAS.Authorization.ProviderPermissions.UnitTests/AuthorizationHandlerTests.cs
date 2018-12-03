@@ -147,8 +147,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             var option = Options.Select(o => o.ToEnum<Operation>()).Single();
             
             ProviderRelationshipsApiClient.Setup(c => c.HasPermission(
-                    It.Is<PermissionRequest>(r => 
-                        r.EmployerAccountLegalEntityId == AccountLegalEntityId &&
+                    It.Is<HasPermissionRequest>(r => 
+                        r.AccountLegalEntityId == AccountLegalEntityId &&
                         r.Ukprn == Ukprn &&
                         r.Operation == option),
                     It.IsAny<CancellationToken>()))
