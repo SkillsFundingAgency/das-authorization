@@ -6,7 +6,7 @@ This package includes:
   * Employer features - Toggling, toggling by user whitelisting, toggling by agreement signing.
   * Employer roles - User membership checks for an account, user role checks for an account.
   * Provider permissions - Provider permission checks for an organisation.
-* Cross cutting authorization infrastructure for Mvc and WebAPi.
+* Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
 * Html helper extensions for Mvc.
 
