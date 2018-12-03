@@ -45,6 +45,28 @@ config.Filters.AddAuthorizationFilter();
 config.Filters.AddUnauthorizedAccessExceptionFilter();
 ```
 
+### Table Storage
+
+All of the `SFA.DAS.Authorization` packages bootstrap their own configuration from table storage using the `SFA.DAS.AutoConfiguration` package except for `SFA.DAS.Authorization.EmployerFeatures` which requires an instance of `SFA.DAS.Authorization.EmployerFeatures.EmployerFeaturesConfiguration` registering in your application's container.
+
+If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+
+```json
+{
+    "FeatureToggles": [{
+        "Feature": "ProviderRelationships",
+        "IsEnabled": true,
+        "Whitelist": [{
+            "accountId": 111111111,
+            "userEmails": ["foo1@foo.com", "foo2@foo.com"]
+        }, {
+           "accountId": 222222222,
+           "userEmails": ["bar1@bar.com", "bar2@bar.com"]
+        }]
+    }]
+}
+```
+
 ### Authorization context
 
 Each authorization package needs to know the context of the current operation it's running in for it to be able to do any authorization checks. For example to check if a user has access to an account then the user's ID and the account's ID are needed. For your application to be able to to provide this context to the authorization package a custom implementation of `IAuthorizationContextProvider` will need registering in your application's container:
@@ -120,7 +142,6 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountId` & `UserEmail` authorization context values are required for this package.
 
-
 ### SFA.DAS.Authorization.EmployerRoles
 
 To check if a user has the required role:
@@ -183,12 +204,20 @@ public class LegalEntitiesController : Controller
     {
         return View();
     }
-
+    
     [DasAuthorize(EmployerRoles.Owner)]
     [Route("add")]
     public ActionResult Add()
     {
-        return View();
+        return View(new AddLegalEntityViewModel());
+    }
+
+    [HttpPost]
+    [DasAuthorize(EmployerRoles.Owner)]
+    [Route("add")]
+    public ActionResult Add(AddLegalEntityViewModel model)
+    {
+        return RedirectToAction("Index");
     }
 }
 ```
@@ -196,7 +225,7 @@ public class LegalEntitiesController : Controller
 By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextModel
+public class AddLegalEntityViewModel: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }
@@ -205,7 +234,7 @@ public class AddLeglEntityCommand: IAuthorizationContextModel
 
 Html helpers can also be used that includes the synchronous methods from `IAuthorizationService`:
 
-```
+```razor
 if (@Html.IsAuthorized(EmployerRoles.Owner))
 {
     <a href="@Url.Action("Add", "LegalEntities")">Add legal entity</a>
@@ -222,14 +251,14 @@ The `DasAuthorizeAttribute` attribute can be used to check users' authorization.
 public class LegalEntitiesController : ApiController
 {
     [Route]
-    public IHttpActionResult Index()
+    public IHttpActionResult GetAll()
     {
         return Ok();
     }
 
     [DasAuthorize(EmployerRoles.Owner)]
-    [Route("add")]
-    public IHttpActionResult Add()
+    [Route]
+    public IHttpActionResult Post(PostLegalEntityModel model)
     {
         return Ok();
     }
@@ -239,7 +268,7 @@ public class LegalEntitiesController : ApiController
 By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextModel
+public class PostLegalEntityModel: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }
