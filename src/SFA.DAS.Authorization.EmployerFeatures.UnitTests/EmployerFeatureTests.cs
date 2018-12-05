@@ -9,18 +9,18 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
     public class EmployerFeatureTests
     {
         /// <remarks>
-        /// All ProviderOperation const names must match a value's name in the api client's Operation enum
+        /// All EmployerFeature const names must match a value's name in the Feature enum
         /// (but we don't need a const name for every enum value)
         /// </remarks>
         [Test]
         public void EveryEmployerFeatureNameMustMatchAFeatureEnumValue()
         {
             var nakedOperationPos = EmployerFeature.Namespace.Length + 1;
-            var providerOperations = typeof(EmployerFeature).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().Select(o => o.Substring(nakedOperationPos));
+            var employerFeatures = typeof(EmployerFeature).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().Select(o => o.Substring(nakedOperationPos));
 
-            foreach (var providerOperation in providerOperations)
+            foreach (var employerFeature in employerFeatures)
             {
-                Enum.Parse(typeof(Feature), providerOperation);
+                Enum.Parse(typeof(Feature), employerFeature);
             }
         }
     }
