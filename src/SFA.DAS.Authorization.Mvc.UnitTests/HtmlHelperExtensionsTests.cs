@@ -14,19 +14,19 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void IsAuthorized_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
-            Run(f => f.SetAuthorized(), f => f.IsAuthorized(), (f, r) => r.Should().BeTrue());
+            Test(f => f.SetAuthorized(), f => f.IsAuthorized(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
         public void IsAuthorized_WhenOperationIsUnauthorized_ThenShouldReturnFalse()
         {
-            Run(f => f.SetUnauthorized(), f => f.IsAuthorized(), (f, r) => r.Should().BeFalse());
+            Test(f => f.SetUnauthorized(), f => f.IsAuthorized(), (f, r) => r.Should().BeFalse());
         }
 
         [Test]
         public void GetAuthorizationResult_WhenGettingAuthorizationResult_ThenShouldReturnAuthorizationResult()
         {
-            Run(f => f.SetAuthorizationResult(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.AuthorizationResult));
+            Test(f => f.SetAuthorizationResult(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.BeSameAs(f.AuthorizationResult));
         }
     }
 

@@ -17,49 +17,49 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndActionIsDecoratedWithDasAuthorizeAttributeAndActionOptionsAreAuthorized_ThenShouldNotSetResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetAuthorizedActionOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Test(f => f.SetActionDasAuthorizeAttribute().SetAuthorizedActionOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndControllerIsDecoratedWithDasAuthorizeAttributeAndControllerOptionsAreAuthorized_ThenShouldNotSetResult()
         {
-            Run(f => f.SetControllerDasAuthorizeAttribute().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Test(f => f.SetControllerDasAuthorizeAttribute().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreDecoratedWithDasAuthorizeAttributeAndActionAndControllerOptionsAreAuthorized_ThenShouldNotSetResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetAuthorizedActionOptions().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Test(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetAuthorizedActionOptions().SetAuthorizedControllerOptions(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndActionIsDecoratedWithDasAuthorizeAttributeAndActionOptionsAreNotAuthorized_ThenShouldSetResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Test(f => f.SetActionDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndControllerIsDecoratedWithDasAuthorizeAttributeAndControllerOptionsAreNotAuthorized_ThenShouldSetResult()
         {
-            Run(f => f.SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Test(f => f.SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreDecoratedWithDasAuthorizeAttributeAndActionAndControllerOptionsAreNotAuthorized_ThenShouldSetResult()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Test(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreNotDecoratedWithDasAuthorizeAttribute_ThenShouldNotSetResult()
         {
-            Run(f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
+            Test(f => f.OnActionExecuting(), f => f.ActionExecutingContext.Result.Should().BeNull());
         }
 
         [Test]
         public void OnActionExecuting_WhenActionIsExecutingMoreThanOnce_ThenShouldNotGetDasAuthorizeAttributeMoreThanOnce()
         {
-            Run(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecutingMoreThanOnce(), f =>
+            Test(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnActionExecutingMoreThanOnce(), f =>
             {
                 f.ActionDescriptor.Verify(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true), Times.Once);
                 f.ActionDescriptor.Verify(d => d.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true), Times.Once);

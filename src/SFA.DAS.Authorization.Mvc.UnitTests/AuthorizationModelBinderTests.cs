@@ -18,7 +18,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
-            Run(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
+            Test(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.UserRef.Should().Be(f.UserRef);
@@ -28,7 +28,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
-            Run(f => f.BindModel(), (f, r) =>
+            Test(f => f.BindModel(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.UserRef.Should().BeNull();
