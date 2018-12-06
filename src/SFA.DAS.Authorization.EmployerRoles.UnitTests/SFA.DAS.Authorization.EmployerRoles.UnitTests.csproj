@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <TargetFrameworks>net462;netcoreapp2.0</TargetFrameworks>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
     
