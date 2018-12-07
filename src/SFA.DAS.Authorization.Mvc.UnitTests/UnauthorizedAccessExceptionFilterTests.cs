@@ -15,25 +15,25 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void OnException_WhenAnUnauthorizedAccessExceptionIsThrown_ThenShouldSetResult()
         {
-            Run(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ExceptionContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+            Test(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ExceptionContext.Result.Should().NotBeNull().And.Match<HttpStatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
         }
 
         [Test]
         public void OnException_WhenAnUnauthorizedAccessExceptionIsThrown_ThenShouldSetExceptionHandled()
         {
-            Run(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ExceptionContext.ExceptionHandled.Should().BeTrue());
+            Test(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ExceptionContext.ExceptionHandled.Should().BeTrue());
         }
 
         [Test]
         public void OnException_WhenAnExceptionIsThrown_ThenShouldNotSetResult()
         {
-            Run(f => f.SetException(), f => f.OnException(), f => f.ExceptionContext.Result.Should().NotBeNull().And.BeOfType<EmptyResult>());
+            Test(f => f.SetException(), f => f.OnException(), f => f.ExceptionContext.Result.Should().NotBeNull().And.BeOfType<EmptyResult>());
         }
 
         [Test]
         public void OnException_WhenAnExceptionIsThrown_ThenShouldNotSetExceptionHandled()
         {
-            Run(f => f.SetException(), f => f.OnException(), f => f.ExceptionContext.ExceptionHandled.Should().BeFalse());
+            Test(f => f.SetException(), f => f.OnException(), f => f.ExceptionContext.ExceptionHandled.Should().BeFalse());
         }
     }
 

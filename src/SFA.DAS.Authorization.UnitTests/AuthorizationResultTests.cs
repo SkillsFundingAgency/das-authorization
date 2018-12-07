@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Constructor_WhenConstructingAnAuthorizationResult_ThenShouldConstructAValidAuthorizationResult()
         {
-            Run(f => new AuthorizationResult(), (f, r) =>
+            Test(f => new AuthorizationResult(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeTrue();
@@ -25,7 +25,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Constructor_WhenConstructingAnAuthorizationResultWithAnError_ThenShouldConstructAnInvalidAuthorizationResult()
         {
-            Run(f => new AuthorizationResult(f.EmployerRoleNotAuthorized), (f, r) =>
+            Test(f => new AuthorizationResult(f.EmployerRoleNotAuthorized), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -36,7 +36,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Constructor_WhenConstructingAnAuthorizationResultWithErrors_ThenShouldConstructAnInvalidAuthorizationResult()
         {
-            Run(f => new AuthorizationResult(f.Errors), (f, r) =>
+            Test(f => new AuthorizationResult(f.Errors), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -47,7 +47,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void AddError_WhenAddingAnError_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized), (f, r) =>
+            Test(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -58,7 +58,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void AddError_WhenAddingAErrors_ThenShouldInvalidateAuthorizationResult()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted), (f, r) =>
+            Test(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -69,13 +69,13 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void HasError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<EmployerRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());
+            Test(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<EmployerRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
         public void HasError_WhenAnErrorOfTypeDoesNotExist_ThenShouldReturnFalse()
         {
-            Run(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
+            Test(f => new AuthorizationResult().AddError(f.EmployerRoleNotAuthorized).HasError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
         }
     }
 

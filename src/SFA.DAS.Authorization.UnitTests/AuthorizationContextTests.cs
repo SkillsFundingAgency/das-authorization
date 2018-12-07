@@ -12,19 +12,19 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Get_WhenKeyExists_ThenShouldReturnData()
         {
-            Run(f => f.SetData(), f => f.GetData(), (f, d) => d.Should().Be(f.Data));
+            Test(f => f.SetData(), f => f.GetData(), (f, d) => d.Should().Be(f.Data));
         }
 
         [Test]
         public void Get_WhenKeyDoesNotExist_ThenShouldThrowException()
         {
-            Run(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the authorization context"));
+            TestException(f => f.GetData(), (f, r) => r.Should().Throw<KeyNotFoundException>().WithMessage($"The key '{f.Key}' was not present in the authorization context"));
         }
 
         [Test]
         public void TryGet_WhenKeyExists_ThenShouldReturnTrueAndValueShouldNotBeNull()
         {
-            Run(f => f.SetData(), f => f.TryGetData(), (f, r) =>
+            Test(f => f.SetData(), f => f.TryGetData(), (f, r) =>
             {
                 r.Should().BeTrue();
                 f.Value.Should().NotBeNull().And.Be(f.Data);
@@ -34,7 +34,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void TryGet_WhenKeyDoesNotExist_ThenShouldReturnFalseAndValueShouldBeNull()
         {
-            Run(f => f.TryGetData(), (f, r) =>
+            Test(f => f.TryGetData(), (f, r) =>
             {
                 r.Should().BeFalse();
                 f.Value.Should().BeNull();
