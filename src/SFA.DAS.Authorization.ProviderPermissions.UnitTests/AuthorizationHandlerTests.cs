@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using SFA.DAS.ProviderRelationships.Api.Client;
 using SFA.DAS.ProviderRelationships.Types.Dtos;
@@ -61,12 +62,24 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
-        
+
+        [Test]
+        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldLogCorrectly()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), f => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.ProviderPermissions.AuthorizationHandler' for options 'CreateCohort' with successful result"));
+        }
+
         [Test]
         public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderPermissionNotGranted>()));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldLogCorrectly()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.ProviderPermissions.AuthorizationHandler' for options 'CreateCohort' with results 'SFA.DAS.Authorization.ProviderPermissions.ProviderPermissionNotGranted'"));
         }
     }
 
@@ -76,6 +89,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
+        public Mock<ILogger> Logger { get; set; }
         
         public const long AccountLegalEntityId = 22L;
         public const long Ukprn = 333L;
@@ -85,7 +99,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             ProviderRelationshipsApiClient = new Mock<IProviderRelationshipsApiClient>();
-            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object);
+            Logger = new Mock<ILogger>();
+            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object, Logger.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -155,6 +170,11 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
                 .ReturnsAsync(result);
             
             return this;
+        }
+
+        public void VerifyLoggerInfoCall(string message)
+        {
+            Logger.Verify(l => l.Info(It.Is<string>(s => s == message)));
         }
     }
 }

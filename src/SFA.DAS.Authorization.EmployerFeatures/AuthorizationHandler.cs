@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
@@ -9,10 +10,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures
         public string Namespace => EmployerFeature.Namespace;
         
         private readonly IFeatureTogglesService _featureTogglesService;
+        private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService featureTogglesService)
+        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger logger)
         {
             _featureTogglesService = featureTogglesService;
+            _logger = logger;
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -37,6 +40,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                     authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                 }
             }
+            
+            var logResult = authorizationResult.Errors.Any() ? $"results '{authorizationResult.Errors.Select(o => o.GetType()).ToCsvString()}'" : "successful result";
+            _logger.Info($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with {logResult}");
 
             return Task.FromResult(authorizationResult);
         }

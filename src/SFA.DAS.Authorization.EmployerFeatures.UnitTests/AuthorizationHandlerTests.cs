@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using NLog;
 using NUnit.Framework;
 using SFA.DAS.Testing;
 
@@ -60,6 +61,13 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         }
 
         [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabled_ThenShouldLogCorrectly()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true), f => f.GetAuthorizationResult(), (f, r) 
+                => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.EmployerFeatures.AuthorizationHandler' for options 'ProviderRelationships' with successful result"));
+        }
+
+        [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
@@ -78,6 +86,13 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureNotEnabled>()));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsNotEnabled_ThenShouldLogCorrectly()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(false), f => f.GetAuthorizationResult(), (f, r) 
+                => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.EmployerFeatures.AuthorizationHandler' for options 'ProviderRelationships' with results 'SFA.DAS.Authorization.EmployerFeatures.EmployerFeatureNotEnabled'"));
         }
 
         [Test]
@@ -101,6 +116,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IFeatureTogglesService> FeatureTogglesService { get; set; }
+        public Mock<ILogger> Logger { get; set; }
         
         public const long AccountId = 1;
         public const string UserEmail = "foo@bar.com";
@@ -110,7 +126,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             FeatureTogglesService = new Mock<IFeatureTogglesService>();
-            Handler = new AuthorizationHandler(FeatureTogglesService.Object);
+            Logger = new Mock<ILogger>();
+            Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -187,6 +204,11 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle(Feature.ProviderRelationships, isEnabled, whitelist));
             
             return this;
+        }
+
+        public void VerifyLoggerInfoCall(string message)
+        {
+            Logger.Verify(l => l.Info(It.Is<string>(s => s == message)));
         }
     }
 }
