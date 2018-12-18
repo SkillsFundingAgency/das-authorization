@@ -6,7 +6,7 @@ This package includes:
   * Employer features - Toggling, toggling by user whitelisting, toggling by agreement signing.
   * Employer roles - User membership checks for an account, user role checks for an account.
   * Provider permissions - Provider permission checks for an organisation.
-* Cross cutting authorization infrastructure for Mvc and WebAPi.
+* Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
 * Html helper extensions for Mvc.
 
@@ -43,6 +43,28 @@ filters.AddUnauthorizedAccessExceptionFilter();
 config.Services.UseAuthorizationModelBinder();
 config.Filters.AddAuthorizationFilter();
 config.Filters.AddUnauthorizedAccessExceptionFilter();
+```
+
+### Table Storage
+
+All of the `SFA.DAS.Authorization` packages bootstrap their own configuration from table storage using the `SFA.DAS.AutoConfiguration` package except for `SFA.DAS.Authorization.EmployerFeatures` which requires an instance of `SFA.DAS.Authorization.EmployerFeatures.EmployerFeaturesConfiguration` registering in your application's container.
+
+If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+
+```json
+{
+    "FeatureToggles": [{
+        "Feature": "ProviderRelationships",
+        "IsEnabled": true,
+        "Whitelist": [{
+            "AccountId": 111111111,
+            "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
+        }, {
+           "AccountId": 222222222,
+           "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
+        }]
+    }]
+}
 ```
 
 ### Authorization context
@@ -120,7 +142,6 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountId` & `UserEmail` authorization context values are required for this package.
 
-
 ### SFA.DAS.Authorization.EmployerRoles
 
 To check if a user has the required role:
@@ -183,12 +204,20 @@ public class LegalEntitiesController : Controller
     {
         return View();
     }
-
+    
     [DasAuthorize(EmployerRoles.Owner)]
     [Route("add")]
     public ActionResult Add()
     {
-        return View();
+        return View(new AddLegalEntityViewModel());
+    }
+
+    [HttpPost]
+    [DasAuthorize(EmployerRoles.Owner)]
+    [Route("add")]
+    public ActionResult Add(AddLegalEntityViewModel model)
+    {
+        return RedirectToAction("Index");
     }
 }
 ```
@@ -196,7 +225,7 @@ public class LegalEntitiesController : Controller
 By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextModel
+public class AddLegalEntityViewModel: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }
@@ -205,7 +234,7 @@ public class AddLeglEntityCommand: IAuthorizationContextModel
 
 Html helpers can also be used that includes the synchronous methods from `IAuthorizationService`:
 
-```
+```razor
 if (@Html.IsAuthorized(EmployerRoles.Owner))
 {
     <a href="@Url.Action("Add", "LegalEntities")">Add legal entity</a>
@@ -222,14 +251,14 @@ The `DasAuthorizeAttribute` attribute can be used to check users' authorization.
 public class LegalEntitiesController : ApiController
 {
     [Route]
-    public IHttpActionResult Index()
+    public IHttpActionResult GetAll()
     {
         return Ok();
     }
 
     [DasAuthorize(EmployerRoles.Owner)]
-    [Route("add")]
-    public IHttpActionResult Add()
+    [Route]
+    public IHttpActionResult Post(PostLegalEntityModel model)
     {
         return Ok();
     }
@@ -239,7 +268,7 @@ public class LegalEntitiesController : ApiController
 By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
 
 ```c#
-public class AddLeglEntityCommand: IAuthorizationContextModel
+public class PostLegalEntityModel: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }

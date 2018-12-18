@@ -18,13 +18,13 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
         [Test]
         public void OnException_WhenAnUnauthorizedAccessExceptionIsThrown_ThenShouldSetResponse()
         {
-            Run(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ActionExecutedContext.Response.Should().NotBeNull().And.Match<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.Forbidden));
+            Test(f => f.SetUnauthorizedAccessException(), f => f.OnException(), f => f.ActionExecutedContext.Response.Should().NotBeNull().And.Match<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.Forbidden));
         }
 
         [Test]
         public void OnException_WhenAnExceptionIsThrown_ThenShouldNotSetResponse()
         {
-            Run(f => f.SetException(), f => f.OnException(), f => f.ActionExecutedContext.Response.Should().BeNull());
+            Test(f => f.SetException(), f => f.OnException(), f => f.ActionExecutedContext.Response.Should().BeNull());
         }
     }
 

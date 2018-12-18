@@ -18,61 +18,61 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Authorize_WhenOperationIsAuthorized_ThenShouldNotThrowException()
         {
-            Run(f => f.SetAuthorizedOptions(), f => f.Authorize(), f => {});
+            Test(f => f.SetAuthorizedOptions(), f => f.Authorize(), f => {});
         }
         
         [Test]
         public void Authorize_WhenOperationIsUnauthorized_ThenShouldThrowException()
         {
-            Run(f => f.SetUnauthorizedOptions(), f => f.Authorize(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
+            TestException(f => f.SetUnauthorizedOptions(), f => f.Authorize(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
         }
         
         [Test]
         public Task AuthorizeAsync_WhenOperationIsAuthorized_ThenShouldNotThrowException()
         {
-            return RunAsync(f => f.SetAuthorizedOptions(), f => f.AuthorizeAsync(), f => {});
+            return TestAsync(f => f.SetAuthorizedOptions(), f => f.AuthorizeAsync(), f => {});
         }
         
         [Test]
         public Task AuthorizeAsync_WhenOperationIsUnauthorized_ThenShouldThrowException()
         {
-            return RunAsync(f => f.SetUnauthorizedOptions(), f => f.AuthorizeAsync(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
+            return TestExceptionAsync(f => f.SetUnauthorizedOptions(), f => f.AuthorizeAsync(), (f, r) => r.Should().Throw<UnauthorizedAccessException>());
         }
         
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
-            return RunAsync(f => f.SetAuthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeTrue());
+            return TestAsync(f => f.SetAuthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsUnauthorized_ThenShouldReturnTrue()
         {
-            return RunAsync(f => f.SetUnauthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeFalse());
+            return TestAsync(f => f.SetUnauthorizedOptions(), f => f.IsAuthorizedAsync(), (f, r) => r.Should().BeFalse());
         }
 
         [Test]
         public void IsAuthorized_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
-            Run(f => f.SetAuthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeTrue());
+            Test(f => f.SetAuthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeTrue());
         }
 
         [Test]
         public void IsAuthorized_WhenOperationIsUnauthorized_ThenShouldReturnTrue()
         {
-            Run(f => f.SetUnauthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeFalse());
+            Test(f => f.SetUnauthorizedOptions(), f => f.IsAuthorized(), (f, r) => r.Should().BeFalse());
         }
 
         [Test]
         public Task GetAuthorizationResultAsync_WhenOperationIsAuthorized_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return TestAsync(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResultAsync_WhenOperationIsUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
         {
-            return RunAsync(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) =>
+            return TestAsync(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResultAsync(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
@@ -83,13 +83,13 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void GetAuthorizationResult_WhenOperationIsAuthorized_ThenShouldReturnValidAuthorizationResult()
         {
-            Run(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            Test(f => f.SetAuthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public void GetAuthorizationResult_WhenOperationIsUnauthorized_ThenShouldReturnInvalidAuthorizationResult()
         {
-            Run(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) =>
+            Test(f => f.SetUnauthorizedOptions(), f => f.GetAuthorizationResult(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();

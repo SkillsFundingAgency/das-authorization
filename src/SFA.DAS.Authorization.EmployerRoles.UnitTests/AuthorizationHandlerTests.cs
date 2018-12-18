@@ -16,52 +16,52 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return TestAsync(f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenAndedOptionsAreAvailable_ThenShouldThrowNotImplementedException()
         {
-            return RunAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
+            return TestExceptionAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingAccountId_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingUserRef_ThenShouldThrowAuthorizationContextKeyNotFoundException()
         {
-            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldReturnValidAuthorizationResult()
         {
-            return RunAsync(f =>f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
+            return TestAsync(f =>f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
                 f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValidAndHasRoleReturnsFalse_ThenShouldReturnErrorInAuthorizationResult()
         {
-            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(false),
+            return TestAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(false),
                 f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false && r2.Errors.Count() == 1 && r2.HasError<EmployerRoleNotAuthorized>()));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldCallApiCorrectly()
         {
-            return RunAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues(), 
+            return TestAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues(), 
                 f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidOredEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldCallApiCorrectly()
         {
-            return RunAsync(f => f.SetValidOredEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
+            return TestAsync(f => f.SetValidOredEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
                 f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
         }
     }
@@ -138,7 +138,7 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 
         public EmployerRolesAuthorizationHandlerTestsFixture SetHasRole(bool result)
         {
-            var roles = Options.Single().Split(',').Select(x => Enum.Parse<Role>(x.Split('.').Last()));
+            var roles = Options.Single().Split(',').Select(x => (Role)Enum.Parse(typeof(Role), x.Split('.').Last()));
 
             MockEmployerRolesApiClient.Setup(c => c.HasRole(
                     It.Is<RoleRequest>(r =>

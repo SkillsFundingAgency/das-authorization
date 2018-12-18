@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void Constructor_WhenConstructingADasAuthorizeAttributeWithOptions_ThenShouldConstructADasAuthorizeAttribute()
         {
-            Run(f => new DasAuthorizeAttribute(f.Options), (f, r) =>
+            Test(f => new DasAuthorizeAttribute(f.Options), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.Options.Should().BeSameAs(f.Options);
@@ -23,7 +23,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void Constructor_WhenConstructingADasAuthorizeAttributeWithNullOptions_ThenShouldThrowAnException()
         {
-            Run(f => new DasAuthorizeAttribute(null), (f, r) => r.Should().Throw<ArgumentNullException>());
+            TestException(f => new DasAuthorizeAttribute(null), (f, r) => r.Should().Throw<ArgumentNullException>());
         }
     }
 

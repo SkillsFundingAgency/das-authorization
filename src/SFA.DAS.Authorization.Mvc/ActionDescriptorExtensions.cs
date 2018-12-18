@@ -1,5 +1,4 @@
-﻿#if NET462
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -25,4 +24,3 @@ namespace SFA.DAS.Authorization.Mvc
         }
     }
 }
-#endif
