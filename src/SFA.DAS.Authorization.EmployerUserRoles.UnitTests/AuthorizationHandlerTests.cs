@@ -10,7 +10,7 @@ using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerAccounts.Types.Models;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
+namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests
 {
     [TestFixture]
     [Parallelizable]

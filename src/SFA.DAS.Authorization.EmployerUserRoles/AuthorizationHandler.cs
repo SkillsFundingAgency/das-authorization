@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerAccounts.Types.Models;
 
-namespace SFA.DAS.Authorization.EmployerRoles
+namespace SFA.DAS.Authorization.EmployerUserRoles
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {

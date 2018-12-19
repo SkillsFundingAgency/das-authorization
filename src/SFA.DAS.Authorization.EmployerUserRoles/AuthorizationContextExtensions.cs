@@ -1,6 +1,6 @@
 using System;
 
-namespace SFA.DAS.Authorization.EmployerRoles
+namespace SFA.DAS.Authorization.EmployerUserRoles
 {
     public static class AuthorizationContextExtensions
     {

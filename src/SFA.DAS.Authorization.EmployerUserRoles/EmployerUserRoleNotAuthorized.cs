@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Authorization.EmployerRoles
+﻿namespace SFA.DAS.Authorization.EmployerUserRoles
 {
     public class EmployerUserRoleNotAuthorized : AuthorizationError
     {

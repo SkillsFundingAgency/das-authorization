@@ -3,7 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.EmployerAccounts.Types.Models;
 
-namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
+namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests
 {
     [TestFixture]
     [Parallelizable]
