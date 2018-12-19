@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    
+<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TargetFramework>netstandard2.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        
+
         <Authors>DAS</Authors>
-        <Description>Employer roles integration for SFA.DAS.Authorization</Description>
+        <Description>Employer user roles integration for SFA.DAS.Authorization</Description>
         <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
 
@@ -19,7 +19,7 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
         <PackageReference Include="SFA.DAS.EmployerAccounts.Api.Client" Version="0.10.3" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>
