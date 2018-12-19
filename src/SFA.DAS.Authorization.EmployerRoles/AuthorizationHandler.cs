@@ -1,41 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerAccounts.Api.Client;
+using SFA.DAS.EmployerAccounts.Types.Models;
 
 namespace SFA.DAS.Authorization.EmployerRoles
 {
-    //todo remove this and remap onto the api client stub when it is available
-    public interface IEmployerRolesApiClientDummy
-    {
-        Task<bool> HasRole(RoleRequest roleRequest); //what to call this - has role hides the fact we might be passing multiple roles and accepting either or - HasAnyRole? AnyRoleRequest?
-    }
-
-    //todo remove this and remap onto the api client stub when it is available
-    public class RoleRequest
-    {
-        public Guid UserRef { get; set; }
-        public long EmployerAccountId { get; set; }
-        public List<Role> Roles { get; set; }
-    }
-
-    //todo remove this and remap onto the api client stub when it is available
-    public enum Role
-    {
-        Owner = 1,
-        Transactor = 2,
-        Viewer = 3
-    }
-
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => EmployerRole.Namespace;
+        public string Namespace => EmployerUserRole.Namespace;
 
-        private readonly IEmployerRolesApiClientDummy _employerRolesApiClient;
+        private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
 
-        public AuthorizationHandler(IEmployerRolesApiClientDummy employerRolesApiClient)
+        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient)
         {
-            _employerRolesApiClient = employerRolesApiClient;
+            _employerAccountsApiClient = employerAccountsApiClient;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -46,21 +26,36 @@ namespace SFA.DAS.Authorization.EmployerRoles
             {
                 options.EnsureNoAndOptions();
 
-                var values = authorizationContext.GetEmployerRoleValues();
-                var roles = options.SelectMany(o => o.Split(',')).Select(o => o.ToEnum<Role>()).ToList();
-
-                var roleRequest = new RoleRequest
+                var values = authorizationContext.GetEmployerUserRoleValues();
+                var isUserInRole = false;
+                
+                if (options.Contains(EmployerUserRole.AnyOption))
                 {
-                    UserRef = values.UserRef,
-                    EmployerAccountId = values.AccountId,
-                    Roles = roles
-                };
+                    var isUserInAnyRoleRequest = new IsUserInAnyRoleRequest
+                    {
+                        AccountId = values.AccountId,
+                        UserRef = values.UserRef
+                    };
 
-                var hasRole = await _employerRolesApiClient.HasRole(roleRequest);
-
-                if (!hasRole)
+                    isUserInRole = await _employerAccountsApiClient.IsUserInAnyRole(isUserInAnyRoleRequest, CancellationToken.None).ConfigureAwait(false);
+                }
+                else
                 {
-                    authorizationResult.AddError(new EmployerRoleNotAuthorized());
+                    var roles = options.SelectMany(o => o.Split(',')).Select(o => o.ToEnum<UserRole>()).ToHashSet();
+                    
+                    var isUserInRoleRequest = new IsUserInRoleRequest
+                    {
+                        AccountId = values.AccountId,
+                        UserRef = values.UserRef,
+                        Roles = roles
+                    };
+                    
+                    isUserInRole = await _employerAccountsApiClient.IsUserInRole(isUserInRoleRequest, CancellationToken.None).ConfigureAwait(false);
+                }
+
+                if (!isUserInRole)
+                {
+                    authorizationResult.AddError(new EmployerUserRoleNotAuthorized());
                 }
             }
 

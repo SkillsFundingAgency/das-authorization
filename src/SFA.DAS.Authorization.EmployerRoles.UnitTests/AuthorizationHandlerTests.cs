@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerAccounts.Api.Client;
+using SFA.DAS.EmployerAccounts.Types.Models;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class AuthorizationHandlerTests : FluentTest<EmployerRolesAuthorizationHandlerTestsFixture>
+    public class AuthorizationHandlerTests : FluentTest<EmployerUserRolesAuthorizationHandlerTestsFixture>
     {
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
         {
             return TestAsync(f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
@@ -26,64 +29,74 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingAccountId_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValuesMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndAuthorizationContextIsMissingUserRef_ThenShouldThrowAuthorizationContextKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingUserRef_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+        
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidAccountId_ThenShouldThrowInvalidOperationException()
+        {
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(null, Guid.NewGuid()), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
+        }
+        
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidUserRef_ThenShouldThrowInvalidOperationException()
+        {
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(1L, null), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldReturnValidAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndUserIsInRole_ThenShouldReturnValidAuthorizationResult()
         {
-            return TestAsync(f =>f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
-                f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return TestAsync(f =>f.SetOption().SetAuthorizationContextValues().SetUserIsInRole(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValidAndHasRoleReturnsFalse_ThenShouldReturnErrorInAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndUserIsNotInRole_ThenShouldReturnErrorInAuthorizationResult()
         {
-            return TestAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(false),
-                f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false && r2.Errors.Count() == 1 && r2.HasError<EmployerRoleNotAuthorized>()));
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetUserIsInRole(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false && r2.Errors.Count() == 1 && r2.HasError<EmployerUserRoleNotAuthorized>()));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidSingleEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldCallApiCorrectly()
+        public Task GetAuthorizationResult_WhenAnyOptionIsAvailableAndContextIsAvailableAndUserIsInAnyRole_ThenShouldReturnValidAuthorizationResult()
         {
-            return TestAsync(f => f.SetValidSingleEmployerRolesOptions().SetAuthorizationContextValues(), 
-                f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
+            return TestAsync(f =>f.SetAnyOption().SetAuthorizationContextValues().SetUserIsInAnyRole(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenGettingAuthorizationResultAndValidOredEmployerRoleOptionsAreAvailableAndEmployerRoleContextIsValid_ThenShouldCallApiCorrectly()
+        public Task GetAuthorizationResult_WhenAnyOptionIsAvailableAndContextIsAvailableAndUserIsNotInAnyRole_ThenShouldReturnErrorInAuthorizationResult()
         {
-            return TestAsync(f => f.SetValidOredEmployerRolesOptions().SetAuthorizationContextValues().SetHasRole(true),
-                f => f.GetAuthorizationResult(), f => f.VerifyHasRole());
+            return TestAsync(f => f.SetAnyOption().SetAuthorizationContextValues().SetUserIsInAnyRole(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false && r2.Errors.Count() == 1 && r2.HasError<EmployerUserRoleNotAuthorized>()));
         }
     }
 
-    public class EmployerRolesAuthorizationHandlerTestsFixture
+    public class EmployerUserRolesAuthorizationHandlerTestsFixture
     {
         public List<string> Options { get; set; }
-        public List<Role> ExpectedRoles { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
-        public Mock<IEmployerRolesApiClientDummy> MockEmployerRolesApiClient { get; set; }
+        public Mock<IEmployerAccountsApiClient> EmployerAccountsApiClient { get; set; }
         public AuthorizationHandler Handler { get; set; }
 
         public const long AccountId = 112L;
-        public readonly Guid UserRef = Guid.NewGuid();
+        public static readonly Guid UserRef = Guid.NewGuid();
 
-        public EmployerRolesAuthorizationHandlerTestsFixture()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
-            ExpectedRoles = new List<Role>();
             AuthorizationContext = new AuthorizationContext();
-            MockEmployerRolesApiClient = new Mock<IEmployerRolesApiClientDummy>();
-            Handler = new AuthorizationHandler(MockEmployerRolesApiClient.Object);
+            EmployerAccountsApiClient = new Mock<IEmployerAccountsApiClient>();
+            Handler = new AuthorizationHandler(EmployerAccountsApiClient.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -91,73 +104,78 @@ namespace SFA.DAS.Authorization.EmployerRoles.UnitTests
             return Handler.GetAuthorizationResult(Options, AuthorizationContext);
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetValidSingleEmployerRolesOptions()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAndedOptions()
         {
-            Options.AddRange(new [] { EmployerRole.OwnerOption });
-            ExpectedRoles.Add(Role.Owner);
+            Options.AddRange(new[] { EmployerUserRole.OwnerOption, EmployerUserRole.TransactorOption });
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetValidOredEmployerRolesOptions()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetOption()
         {
-            Options.AddRange(new[] { EmployerRole.OwnerOption + "," + EmployerRole.TransactorOption });
-            ExpectedRoles.Add(Role.Owner);
-            ExpectedRoles.Add(Role.Transactor);
+            Options.AddRange(new[] { EmployerUserRole.OwnerOption + "," + EmployerUserRole.TransactorOption });
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAndedOptions()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAnyOption()
         {
-            Options.AddRange(new[] { EmployerRole.AnyOption, EmployerRole.OwnerOption });
+            Options.AddRange(new[] { EmployerUserRole.AnyOption });
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues()
         {
-            AuthorizationContext.AddEmployerRoleValues(AccountId, UserRef);
+            AuthorizationContext.AddEmployerUserRoleValues(AccountId, UserRef);
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingAccountId()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountId, Guid? userRef)
+        {
+            AuthorizationContext.AddEmployerUserRoleValues(accountId, userRef);
+
+            return this;
+        }
+
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingAccountId()
         {
             AuthorizationContext.Set(AuthorizationContextKey.UserRef, UserRef);
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingUserRef()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValuesMissingUserRef()
         {
             AuthorizationContext.Set(AuthorizationContextKey.AccountId, AccountId);
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture SetHasRole(bool result)
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetUserIsInRole(bool result)
         {
-            var roles = Options.Single().Split(',').Select(x => (Role)Enum.Parse(typeof(Role), x.Split('.').Last()));
+            var roles = Options.Single().Split(',').Select(x => (UserRole)Enum.Parse(typeof(UserRole), x.Split('.').Last()));
 
-            MockEmployerRolesApiClient.Setup(c => c.HasRole(
-                    It.Is<RoleRequest>(r =>
+            EmployerAccountsApiClient.Setup(c => c.IsUserInRole(
+                    It.Is<IsUserInRoleRequest>(r =>
+                        r.AccountId == AccountId &&
                         r.UserRef == UserRef &&
-                        r.EmployerAccountId == AccountId &&
-                        r.Roles.SequenceEqual(roles))))
+                        r.Roles.SequenceEqual(roles)),
+                    CancellationToken.None))
                 .ReturnsAsync(result);
 
             return this;
         }
 
-        public EmployerRolesAuthorizationHandlerTestsFixture VerifyHasRole()
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetUserIsInAnyRole(bool result)
         {
-            MockEmployerRolesApiClient.Verify(c => c.HasRole(
-                It.Is<RoleRequest>(r =>
-                    r.UserRef == UserRef &&
-                    r.EmployerAccountId == AccountId &&
-                    r.Roles.Count == ExpectedRoles.Count &&
-                    r.Roles.All(role => ExpectedRoles.Any(expectedRole => expectedRole == role)))));
+            EmployerAccountsApiClient.Setup(c => c.IsUserInAnyRole(
+                    It.Is<IsUserInAnyRoleRequest>(r =>
+                        r.AccountId == AccountId &&
+                        r.UserRef == UserRef),
+                    CancellationToken.None))
+                .ReturnsAsync(result);
 
             return this;
         }

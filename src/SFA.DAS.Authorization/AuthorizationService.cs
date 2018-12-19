@@ -46,7 +46,9 @@ namespace SFA.DAS.Authorization
                 let hno = options.Where(o => o.Contains(n)).Select(o => o.Replace(n, "")).ToList()
                 select h.GetAuthorizationResult(hno, authorizationContext)).ConfigureAwait(false);
             
-            return new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
+            var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
+            
+            return authorizationResult;
         }
 
         public bool IsAuthorized(params string[] options)
