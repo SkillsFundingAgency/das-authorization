@@ -21,11 +21,21 @@ namespace SFA.DAS.Authorization.Mvc
             if (dasAuthorizeAttributes.Any())
             {
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
-                var isAuthorized = _authorizationService().IsAuthorized(options);
-
-                if (!isAuthorized)
+                try
                 {
-                    filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                    var isAuthorized = _authorizationService().IsAuthorized(options);
+                
+
+                    if (!isAuthorized)
+                    {
+                        filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
         }
