@@ -71,6 +71,14 @@ namespace SFA.DAS.Authorization.TestHarness.Controllers
             return View();
         }
 
+        [DasAuthorize(EmployerFeatures.EmployerFeature.ProviderRelationships)]
+        public ActionResult DasAuthorizeEmployerFeaturesProviderRelationships()
+        {
+            ViewBag.Message = "DasAuthorizeEmployerFeaturesProviderRelationships";
+
+            return View("GenericAuthorizationLandingPage");
+        }
+
         public async Task<ActionResult> AutoLogin()
         {
             const string username = "test@example.com";

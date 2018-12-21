@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.TestHarness.Handlers;
+﻿using SFA.DAS.Authorization.EmployerFeatures;
+using SFA.DAS.Authorization.TestHarness.Handlers;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
@@ -7,9 +8,12 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
     {
         public TestHarnessAuthorizationRegistry()
         {
-            For<IAuthorizationHandler>().Use<TestHarnessAuthorizationHandler>();
-            //For<Func<IAuthorizationService>>().Use(c => c.GetInstance<IAuthorizationService>());
             For<IAuthorizationContextProvider>().Use<TestHarnessAuthorizationContextProvider>();
+
+            //For<IAuthorizationHandler>().Use<TestHarnessAuthorizationHandler>();
+            IncludeRegistry<EmployerFeaturesAuthorizationRegistry>();
+            //For<IAuthorizationHandler>().Use<EmployerRoles.AuthorizationHandler>();
+            //For<IAuthorizationHandler>().Use<ProviderPermissions.AuthorizationHandler>();
         }
     }
 }
