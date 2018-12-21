@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using SFA.DAS.EmployerAccounts.Api.Client;
+using StructureMap;
 
 namespace SFA.DAS.Authorization.EmployerUserRoles
 {
@@ -6,6 +7,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
     {
         public EmployerUserRolesAuthorizationRegistry()
         {
+            IncludeRegistry<EmployerAccountsApiClientRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
         }
     }
