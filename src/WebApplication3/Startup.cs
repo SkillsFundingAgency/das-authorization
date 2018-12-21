@@ -1,8 +1,9 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using SFA.DAS.Authorization.TestHarness;
 
-[assembly: OwinStartupAttribute(typeof(WebApplication3.Startup))]
-namespace WebApplication3
+[assembly: OwinStartup(typeof(Startup))]
+namespace SFA.DAS.Authorization.TestHarness
 {
     public partial class Startup
     {

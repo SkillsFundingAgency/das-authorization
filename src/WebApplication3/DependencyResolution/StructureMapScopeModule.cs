@@ -1,7 +1,7 @@
-namespace WebApplication3.DependencyResolution {
+namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
     using System.Web;
 
-    using WebApplication3.App_Start;
+    using SFA.DAS.Authorization.TestHarness.App_Start;
 
     using StructureMap.Web.Pipeline;
 

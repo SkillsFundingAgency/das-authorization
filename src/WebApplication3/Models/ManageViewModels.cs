@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace WebApplication3.Models
+namespace SFA.DAS.Authorization.TestHarness.Models
 {
     public class IndexViewModel
     {

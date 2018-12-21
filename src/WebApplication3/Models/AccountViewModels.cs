@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication3.Models
+namespace SFA.DAS.Authorization.TestHarness.Models
 {
     public class ExternalLoginConfirmationViewModel
     {

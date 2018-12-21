@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace WebApplication3
+namespace SFA.DAS.Authorization.TestHarness
 {
     public class BundleConfig
     {

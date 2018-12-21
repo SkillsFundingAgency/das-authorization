@@ -15,19 +15,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using WebApplication3.App_Start;
+using SFA.DAS.Authorization.TestHarness.App_Start;
 
 using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(StructuremapMvc), "Start")]
 [assembly: ApplicationShutdownMethod(typeof(StructuremapMvc), "End")]
 
-namespace WebApplication3.App_Start {
+namespace SFA.DAS.Authorization.TestHarness.App_Start {
 	using System.Web.Mvc;
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 	using StructureMap;
-    using WebApplication3.DependencyResolution;
+    using SFA.DAS.Authorization.TestHarness.DependencyResolution;
 
     public static class StructuremapMvc {
         #region Public Properties

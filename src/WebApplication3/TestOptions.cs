@@ -1,4 +1,4 @@
-﻿namespace WebApplication3
+﻿namespace SFA.DAS.Authorization.TestHarness
 {
     public static class TestOptions
     {

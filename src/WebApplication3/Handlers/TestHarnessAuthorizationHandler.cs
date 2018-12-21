@@ -2,9 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Authorization;
 
-namespace WebApplication3.Handlers
+namespace SFA.DAS.Authorization.TestHarness.Handlers
 {
     public class TestHarnessAuthorizationHandler : IAuthorizationHandler
     {

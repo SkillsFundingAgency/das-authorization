@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WebApplication3.DependencyResolution {
+namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
     using System;
     using System.Web.Mvc;
     using StructureMap;

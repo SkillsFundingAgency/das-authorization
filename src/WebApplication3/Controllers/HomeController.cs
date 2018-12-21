@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using SFA.DAS.Authorization.Mvc;
-using WebApplication3.Models;
+using SFA.DAS.Authorization.TestHarness.Models;
 
-namespace WebApplication3.Controllers
+namespace SFA.DAS.Authorization.TestHarness.Controllers
 {
     public class HomeController : Controller
     {

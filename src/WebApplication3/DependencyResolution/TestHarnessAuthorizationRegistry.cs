@@ -1,8 +1,7 @@
-﻿using SFA.DAS.Authorization;
+﻿using SFA.DAS.Authorization.TestHarness.Handlers;
 using StructureMap;
-using WebApplication3.Handlers;
 
-namespace WebApplication3.DependencyResolution
+namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
 {
     public class TestHarnessAuthorizationRegistry : Registry
     {

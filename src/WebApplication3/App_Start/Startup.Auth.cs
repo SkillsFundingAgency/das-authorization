@@ -3,11 +3,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Owin;
-using WebApplication3.Models;
+using SFA.DAS.Authorization.TestHarness.Models;
 
-namespace WebApplication3
+namespace SFA.DAS.Authorization.TestHarness
 {
     public partial class Startup
     {

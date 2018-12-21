@@ -1,6 +1,4 @@
-﻿using SFA.DAS.Authorization;
-
-namespace WebApplication3.Handlers
+﻿namespace SFA.DAS.Authorization.TestHarness.Handlers
 {
     public class TestAuthorizationError : AuthorizationError
     {

@@ -1,8 +1,7 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using SFA.DAS.Authorization.Mvc;
 
-namespace WebApplication3
+namespace SFA.DAS.Authorization.TestHarness
 {
     public class FilterConfig
     {

@@ -17,8 +17,9 @@
 
 
 using SFA.DAS.Authorization;
+using SFA.DAS.Authorization.TestHarness.DependencyResolution;
 
-namespace WebApplication3.DependencyResolution {
+namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
     using StructureMap;
 	
     public static class IoC {
