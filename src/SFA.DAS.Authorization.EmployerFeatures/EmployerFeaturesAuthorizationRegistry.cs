@@ -1,6 +1,5 @@
 ﻿using StructureMap;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {

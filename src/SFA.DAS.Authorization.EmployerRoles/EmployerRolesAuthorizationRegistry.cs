@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.EmployerRoles

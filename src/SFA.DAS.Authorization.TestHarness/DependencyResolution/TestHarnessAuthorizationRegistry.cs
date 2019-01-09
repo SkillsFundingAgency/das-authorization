@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using NLog;
+﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerRoles;
 using SFA.DAS.Authorization.ProviderPermissions;

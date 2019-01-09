@@ -23,10 +23,7 @@ namespace SFA.DAS.Authorization.Mvc
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 try
                 {
-                    var testService = DependencyResolver.Current.GetService<IAuthorizationService>();
-                    var service = _authorizationService();
-                    var isAuthorized = service.IsAuthorized(options);
-                
+                    var isAuthorized = _authorizationService().IsAuthorized(options);
 
                     if (!isAuthorized)
                     {
