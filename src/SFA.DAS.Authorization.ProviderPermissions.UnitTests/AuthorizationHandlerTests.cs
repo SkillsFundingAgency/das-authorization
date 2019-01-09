@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
-using NLog;
 using NUnit.Framework;
 using SFA.DAS.ProviderRelationships.Api.Client;
 using SFA.DAS.ProviderRelationships.Types.Dtos;
@@ -64,22 +64,10 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldLogCorrectly()
-        {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), f => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.ProviderPermissions.AuthorizationHandler' for options 'CreateCohort' with successful result"));
-        }
-
-        [Test]
         public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderPermissionNotGranted>()));
-        }
-
-        [Test]
-        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldLogCorrectly()
-        {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.ProviderPermissions.AuthorizationHandler' for options 'CreateCohort' with results 'SFA.DAS.Authorization.ProviderPermissions.ProviderPermissionNotGranted'"));
         }
     }
 
@@ -170,11 +158,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
                 .ReturnsAsync(result);
             
             return this;
-        }
-
-        public void VerifyLoggerInfoCall(string message)
-        {
-            Logger.Verify(l => l.Info(It.Is<string>(s => s == message)));
         }
     }
 }

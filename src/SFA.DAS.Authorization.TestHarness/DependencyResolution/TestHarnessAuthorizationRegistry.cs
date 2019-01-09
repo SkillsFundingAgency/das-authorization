@@ -33,6 +33,9 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
                             {new FeatureToggleWhitelistItem(DefaultAccountId, new List<string> {DefaultUser})})
                 }
             });
+
+            //Optionally add the test handler for testing outside the context of a specific authorization implementation
+            //For<IAuthorizationHandler>().Add<TestHarnessAuthorizationHandler>();
         }
     }
 }

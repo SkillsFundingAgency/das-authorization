@@ -61,13 +61,6 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabled_ThenShouldLogCorrectly()
-        {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true), f => f.GetAuthorizationResult(), (f, r) 
-                => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.EmployerFeatures.AuthorizationHandler' for options 'ProviderRelationships' with successful result"));
-        }
-
-        [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
@@ -86,13 +79,6 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureNotEnabled>()));
-        }
-
-        [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsNotEnabled_ThenShouldLogCorrectly()
-        {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(false), f => f.GetAuthorizationResult(), (f, r) 
-                => f.VerifyLoggerInfoCall("Finished running 'SFA.DAS.Authorization.EmployerFeatures.AuthorizationHandler' for options 'ProviderRelationships' with results 'SFA.DAS.Authorization.EmployerFeatures.EmployerFeatureNotEnabled'"));
         }
 
         [Test]
@@ -204,11 +190,6 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle(Feature.ProviderRelationships, isEnabled, whitelist));
             
             return this;
-        }
-
-        public void VerifyLoggerInfoCall(string message)
-        {
-            Logger.Verify(l => l.LogInformation(It.Is<string>(s => s == message)));
         }
     }
 }
