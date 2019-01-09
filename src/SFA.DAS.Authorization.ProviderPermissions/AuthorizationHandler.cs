@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.ProviderRelationships.Api.Client;
 using SFA.DAS.ProviderRelationships.Types.Dtos;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -49,7 +49,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                 }
             }
             var logResult = authorizationResult.Errors.Any() ? $"results '{authorizationResult.Errors.Select(o => o.GetType()).ToCsvString()}'" : "successful result";
-            _logger.Info($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with {logResult}");
+            _logger.LogInformation($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with {logResult}");
 
             return authorizationResult;
         }

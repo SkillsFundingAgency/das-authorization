@@ -45,6 +45,7 @@ namespace SFA.DAS.Authorization.TestHarness.App_Start {
         public static void Start() {
             IContainer container = IoC.Initialize();
             StructureMapDependencyScope = new StructureMapDependencyScope(container);
+            var whatihave = container.WhatDoIHave();
             DependencyResolver.SetResolver(StructureMapDependencyScope);
             DynamicModuleUtility.RegisterModule(typeof(StructureMapScopeModule));
         }

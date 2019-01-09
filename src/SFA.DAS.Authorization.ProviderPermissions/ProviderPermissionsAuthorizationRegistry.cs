@@ -11,7 +11,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         {
             IncludeRegistry<ProviderRelationshipsApiClientRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
-            For<ILoggerFactory>().Use(c => c.TryGetInstance<ILoggerFactory>() ?? new LoggerFactory().AddNLog()).Singleton();
+            For<ILoggerFactory>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetFactory(c.TryGetInstance<ILoggerFactory>)).Singleton();
             For<ILogger>().Use(c => c.GetInstance<ILoggerFactory>().CreateLogger(c.ParentType));
         }
     }

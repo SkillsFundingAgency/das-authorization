@@ -5,12 +5,13 @@
 <div class="jumbotron">
     <h1>Instructions</h1>
     <p class="lead"><ul>
-    <li>Login or Register. This is so that you pass the default MVC Authorization and the SFA.DAS.Authorization logic will fire on each controller action. (You can use Auto Login below)</li>
-    <li>You can then navigate between the various pages in the nav bar which are set up to succeed or fail.</li>
-    <li>DasAuthorizeTrue - This will pass, you should be able to load the view for this page.</li>
-    <li>DasAuthorizeFalse - This will fail, you should see a 401 when navigating.</li>
-    <li>DasAuthorizeFalseWithErrors - This will fail with multiple errors, which you should be able to see in the logs.</li>
-</ul></p>
+        <li>Setup the registry for your test scenario. This is done in TestHarnessAuthorizationRegistry.</li>
+        <li>Login or Register. This is so that you pass the default MVC Authorization and the SFA.DAS.Authorization logic will fire on each controller action. (You can use Auto Login below, if you don't you will need to configure your user in the registry)</li>
+        <li>You can then navigate between the various pages in the nav bar which are set up to succeed or fail.</li>
+        <li>DasAuthorizeTrue - This will pass, you should be able to load the view for this page.</li>
+        <li>DasAuthorizeFalse - This will fail, you should see a 401 when navigating.</li>
+        <li>DasAuthorizeFalseWithErrors - This will fail with multiple errors, which you should be able to see in the logs.</li>
+    </ul></p>
     <p>
         This automatically logs in the default test user and registers that user if it has not been registered. (Enables quick setup of a valid user to avoid having to login/register):
         <a href='@Url.Action("AutoLogin", "Home")' class="btn btn-primary btn-lg">

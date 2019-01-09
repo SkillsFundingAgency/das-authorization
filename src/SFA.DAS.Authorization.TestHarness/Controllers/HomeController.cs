@@ -79,6 +79,22 @@ namespace SFA.DAS.Authorization.TestHarness.Controllers
             return View("GenericAuthorizationLandingPage");
         }
 
+        [DasAuthorize(EmployerRoles.EmployerRole.Owner)]
+        public ActionResult DasAuthorizeEmployerRolesOwner()
+        {
+            ViewBag.Message = "DasAuthorizeEmployerRolesOwner";
+
+            return View("GenericAuthorizationLandingPage");
+        }
+
+        [DasAuthorize(ProviderPermissions.ProviderOperation.CreateCohort)]
+        public ActionResult DasAuthorizeProviderPermissionsProviderOperationCreateCohort()
+        {
+            ViewBag.Message = "DasAuthorizeProviderPermissionsProviderOperationCreateCohort";
+
+            return View("GenericAuthorizationLandingPage");
+        }
+
         public async Task<ActionResult> AutoLogin()
         {
             const string username = "test@example.com";

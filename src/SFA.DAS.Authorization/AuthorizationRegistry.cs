@@ -8,6 +8,7 @@ namespace SFA.DAS.Authorization
         {
             For<IAuthorizationContext>().Use<AuthorizationContext>();
             For<IAuthorizationService>().Use<AuthorizationService>();
+            For<ILoggerFactoryManager>().Use<LoggerFactoryManager>().Singleton();
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
-using NLog;
 using NUnit.Framework;
 using SFA.DAS.Testing;
 
@@ -208,7 +208,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public void VerifyLoggerInfoCall(string message)
         {
-            Logger.Verify(l => l.Info(It.Is<string>(s => s == message)));
+            Logger.Verify(l => l.LogInformation(It.Is<string>(s => s == message)));
         }
     }
 }

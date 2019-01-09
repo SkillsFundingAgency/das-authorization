@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Authorization.EmployerRoles
 {
@@ -27,7 +27,7 @@ namespace SFA.DAS.Authorization.EmployerRoles
                 //authorizationResult.AddError(new EmployerRoleNotAuthorized());
             }
 
-            _logger.Info($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with successful result");
+            _logger.LogInformation($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with successful result");
 
             return Task.FromResult(authorizationResult);
         }

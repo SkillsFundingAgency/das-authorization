@@ -102,19 +102,38 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
         #region Methods
 
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType) {
-            return (CurrentNestedContainer ?? Container).GetAllInstances(serviceType).Cast<object>();
+            IContainer container = CurrentNestedContainer ?? Container;
+
+            try
+            {
+                return container.GetAllInstances(serviceType).Cast<object>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         protected override object DoGetInstance(Type serviceType, string key) {
-            IContainer container = (CurrentNestedContainer ?? Container);
+            IContainer container = CurrentNestedContainer ?? Container;
 
-            if (string.IsNullOrEmpty(key)) {
-                return serviceType.IsAbstract || serviceType.IsInterface
-                    ? container.TryGetInstance(serviceType)
-                    : container.GetInstance(serviceType);
+            try
+            {
+                if (string.IsNullOrEmpty(key))
+                {
+                    return serviceType.IsAbstract || serviceType.IsInterface
+                        ? container.TryGetInstance(serviceType)
+                        : container.GetInstance(serviceType);
+                }
+
+                return container.GetInstance(serviceType, key);
             }
-
-            return container.GetInstance(serviceType, key);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         #endregion

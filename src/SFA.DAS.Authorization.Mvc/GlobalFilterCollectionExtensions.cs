@@ -6,6 +6,7 @@ namespace SFA.DAS.Authorization.Mvc
     {
         public static void AddAuthorizationFilter(this GlobalFilterCollection filters)
         {
+            var service = DependencyResolver.Current.GetService<IAuthorizationService>();
             filters.Add(new AuthorizationFilter(() => DependencyResolver.Current.GetService<IAuthorizationService>()));
         }
 
