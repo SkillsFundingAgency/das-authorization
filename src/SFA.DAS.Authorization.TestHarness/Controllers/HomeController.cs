@@ -14,16 +14,6 @@ namespace SFA.DAS.Authorization.TestHarness.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public HomeController()
-        {
-        }
-
-        public HomeController(ApplicationSignInManager signInManager, ApplicationUserManager userManager)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
-
         public ApplicationSignInManager SignInManager {
             get {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();

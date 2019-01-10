@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
 
         public TestHarnessAuthorizationRegistry()
         {
-            //Setup test harness context, add values in TestHarnessAuthorizationContextProvider if as needed.
+            //Setup test harness context, add values in TestHarnessAuthorizationContextProvider as needed.
             For<IAuthorizationContextProvider>().Use<TestHarnessAuthorizationContextProvider>();
 
             //Include the registry(ies) that you are testing
