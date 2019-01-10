@@ -1,8 +1,8 @@
-﻿namespace SFA.DAS.Authorization.EmployerRoles
+﻿namespace SFA.DAS.Authorization.EmployerUserRoles
 {
-    public static class EmployerRole
+    public static class EmployerUserRole
     {
-        internal const string Namespace = "EmployerRole";
+        internal const string Namespace = "EmployerUserRole";
         internal const string AnyOption = "Any";
         internal const string OwnerOption = "Owner";
         internal const string TransactorOption = "Transactor";

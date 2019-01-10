@@ -14,10 +14,15 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         /// (but we don't need a const name for every enum value)
         /// </remarks>
         [Test]
-        public void EveryProviderOperationNameMustMatchAProviderRelationshipsApiOperationEnumValue()
+        public void EveryProviderOperationNameMustMatchAProviderRelationshipsOperationEnumValue()
         {
-            var nakedOperationPos = ProviderOperation.Namespace.Length + 1;
-            var providerOperations = typeof(ProviderOperation).GetFields().Select(f => f.GetRawConstantValue()).Cast<string>().Select(o => o.Substring(nakedOperationPos));
+            var nakedProviderOperationPos = ProviderOperation.Namespace.Length + 1;
+            
+            var providerOperations = typeof(ProviderOperation)
+                .GetFields()
+                .Select(f => f.GetRawConstantValue())
+                .Cast<string>()
+                .Select(o => o.Substring(nakedProviderOperationPos));
 
             foreach (var providerOperation in providerOperations)
             {

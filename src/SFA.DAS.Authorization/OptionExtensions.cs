@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization
         {
             if (options.Count() > 1)
             {
-                throw new NotImplementedException("Combining features (to specify AND) is not currently supported");
+                throw new NotImplementedException("Combining options (to specify AND) is not currently supported");
             }
         }
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.Authorization
         {
             if (options.Any(o => o.Contains(',')))
             {
-                throw new NotImplementedException("Combining features (to specify OR) by comma separating them is not currently supported");
+                throw new NotImplementedException("Combining options (to specify OR) by comma separating them is not currently supported");
             }
         }
     }

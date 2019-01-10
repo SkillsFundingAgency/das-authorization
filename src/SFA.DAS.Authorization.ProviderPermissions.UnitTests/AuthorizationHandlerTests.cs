@@ -56,14 +56,14 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         }
         
         [Test]
-        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
         
         [Test]
-        public Task GetAuthorizationResult_WhenProviderPermissionsOptionsAreAvailableAndProviderPermissionsContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderPermissionNotGranted>()));
@@ -91,13 +91,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public Task<AuthorizationResult> GetAuthorizationResult()
         {
             return Handler.GetAuthorizationResult(Options, AuthorizationContext);
-        }
-        
-        public AuthorizationHandlerTestsFixture SetNonProviderOpertionOptions()
-        {
-            Options.AddRange(new [] { "Foo", "Bar" });
-            
-            return this;
         }
 
         public AuthorizationHandlerTestsFixture SetAndedOptions()
