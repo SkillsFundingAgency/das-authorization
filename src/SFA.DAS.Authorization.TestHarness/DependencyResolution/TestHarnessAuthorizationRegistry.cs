@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.EmployerRoles;
+using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Authorization.TestHarness.Handlers;
 using StructureMap;
@@ -19,7 +19,7 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
 
             //Include the registry(ies) that you are testing
             IncludeRegistry<EmployerFeaturesAuthorizationRegistry>();
-            IncludeRegistry<EmployerRolesAuthorizationRegistry>();
+            IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             IncludeRegistry<ProviderPermissionsAuthorizationRegistry>();
 
             //Allow Feature.ProviderRelationships for default user

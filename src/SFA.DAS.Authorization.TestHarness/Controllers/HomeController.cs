@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.TestHarness.Models;
 
@@ -69,7 +70,7 @@ namespace SFA.DAS.Authorization.TestHarness.Controllers
             return View("GenericAuthorizationLandingPage");
         }
 
-        [DasAuthorize(EmployerRoles.EmployerRole.Owner)]
+        [DasAuthorize(EmployerUserRole.Owner)]
         public ActionResult DasAuthorizeEmployerRolesOwner()
         {
             ViewBag.Message = "DasAuthorizeEmployerRolesOwner";

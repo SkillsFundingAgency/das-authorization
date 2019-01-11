@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using SFA.DAS.ProviderRelationships.Api.Client.DependencyResolution;
 using StructureMap;
 

@@ -18,6 +18,7 @@
 
 using SFA.DAS.Authorization;
 using SFA.DAS.Authorization.TestHarness.DependencyResolution;
+using SFA.DAS.AutoConfiguration.DependencyResolution;
 
 namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
     using StructureMap;
@@ -26,6 +27,7 @@ namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
         public static IContainer Initialize() {
             return new Container(c =>{
                     c.AddRegistry<DefaultRegistry>();
+                    c.AddRegistry<AutoConfigurationRegistry>();
                     c.AddRegistry<AuthorizationRegistry>();
                     c.AddRegistry<TestHarnessAuthorizationRegistry>();
                 }
