@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.EmployerRoles;
+using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Testing;
 
@@ -76,7 +76,7 @@ namespace SFA.DAS.Authorization.UnitTests
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
+                r.Errors.Should().HaveCount(3).And.Contain(f.EmployerFeatureUserNotWhitelisted).And.Contain(f.EmployerUserRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
 
@@ -93,7 +93,7 @@ namespace SFA.DAS.Authorization.UnitTests
             {
                 r.Should().NotBeNull();
                 r.IsAuthorized.Should().BeFalse();
-                r.Errors.Should().HaveCount(2).And.Contain(f.EmployerRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
+                r.Errors.Should().HaveCount(3).And.Contain(f.EmployerFeatureUserNotWhitelisted).And.Contain(f.EmployerUserRoleNotAuthorized).And.Contain(f.ProviderPermissionNotGranted);
             });
         }
     }
@@ -105,30 +105,37 @@ namespace SFA.DAS.Authorization.UnitTests
         public Mock<IAuthorizationContext> AuthorizationContext { get; set; }
         public IAuthorizationService AuthorizationService { get; set; }
         public Mock<IAuthorizationHandler> EmployerFeatureAuthorizationHandler { get; set; }
-        public EmployerRoleNotAuthorized EmployerRoleNotAuthorized { get; set; }
+        public EmployerFeatureUserNotWhitelisted EmployerFeatureUserNotWhitelisted { get; set; }
+        public Mock<IAuthorizationHandler> EmployerRolesAuthorizationHandler { get; set; }
+        public EmployerUserRoleNotAuthorized EmployerUserRoleNotAuthorized { get; set; }
         public Mock<IAuthorizationHandler> ProviderOperationAuthorizationHandler { get; set; }
         public ProviderPermissionNotGranted ProviderPermissionNotGranted { get; set; }
+
 
         public AuthorizationServiceTestsFixture()
         {
             Options = new []
             {
                 EmployerFeature.ProviderRelationships,
+                EmployerUserRole.OwnerOrTransactor,
                 ProviderOperation.CreateCohort
             };
 
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();
             AuthorizationContext = new Mock<IAuthorizationContext>();
             EmployerFeatureAuthorizationHandler = new Mock<IAuthorizationHandler>();
+            EmployerRolesAuthorizationHandler = new Mock<IAuthorizationHandler>();
             ProviderOperationAuthorizationHandler = new Mock<IAuthorizationHandler>();
             
             AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(AuthorizationContext.Object);
             EmployerFeatureAuthorizationHandler.Setup(h => h.Namespace).Returns(EmployerFeature.Namespace);
+            EmployerRolesAuthorizationHandler.Setup(h => h.Namespace).Returns(EmployerUserRole.Namespace);
             ProviderOperationAuthorizationHandler.Setup(h => h.Namespace).Returns(ProviderOperation.Namespace);
 
             AuthorizationService = new AuthorizationService(AuthorizationContextProvider.Object, new List<IAuthorizationHandler>
             {
                 EmployerFeatureAuthorizationHandler.Object,
+                EmployerRolesAuthorizationHandler.Object,
                 ProviderOperationAuthorizationHandler.Object
             });
         }
@@ -168,6 +175,10 @@ namespace SFA.DAS.Authorization.UnitTests
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
                     new [] { EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult());
+            
+            EmployerRolesAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
+                    new [] { EmployerUserRole.OwnerOption + "," + EmployerUserRole.TransactorOption }, AuthorizationContext.Object))
+                .ReturnsAsync(new AuthorizationResult());
 
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
                     new [] { ProviderOperation.CreateCohortOption }, AuthorizationContext.Object))
@@ -178,12 +189,17 @@ namespace SFA.DAS.Authorization.UnitTests
 
         public AuthorizationServiceTestsFixture SetUnauthorizedOptions()
         {
-            EmployerRoleNotAuthorized = new EmployerRoleNotAuthorized();
+            EmployerFeatureUserNotWhitelisted = new EmployerFeatureUserNotWhitelisted();
+            EmployerUserRoleNotAuthorized = new EmployerUserRoleNotAuthorized();
             ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
                     new [] { EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
-                .ReturnsAsync(new AuthorizationResult(EmployerRoleNotAuthorized));
+                .ReturnsAsync(new AuthorizationResult(EmployerFeatureUserNotWhitelisted));
+
+            EmployerRolesAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
+                    new [] { EmployerUserRole.OwnerOption + "," + EmployerUserRole.TransactorOption }, AuthorizationContext.Object))
+                .ReturnsAsync(new AuthorizationResult(EmployerUserRoleNotAuthorized));
             
             ProviderOperationAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
                     new [] { ProviderOperation.CreateCohortOption }, AuthorizationContext.Object))

@@ -4,7 +4,7 @@ This package includes:
 
 * Facade to aggregate multiple authorization concerns into a single call including:
   * Employer features - Toggling, toggling by user whitelisting, toggling by agreement signing.
-  * Employer roles - User membership checks for an account, user role checks for an account.
+  * Employer user roles - User membership checks for an account, user role checks for an account.
   * Provider permissions - Provider permission checks for an organisation.
 * Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
@@ -15,7 +15,7 @@ This package includes:
 In addition to the `SFA.DAS.Authorization` package one or more of the following packages should be referenced depending on your application's requirements:
 
 * `SFA.DAS.Authorization.EmployerFeatures`
-* `SFA.DAS.Authorization.EmployerRoles`
+* `SFA.DAS.Authorization.EmployerUserRoles`
 * `SFA.DAS.Authorization.ProviderPermissions`
 
 ### StructureMap
@@ -25,7 +25,7 @@ The authorization packages include StructureMap registries for wiring up their c
 ```c#
 c.AddRegistry<AuthorizationRegistry>();
 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
-c.AddRegistry<EmployerRolesAuthorizationRegistry>();
+c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 ```
 
@@ -84,7 +84,7 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
         var userEmail = "foo@bar.com" // e.g. From the authentication claims
         
         authorizationContext.AddEmployerFeatureValues(accountId, userEmail);
-        authorizationContext.AddEmployerRoleValues(accountId, userRef);
+        authorizationContext.AddEmployerUserRoleValues(accountId, userRef);
         authorizationContext.AddProviderPermissionValues(accountLegalEntityId, ukprn);
 
         return authorizationContext;
@@ -115,13 +115,13 @@ The options that can be included in an authorization check will depend on which 
 To check if a feature is enabled:
 
 ```c#
-var isAuthorized = _authorizationService.IsAuthorized(EmployerFeatures.ProviderRelationships);
+var isAuthorized = _authorizationService.IsAuthorized(EmployerFeature.ProviderRelationships);
 ```
 
 Alternatively, if you're interested in why an authorization check has failed:
 
 ```c#
-var authorizationResult = _authorizationService.GetAuthorizationResult(EmployerFeatures.ProviderRelationships);
+var authorizationResult = _authorizationService.GetAuthorizationResult(EmployerFeature.ProviderRelationships);
 
 if (!authorizationResult.IsAuthorized)
 {
@@ -142,22 +142,22 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountId` & `UserEmail` authorization context values are required for this package.
 
-### SFA.DAS.Authorization.EmployerRoles
+### SFA.DAS.Authorization.EmployerUserRoles
 
 To check if a user has the required role:
 
 ```c#
-var isAuthorized = _authorizationService.IsAuthorized(EmployerRoles.Owner);
+var isAuthorized = _authorizationService.IsAuthorized(EmployerUserRole.Owner);
 ```
 
 Alternatively, if you're interested in why an authorization check has failed:
 
 ```c#
-var authorizationResult = _authorizationService.GetAuthorizationResult(EmployerRoles.Owner);
+var authorizationResult = _authorizationService.GetAuthorizationResult(EmployerUserRole.Owner);
 
 if (!authorizationResult.IsAuthorized)
 {
-    if (authorizationResult.HasError<EmployerRoleNotAuthorized>())
+    if (authorizationResult.HasError<EmployerUserRoleNotAuthorized>())
     {
         // Handle role not authorized
     }
@@ -171,13 +171,13 @@ if (!authorizationResult.IsAuthorized)
 To check if a provider has the required permission:
 
 ```c#
-var isAuthorized = _authorizationService.IsAuthorized(ProviderPermissions.CreateCohort);
+var isAuthorized = _authorizationService.IsAuthorized(ProviderPermission.CreateCohort);
 ```
 
 Alternatively, if you're interested in why an authorization check has failed:
 
 ```c#
-var authorizationResult = _authorizationService.GetAuthorizationResult(ProviderPermissions.CreateCohort);
+var authorizationResult = _authorizationService.GetAuthorizationResult(ProviderPermission.CreateCohort);
 
 if (!authorizationResult.IsAuthorized)
 {
@@ -205,7 +205,7 @@ public class LegalEntitiesController : Controller
         return View();
     }
     
-    [DasAuthorize(EmployerRoles.Owner)]
+    [DasAuthorize(EmployerUserRole.Owner)]
     [Route("add")]
     public ActionResult Add()
     {
@@ -213,7 +213,7 @@ public class LegalEntitiesController : Controller
     }
 
     [HttpPost]
-    [DasAuthorize(EmployerRoles.Owner)]
+    [DasAuthorize(EmployerUserRole.Owner)]
     [Route("add")]
     public ActionResult Add(AddLegalEntityViewModel model)
     {
@@ -235,7 +235,7 @@ public class AddLegalEntityViewModel: IAuthorizationContextModel
 Html helpers can also be used that includes the synchronous methods from `IAuthorizationService`:
 
 ```razor
-if (@Html.IsAuthorized(EmployerRoles.Owner))
+if (@Html.IsAuthorized(EmployerUserRole.Owner))
 {
     <a href="@Url.Action("Add", "LegalEntities")">Add legal entity</a>
 }
@@ -256,7 +256,7 @@ public class LegalEntitiesController : ApiController
         return Ok();
     }
 
-    [DasAuthorize(EmployerRoles.Owner)]
+    [DasAuthorize(EmployerUserRole.Owner)]
     [Route]
     public IHttpActionResult Post(PostLegalEntityModel model)
     {

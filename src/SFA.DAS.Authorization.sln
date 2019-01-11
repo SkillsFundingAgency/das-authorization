@@ -13,10 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.Mvc",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.Mvc.UnitTests", "SFA.DAS.Authorization.Mvc.UnitTests\SFA.DAS.Authorization.Mvc.UnitTests.csproj", "{E1396587-38CB-4D64-83D1-A1C0E0179FD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.EmployerRoles", "SFA.DAS.Authorization.EmployerRoles\SFA.DAS.Authorization.EmployerRoles.csproj", "{6D800FA4-959C-4488-A905-F5194F491CEF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.EmployerRoles.UnitTests", "SFA.DAS.Authorization.EmployerRoles.UnitTests\SFA.DAS.Authorization.EmployerRoles.UnitTests.csproj", "{95F254CB-DDB7-4957-8E68-E754630A62EA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.EmployerFeatures", "SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj", "{DE288F48-9DEB-4D22-9C91-C01FA118583D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Authorization.EmployerFeatures.UnitTests", "SFA.DAS.Authorization.EmployerFeatures.UnitTests\SFA.DAS.Authorization.EmployerFeatures.UnitTests.csproj", "{E4DE0F16-4C3C-4E6E-BDCA-B2787443BE2C}"
@@ -38,6 +34,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.TestHarness", "SFA.DAS.Authorization.TestHarness\SFA.DAS.Authorization.TestHarness.csproj", "{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.EmployerUserRoles", "SFA.DAS.Authorization.EmployerUserRoles\SFA.DAS.Authorization.EmployerUserRoles.csproj", "{03FD0131-C861-418A-91CA-B3884DE9D1D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.EmployerUserRoles.UnitTests", "SFA.DAS.Authorization.EmployerUserRoles.UnitTests\SFA.DAS.Authorization.EmployerUserRoles.UnitTests.csproj", "{039FA42B-0391-4920-9DDF-8AE10528FFBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,14 +61,6 @@ Global
 		{E1396587-38CB-4D64-83D1-A1C0E0179FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1396587-38CB-4D64-83D1-A1C0E0179FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1396587-38CB-4D64-83D1-A1C0E0179FD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D800FA4-959C-4488-A905-F5194F491CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D800FA4-959C-4488-A905-F5194F491CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D800FA4-959C-4488-A905-F5194F491CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D800FA4-959C-4488-A905-F5194F491CEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95F254CB-DDB7-4957-8E68-E754630A62EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95F254CB-DDB7-4957-8E68-E754630A62EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95F254CB-DDB7-4957-8E68-E754630A62EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95F254CB-DDB7-4957-8E68-E754630A62EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE288F48-9DEB-4D22-9C91-C01FA118583D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE288F48-9DEB-4D22-9C91-C01FA118583D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE288F48-9DEB-4D22-9C91-C01FA118583D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,6 +89,14 @@ Global
 		{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03FD0131-C861-418A-91CA-B3884DE9D1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03FD0131-C861-418A-91CA-B3884DE9D1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03FD0131-C861-418A-91CA-B3884DE9D1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03FD0131-C861-418A-91CA-B3884DE9D1D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,11 +104,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7581C950-7067-4C9C-B740-B946B7E77FB3} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{E1396587-38CB-4D64-83D1-A1C0E0179FD9} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
-		{95F254CB-DDB7-4957-8E68-E754630A62EA} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{E4DE0F16-4C3C-4E6E-BDCA-B2787443BE2C} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{3297236C-21F5-4360-B231-A206F9922040} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{EB53E2B8-3A40-4756-A748-98D264989FAC} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{CB917399-01A7-48C5-9001-DBD5A2BBFBF5} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
+		{039FA42B-0391-4920-9DDF-8AE10528FFBA} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E98D09A-8D14-42A0-8B8A-16CAC957C69F}
