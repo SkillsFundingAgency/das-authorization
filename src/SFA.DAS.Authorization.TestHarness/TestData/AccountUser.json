@@ -1,0 +1,19 @@
+{
+    "userRef": "121af597-42d1-4aee-96be-d1f88293b140",
+    "accountId": 112,
+    "role": 1,
+    "outboxData": [
+        {
+            "messageId": "4089ABDA-F1E4-40D3-BF9C-6DF8579132A7",
+            "created": "2019-01-22T14:19:20.5998601Z"
+        }
+    ],
+    "Created": "2019-01-22T14:19:20.5998601Z",
+    "updated": null,
+    "removed": null,
+    "id": "95C1D5AE-6EC0-4025-9EBD-24FBD7F85EE3",
+    "metadata": {
+        "schemaType": "accountUser",
+        "schemaVersion": 1
+    }
+ }
