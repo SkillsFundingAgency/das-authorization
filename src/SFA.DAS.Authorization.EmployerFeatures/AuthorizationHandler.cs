@@ -40,10 +40,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                     authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                 }
             }
-            
-            var logResult = authorizationResult.Errors.Any() ? $"results '{authorizationResult.Errors.Select(o => o.GetType()).ToCsvString()}'" : "successful result";
-            _logger.LogInformation($"Finished running '{this.GetType().FullName}' for options '{options.ToCsvString()}' with {logResult}");
 
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
+            
             return Task.FromResult(authorizationResult);
         }
     }

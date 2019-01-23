@@ -31,6 +31,11 @@ namespace SFA.DAS.Authorization
             return this;
         }
 
+        public string GetDescription()
+        {
+            return $"{nameof(IsAuthorized)}: {IsAuthorized}, {nameof(Errors)}: {(Errors.Any() ? string.Join(", ", Errors.Select(e => e.Message)) : "None")}";
+        }
+
         public bool HasError<T>() where T : AuthorizationError
         {
             return _errors.OfType<T>().Any();
