@@ -9,9 +9,8 @@ namespace SFA.DAS.Authorization
         {
             For<IAuthorizationContext>().Use<AuthorizationContext>();
             For<IAuthorizationService>().Use<AuthorizationService>();
-            For<ILogger>().Use(c => c.GetInstance<ILoggerFactory>().CreateLogger(c.ParentType));
-            For<ILoggerFactory>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetFactory(c.TryGetInstance<ILoggerFactory>)).Singleton();
-            For<ILoggerFactoryManager>().Use<LoggerFactoryManager>().Singleton();
+            For<ILogger>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory().CreateLogger(c.ParentType));
+            For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();
         }
     }
 }
