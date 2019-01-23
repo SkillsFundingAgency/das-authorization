@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
-using System.Web.Security;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
+using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using SFA.DAS.Authorization.ProviderPermissions;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers

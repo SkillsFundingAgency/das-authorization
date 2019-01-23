@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Authorization.NetFrameworkTestHarness
+﻿namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {
     public static class TestOption
     {

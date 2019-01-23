@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {
@@ -9,6 +10,13 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
     {
         public string Namespace => TestOption.Namespace;
         
+        private readonly ILogger _logger;
+
+        public TestAuthorizationHandler(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = new AuthorizationResult();
@@ -30,6 +38,8 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
                         throw new ArgumentOutOfRangeException(nameof(options));
                 }
             }
+            
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
             
             return Task.FromResult(authorizationResult);
         }
