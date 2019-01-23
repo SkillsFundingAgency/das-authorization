@@ -1,5 +1,4 @@
 ﻿using StructureMap;
-using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
@@ -7,10 +6,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     {
         public EmployerFeaturesAuthorizationRegistry()
         {
+            IncludeRegistry<AuthorizationRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
             For<IFeatureTogglesService>().Use<FeatureTogglesService>().Singleton();
-            For<ILoggerFactory>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetFactory(c.TryGetInstance<ILoggerFactory>)).Singleton();
-            For<ILogger>().Use(c => c.GetInstance<ILoggerFactory>().CreateLogger(c.ParentType));
         }
     }
 }
