@@ -6,7 +6,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
     public class AccountController : Controller
     {public ActionResult Login()
         {
-            FormsAuthentication.SetAuthCookie(Usernames.Default, false);
+            FormsAuthentication.SetAuthCookie(Models.User.Email, false);
             
             return RedirectToAction("Index", "Home");
         }

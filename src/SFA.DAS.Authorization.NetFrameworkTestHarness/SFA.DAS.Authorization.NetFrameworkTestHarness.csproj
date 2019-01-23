@@ -88,7 +88,6 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountIds.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -107,10 +106,13 @@
     <Compile Include="Authorization\TestAuthorizationError.cs" />
     <Compile Include="Authorization\TestAuthorizationContextProvider.cs" />
     <Compile Include="Authorization\TestAuthorizationHandler.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountLegalEntity.cs" />
+    <Compile Include="Models\Provider.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TestOption.cs" />
-    <Compile Include="Usernames.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

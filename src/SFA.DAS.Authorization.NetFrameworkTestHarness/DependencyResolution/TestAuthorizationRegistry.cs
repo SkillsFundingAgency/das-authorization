@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
+using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
@@ -15,9 +16,9 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                 {
                     new FeatureToggle(Feature.ProviderRelationships, true, new List<FeatureToggleWhitelistItem>
                     {
-                        new FeatureToggleWhitelistItem(AccountIds.Default, new List<string>
+                        new FeatureToggleWhitelistItem(Account.Id, new List<string>
                         {
-                            Usernames.Default
+                            User.Email
                         })
                     })
                 }

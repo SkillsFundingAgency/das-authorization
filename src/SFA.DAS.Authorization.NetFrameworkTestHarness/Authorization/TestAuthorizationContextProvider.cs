@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SFA.DAS.Authorization.EmployerFeatures;
+using SFA.DAS.Authorization.EmployerUserRoles;
+using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
+using SFA.DAS.Authorization.ProviderPermissions;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {
@@ -6,13 +9,13 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
     {
         public IAuthorizationContext GetAuthorizationContext()
         {
-            var context = new AuthorizationContext();
-            context.Set("AccountId", (long?)112);
-            context.Set("UserEmail", "test");
-            context.Set("UserRef", (Guid?)Guid.NewGuid());
-            context.Set("Ukprn", (long?)382938712);
-            context.Set("AccountLegalEntityId", (long?)114);
-            return context;
+            var authorizationContext = new AuthorizationContext();
+            
+            authorizationContext.AddEmployerFeatureValues(Account.Id, User.Email);
+            authorizationContext.AddEmployerUserRoleValues(Account.Id, User.Ref);
+            authorizationContext.AddProviderPermissionValues(AccountLegalEntity.Id, Provider.Ukprn);
+            
+            return authorizationContext;
         }
     } 
 }
