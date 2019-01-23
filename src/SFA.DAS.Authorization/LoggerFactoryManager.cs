@@ -6,11 +6,6 @@ using NLog.Extensions.Logging;
 
 namespace SFA.DAS.Authorization
 {
-    public interface ILoggerFactoryManager
-    {
-        ILoggerFactory GetFactory(Func<ILoggerFactory> iocProvidedFactoryFunction);
-    }
-
     public class LoggerFactoryManager : ILoggerFactoryManager
     {
         private ILoggerFactory _factory;
