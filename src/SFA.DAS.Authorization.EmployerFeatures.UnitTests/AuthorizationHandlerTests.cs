@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Testing;
@@ -101,6 +102,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IFeatureTogglesService> FeatureTogglesService { get; set; }
+        public Mock<ILogger> Logger { get; set; }
         
         public const long AccountId = 1;
         public const string UserEmail = "foo@bar.com";
@@ -110,7 +112,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             FeatureTogglesService = new Mock<IFeatureTogglesService>();
-            Handler = new AuthorizationHandler(FeatureTogglesService.Object);
+            Logger = new Mock<ILogger>();
+            Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()

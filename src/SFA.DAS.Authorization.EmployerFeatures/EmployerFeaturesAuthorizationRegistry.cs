@@ -6,6 +6,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     {
         public EmployerFeaturesAuthorizationRegistry()
         {
+            IncludeRegistry<AuthorizationRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
             For<IFeatureTogglesService>().Use<FeatureTogglesService>().Singleton();
         }

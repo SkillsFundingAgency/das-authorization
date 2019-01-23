@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.ProviderRelationships.Api.Client;
 using SFA.DAS.ProviderRelationships.Types.Dtos;
 using SFA.DAS.ProviderRelationships.Types.Models;
@@ -12,10 +13,13 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         public string Namespace => ProviderOperation.Namespace;
         
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
-        
-        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient)
+        private readonly ILogger _logger;
+
+        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient,
+            ILogger logger)
         {
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
+            _logger = logger;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -44,6 +48,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                     authorizationResult.AddError(new ProviderPermissionNotGranted());
                 }
             }
+            
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
 
             return authorizationResult;
         }

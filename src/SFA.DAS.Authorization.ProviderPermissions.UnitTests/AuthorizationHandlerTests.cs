@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.ProviderRelationships.Api.Client;
@@ -61,7 +62,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
-        
+
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
@@ -76,6 +77,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
+        public Mock<ILogger> Logger { get; set; }
         
         public const long AccountLegalEntityId = 22L;
         public const long Ukprn = 333L;
@@ -85,7 +87,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             ProviderRelationshipsApiClient = new Mock<IProviderRelationshipsApiClient>();
-            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object);
+            Logger = new Mock<ILogger>();
+            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object, Logger.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()

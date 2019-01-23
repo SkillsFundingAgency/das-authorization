@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using Microsoft.Extensions.Logging;
+using StructureMap;
 
 namespace SFA.DAS.Authorization
 {
@@ -8,6 +9,8 @@ namespace SFA.DAS.Authorization
         {
             For<IAuthorizationContext>().Use<AuthorizationContext>();
             For<IAuthorizationService>().Use<AuthorizationService>();
+            For<ILogger>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory().CreateLogger(c.ParentType));
+            For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();
         }
     }
 }

@@ -67,6 +67,18 @@ namespace SFA.DAS.Authorization.UnitTests
         }
 
         [Test]
+        public void GetDescription_WhenAuthorized_ThenShouldReturnAuthorizedDescription()
+        {
+            Test(f => new AuthorizationResult(), (f, r) => r.GetDescription().Should().Be($"IsAuthorized: True, Errors: None"));
+        }
+
+        [Test]
+        public void GetDescription_WhenUnauthorized_ThenShouldReturnUnauthorizedDescription()
+        {
+            Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted), (f, r) => r.GetDescription().Should().Be($"IsAuthorized: False, Errors: {f.EmployerUserRoleNotAuthorized.Message}, {f.ProviderPermissionNotGranted.Message}"));
+        }
+        
+        [Test]
         public void HasError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
         {
             Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).HasError<EmployerUserRoleNotAuthorized>(), (f, r) => r.Should().BeTrue());

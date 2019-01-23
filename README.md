@@ -23,7 +23,6 @@ In addition to the `SFA.DAS.Authorization` package one or more of the following 
 The authorization packages include StructureMap registries for wiring up their components:
 
 ```c#
-c.AddRegistry<AuthorizationRegistry>();
 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();

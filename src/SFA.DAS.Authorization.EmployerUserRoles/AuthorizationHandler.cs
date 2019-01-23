@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerAccounts.Types.Models;
 
@@ -12,10 +13,12 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
         public string Namespace => EmployerUserRole.Namespace;
 
         private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
+        private readonly ILogger _logger;
 
-        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient)
+        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient, ILogger logger)
         {
             _employerAccountsApiClient = employerAccountsApiClient;
+            _logger = logger;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -58,6 +61,8 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
                     authorizationResult.AddError(new EmployerUserRoleNotAuthorized());
                 }
             }
+            
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
 
             return authorizationResult;
         }
