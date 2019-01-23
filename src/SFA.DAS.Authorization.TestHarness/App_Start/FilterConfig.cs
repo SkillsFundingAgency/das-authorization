@@ -7,8 +7,8 @@ namespace SFA.DAS.Authorization.TestHarness
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
             filters.AddAuthorizationFilter();
+            filters.AddUnauthorizedAccessExceptionFilter();
         }
     }
 }

@@ -1,109 +1,53 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity.Owin;
+﻿using System.Web.Mvc;
+using System.Web.Security;
+using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
-using SFA.DAS.Authorization.TestHarness.Models;
+using SFA.DAS.Authorization.ProviderPermissions;
 
 namespace SFA.DAS.Authorization.TestHarness.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
-
-        public ApplicationSignInManager SignInManager {
-            get {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set {
-                _signInManager = value;
-            }
-        }
-
-        public ApplicationUserManager UserManager {
-            get {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set {
-                _userManager = value;
-            }
-        }
-
         public ActionResult Index()
         {
             return View();
         }
-
-        [DasAuthorize(TestOptions.DasAuthorizeTrue)]
-        public ActionResult DasAuthorizeTrue()
+        
+        [DasAuthorize(TestOption.Authorized)]
+        public ActionResult TestOptionAuthorized()
         {
-            ViewBag.Message = "DasAuthorizeTrue";
-
-            return View();
+            return View("Authorized");
         }
 
-        [DasAuthorize(TestOptions.DasAuthorizeFalse)]
-        public ActionResult DasAuthorizeFalse()
+        [DasAuthorize(TestOption.UnauthorizedSingleError)]
+        public ActionResult TestOptionUnauthorizedSingleError()
         {
-            ViewBag.Message = "DasAuthorizeFalse";
-
-            return View();
+            return View("Authorized");
         }
 
-        [DasAuthorize(TestOptions.DasAuthorizeFalseWithErrors)]
-        public ActionResult DasAuthorizeFalseWithErrors()
+        [DasAuthorize(TestOption.UnauthorizedMultipleErrors)]
+        public ActionResult TestOptionUnauthorizedMultipleErrors()
         {
-            ViewBag.Message = "DasAuthorizeFalseWithErrors";
-
-            return View();
+            return View("Authorized");
         }
 
-        [DasAuthorize(EmployerFeatures.EmployerFeature.ProviderRelationships)]
-        public ActionResult DasAuthorizeEmployerFeaturesProviderRelationships()
+        [DasAuthorize(EmployerFeature.ProviderRelationships)]
+        public ActionResult EmployerFeatureProviderRelationships()
         {
-            ViewBag.Message = "DasAuthorizeEmployerFeaturesProviderRelationships";
-
-            return View("GenericAuthorizationLandingPage");
+            return View("Authorized");
         }
 
         [DasAuthorize(EmployerUserRole.Owner)]
-        public ActionResult DasAuthorizeEmployerRolesOwner()
+        public ActionResult EmployerUserRoleOwner()
         {
-            ViewBag.Message = "DasAuthorizeEmployerRolesOwner";
-
-            return View("GenericAuthorizationLandingPage");
+            return View("Authorized");
         }
 
-        [DasAuthorize(ProviderPermissions.ProviderOperation.CreateCohort)]
-        public ActionResult DasAuthorizeProviderPermissionsProviderOperationCreateCohort()
+        [DasAuthorize(ProviderOperation.CreateCohort)]
+        public ActionResult ProviderOperationCreateCohort()
         {
-            ViewBag.Message = "DasAuthorizeProviderPermissionsProviderOperationCreateCohort";
-
-            return View("GenericAuthorizationLandingPage");
+            return View("Authorized");
         }
-
-        public async Task<ActionResult> AutoLogin()
-        {
-            const string username = "test@example.com";
-            var user = UserManager.Users.FirstOrDefault(x => x.UserName == username);
-            if (user == null)
-            {
-                user = new ApplicationUser { UserName = username, Email = username };
-                var result = await UserManager.CreateAsync(user, "Test11!!");
-                if (!result.Succeeded)
-                {
-                    throw new Exception("Error automatically registering a user in test harness");
-                }
-            }
-
-            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-            return RedirectToAction("Index", "Home");
-        }
-
     }
 }
