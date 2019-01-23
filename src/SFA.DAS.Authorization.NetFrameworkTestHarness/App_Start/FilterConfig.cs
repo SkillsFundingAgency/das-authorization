@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using SFA.DAS.Authorization.Mvc;
 
-namespace SFA.DAS.Authorization.TestHarness
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness
 {
     public class FilterConfig
     {

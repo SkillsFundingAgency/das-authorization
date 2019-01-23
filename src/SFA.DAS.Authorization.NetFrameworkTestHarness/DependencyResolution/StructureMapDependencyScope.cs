@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
     using System;
     using System.Collections.Generic;
     using System.Linq;

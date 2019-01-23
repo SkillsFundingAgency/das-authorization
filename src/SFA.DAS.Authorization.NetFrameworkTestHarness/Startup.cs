@@ -1,9 +1,9 @@
 ﻿using Microsoft.Owin;
 using Owin;
-using SFA.DAS.Authorization.TestHarness;
+using SFA.DAS.Authorization.NetFrameworkTestHarness;
 
 [assembly: OwinStartup(typeof(Startup))]
-namespace SFA.DAS.Authorization.TestHarness
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness
 {
     public class Startup
     {

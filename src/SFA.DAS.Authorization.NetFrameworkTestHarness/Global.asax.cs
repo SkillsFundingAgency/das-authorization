@@ -2,7 +2,7 @@
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace SFA.DAS.Authorization.TestHarness
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness
 {
     public class MvcApplication : System.Web.HttpApplication
     {

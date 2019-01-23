@@ -1,6 +1,6 @@
 ﻿using System.Web.Optimization;
 
-namespace SFA.DAS.Authorization.TestHarness
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness
 {
     public class BundleConfig
     {

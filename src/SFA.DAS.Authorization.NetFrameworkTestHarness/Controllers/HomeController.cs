@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.ProviderPermissions;
 
-namespace SFA.DAS.Authorization.TestHarness.Controllers
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
 {
     public class HomeController : Controller
     {

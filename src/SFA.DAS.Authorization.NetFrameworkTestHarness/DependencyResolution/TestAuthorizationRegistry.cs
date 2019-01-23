@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.TestHarness.Authorization;
+using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.TestHarness.DependencyResolution
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
 {
     public class TestAuthorizationRegistry : Registry
     {

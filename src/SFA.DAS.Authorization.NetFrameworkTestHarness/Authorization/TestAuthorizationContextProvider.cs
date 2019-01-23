@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Authorization.TestHarness.Authorization
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {
     public class TestAuthorizationContextProvider : IAuthorizationContextProvider
     {

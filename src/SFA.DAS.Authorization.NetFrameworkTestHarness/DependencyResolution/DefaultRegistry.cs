@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ControllerConvention.cs" company="Web Advanced">
+// <copyright file="DefaultRegistry.cs" company="Web Advanced">
 // Copyright 2012 Web Advanced (www.webadvanced.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,31 +15,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SFA.DAS.Authorization.TestHarness.DependencyResolution {
-    using System;
-    using System.Web.Mvc;
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
     using StructureMap;
-    using StructureMap.Configuration.DSL;
-    using StructureMap.Graph;
-    using StructureMap.Graph.Scanning;
-    using StructureMap.Pipeline;
-    using StructureMap.TypeRules;
+	
+    public class DefaultRegistry : Registry {
+        #region Constructors and Destructors
 
-    public class ControllerConvention : IRegistrationConvention {
-        #region Public Methods and Operators
-
-        public void Process(Type type, Registry registry) {
-            if (type.CanBeCastTo<Controller>() && !type.IsAbstract) {
-                registry.For(type).LifecycleIs(new UniquePerRequestLifecycle());
-            }
-        }
-
-        public void ScanTypes(TypeSet types, Registry registry)
-        {
-            foreach (var type in types.AllTypes())
-            {
-                Process(type, registry);
-            }
+        public DefaultRegistry() {
+            Scan(
+                scan => {
+                    scan.TheCallingAssembly();
+                    scan.WithDefaultConventions();
+					scan.With(new ControllerConvention());
+                });
         }
 
         #endregion

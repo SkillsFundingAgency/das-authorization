@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace SFA.DAS.Authorization.TestHarness
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness
 {
     public class RouteConfig
     {

@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace SFA.DAS.Authorization.TestHarness.Controllers
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
 {
     public class AccountController : Controller
     {public ActionResult Login()

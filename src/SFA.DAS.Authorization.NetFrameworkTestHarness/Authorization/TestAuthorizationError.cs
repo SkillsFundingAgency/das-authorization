@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Authorization.TestHarness.Authorization
+﻿namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {
     public class TestAuthorizationError : AuthorizationError
     {
