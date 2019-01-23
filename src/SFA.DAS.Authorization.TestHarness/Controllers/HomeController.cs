@@ -78,6 +78,14 @@ namespace SFA.DAS.Authorization.TestHarness.Controllers
             return View("GenericAuthorizationLandingPage");
         }
 
+        [DasAuthorize(EmployerUserRole.Any)]
+        public ActionResult DasAuthorizeEmployerRolesAny()
+        {
+            ViewBag.Message = "DasAuthorizeEmployerRolesAny";
+
+            return View("GenericAuthorizationLandingPage");
+        }
+
         [DasAuthorize(ProviderPermissions.ProviderOperation.CreateCohort)]
         public ActionResult DasAuthorizeProviderPermissionsProviderOperationCreateCohort()
         {
