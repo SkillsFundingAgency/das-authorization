@@ -10,7 +10,8 @@ As provided by the SFA.DAS.Authorization package
 
 ## Requirements
 
-3. Install [Cosmos DB Emulator]
+# For testing Employer User Roles Authorization:
+Install [Cosmos DB Emulator]
 
 Load the `AccountUser.json` file under the `TestData` into your local  [Cosmos DB Emulator], this will give the User created by the *AutoLogin* option  the **Owner** role.
 
