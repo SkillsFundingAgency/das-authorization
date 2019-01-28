@@ -10,9 +10,10 @@ As provided by the SFA.DAS.Authorization package
 
 ## Requirements
 
-# For testing Employer User Roles Authorization:
-Install [Cosmos DB Emulator]
+The test harness assumes the necessary Table Storage Configuration and DBs are present for Employer Features, Employer User Roles, and Provider Permissions, when testing these specific areas. Refer to the Readmes for das-authorization and das-provider-relationships for these requirements.
 
-Load the `AccountUser.json` file under the `TestData` into your local  [Cosmos DB Emulator], this will give the User created by the *AutoLogin* option  the **Owner** role.
+Additionally for Employer Roles, some additional test data will need to be loaded to give the User created by the *AutoLogin* option  the **Owner** role:
+
+Load the `AccountUser.json` file under the `TestData` into your local  [Cosmos DB Emulator].
 
 [Cosmos DB Emulator]: https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator
