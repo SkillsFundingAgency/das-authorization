@@ -153,6 +153,9 @@
       <Name>SFA.DAS.Authorization</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestData\AccountUser.json" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

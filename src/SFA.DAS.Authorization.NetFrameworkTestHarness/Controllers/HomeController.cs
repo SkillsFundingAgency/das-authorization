@@ -44,6 +44,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
             return View("Authorized");
         }
 
+        [DasAuthorize(EmployerUserRole.Any)]
+        public ActionResult EmployerUserRoleAny()
+        {
+            return View("Authorized");
+        }
+
         [DasAuthorize(ProviderOperation.CreateCohort)]
         public ActionResult ProviderOperationCreateCohort()
         {
