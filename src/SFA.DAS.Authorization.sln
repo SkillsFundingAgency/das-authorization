@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.TestHarness", "SFA.DAS.Authorization.TestHarness\SFA.DAS.Authorization.TestHarness.csproj", "{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.NetFrameworkTestHarness", "SFA.DAS.Authorization.NetFrameworkTestHarness\SFA.DAS.Authorization.NetFrameworkTestHarness.csproj", "{CB917399-01A7-48C5-9001-DBD5A2BBFBF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.EmployerUserRoles", "SFA.DAS.Authorization.EmployerUserRoles\SFA.DAS.Authorization.EmployerUserRoles.csproj", "{03FD0131-C861-418A-91CA-B3884DE9D1D9}"
 EndProject
