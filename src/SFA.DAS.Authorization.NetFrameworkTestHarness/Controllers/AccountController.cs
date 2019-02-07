@@ -4,7 +4,8 @@ using System.Web.Security;
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
 {
     public class AccountController : Controller
-    {public ActionResult Login()
+    {
+        public ActionResult Login()
         {
             FormsAuthentication.SetAuthCookie(Models.User.Email, false);
             
@@ -18,12 +19,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Unauthenticated()
+        public ActionResult Http401()
         {
             return View();
         }
 
-        public ActionResult Unauthorized()
+        public ActionResult Http403()
         {
             return View();
         }

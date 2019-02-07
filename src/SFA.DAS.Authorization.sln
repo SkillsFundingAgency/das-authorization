@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.Emplo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.EmployerUserRoles.UnitTests", "SFA.DAS.Authorization.EmployerUserRoles.UnitTests\SFA.DAS.Authorization.EmployerUserRoles.UnitTests.csproj", "{039FA42B-0391-4920-9DDF-8AE10528FFBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Authorization.NetCoreTestHarness", "SFA.DAS.Authorization.NetCoreTestHarness\SFA.DAS.Authorization.NetCoreTestHarness.csproj", "{E9778AE5-FEF9-479B-926F-4E3697A19F42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{039FA42B-0391-4920-9DDF-8AE10528FFBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9778AE5-FEF9-479B-926F-4E3697A19F42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9778AE5-FEF9-479B-926F-4E3697A19F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9778AE5-FEF9-479B-926F-4E3697A19F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9778AE5-FEF9-479B-926F-4E3697A19F42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{EB53E2B8-3A40-4756-A748-98D264989FAC} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{CB917399-01A7-48C5-9001-DBD5A2BBFBF5} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 		{039FA42B-0391-4920-9DDF-8AE10528FFBA} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
+		{E9778AE5-FEF9-479B-926F-4E3697A19F42} = {3D5D4A75-EB5D-4AC3-BE84-C8669CD201B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E98D09A-8D14-42A0-8B8A-16CAC957C69F}

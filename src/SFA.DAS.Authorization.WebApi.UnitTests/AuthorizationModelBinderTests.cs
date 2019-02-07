@@ -70,7 +70,7 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
 
             BindingContext = new ModelBindingContext
             {
-                ModelMetadata = MetadataProvider.GetMetadataForProperty(null, typeof(AuthorizationContextModelStub), nameof(UserRef)),
+                ModelMetadata = MetadataProvider.GetMetadataForProperty(null, typeof(AuthorizationContextModelStub), nameof(AuthorizationContextModelStub.UserRef)),
                 ModelName = "",
                 ValueProvider = ValueProvider
             };

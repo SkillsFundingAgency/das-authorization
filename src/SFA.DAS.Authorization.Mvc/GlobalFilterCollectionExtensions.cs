@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET462
+using System.Web.Mvc;
 
 namespace SFA.DAS.Authorization.Mvc
 {
@@ -15,3 +16,4 @@ namespace SFA.DAS.Authorization.Mvc
         }
     }
 }
+#endif
