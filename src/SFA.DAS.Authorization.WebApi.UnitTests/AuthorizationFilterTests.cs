@@ -1,5 +1,4 @@
-﻿#if NET462
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -149,4 +148,3 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
         }
     }
 }
-#endif

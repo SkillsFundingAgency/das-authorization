@@ -1,5 +1,4 @@
-﻿#if NET462
-using System.Globalization;
+﻿using System.Globalization;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
@@ -30,4 +29,3 @@ namespace SFA.DAS.Authorization.WebApi
         }
     }
 }
-#endif
