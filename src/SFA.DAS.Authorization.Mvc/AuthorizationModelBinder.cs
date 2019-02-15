@@ -1,4 +1,34 @@
-﻿using System;
+﻿#if NETCOREAPP2_0
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace SFA.DAS.Authorization.Mvc
+{
+    public class AuthorizationModelBinder : IModelBinder
+    {
+        private readonly IAuthorizationContextProvider _authorizationContextProvider;
+
+        public AuthorizationModelBinder(IAuthorizationContextProvider authorizationContextProvider)
+        {
+            _authorizationContextProvider = authorizationContextProvider;
+        }
+
+        public Task BindModelAsync(ModelBindingContext bindingContext)
+        {
+            var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
+
+            if (authorizationContext.TryGet(bindingContext.ModelMetadata.PropertyName, out object value))
+            {
+                bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value, value.ToString());
+                bindingContext.Result = ModelBindingResult.Success(value);
+            }
+            
+            return Task.CompletedTask;
+        }
+    }
+}
+#elif NET462
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Web.Mvc;
@@ -36,3 +66,4 @@ namespace SFA.DAS.Authorization.Mvc
         }
     }
 }
+#endif

@@ -36,6 +36,12 @@ filters.AddAuthorizationFilter();
 filters.AddUnauthorizedAccessExceptionFilter();
 ```
 
+### MVC Core
+
+```c#
+services.AddMvc(o => o.AddDasAuthorization());
+```
+
 ### WebApi
 
 ```c#

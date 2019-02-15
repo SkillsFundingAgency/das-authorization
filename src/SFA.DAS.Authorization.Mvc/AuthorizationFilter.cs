@@ -1,4 +1,42 @@
-﻿using System;
+﻿#if NETCOREAPP2_0
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace SFA.DAS.Authorization.Mvc
+{
+    public class AuthorizationFilter : IAsyncAuthorizationFilter
+    {
+        private readonly IAuthorizationService _authorizationService;
+
+        public AuthorizationFilter(IAuthorizationService authorizationService)
+        {
+            _authorizationService = authorizationService;
+        }
+
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+            var dasAuthorizeAttributes = controllerActionDescriptor.GetDasAuthorizeAttributes();
+
+            if (dasAuthorizeAttributes.Any())
+            {
+                var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
+                var isAuthorized = await _authorizationService.IsAuthorizedAsync(options);
+
+                if (!isAuthorized)
+                {
+                    context.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
+                }
+            }
+        }
+    }
+}
+#elif NET462
+using System;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -31,3 +69,4 @@ namespace SFA.DAS.Authorization.Mvc
         }
     }
 }
+#endif

@@ -1,4 +1,161 @@
-﻿#if NET462
+﻿#if NETCOREAPP2_0
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Testing;
+
+namespace SFA.DAS.Authorization.Mvc.UnitTests
+{
+    [TestFixture]
+    [Parallelizable]
+    public class AuthorizationFilterTests : FluentTest<AuthorizationFilterTestsFixture>
+    {
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndActionIsDecoratedWithDasAuthorizeAttributeAndActionOptionsAreAuthorized_ThenShouldNotSetResult()
+        {
+            return TestAsync(f => f.SetActionDasAuthorizeAttribute().SetAuthorizedActionOptions(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().BeNull());
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndControllerIsDecoratedWithDasAuthorizeAttributeAndControllerOptionsAreAuthorized_ThenShouldNotSetResult()
+        {
+            return TestAsync(f => f.SetControllerDasAuthorizeAttribute().SetAuthorizedControllerOptions(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().BeNull());
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreDecoratedWithDasAuthorizeAttributeAndActionAndControllerOptionsAreAuthorized_ThenShouldNotSetResult()
+        {
+            return TestAsync(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute().SetAuthorizedActionOptions().SetAuthorizedControllerOptions(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().BeNull());
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndActionIsDecoratedWithDasAuthorizeAttributeAndActionOptionsAreNotAuthorized_ThenShouldSetResult()
+        {
+            return TestAsync(f => f.SetActionDasAuthorizeAttribute(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().NotBeNull().And.Match<StatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndControllerIsDecoratedWithDasAuthorizeAttributeAndControllerOptionsAreNotAuthorized_ThenShouldSetResult()
+        {
+            return TestAsync(f => f.SetControllerDasAuthorizeAttribute(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().NotBeNull().And.Match<StatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreDecoratedWithDasAuthorizeAttributeAndActionAndControllerOptionsAreNotAuthorized_ThenShouldSetResult()
+        {
+            return TestAsync(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().NotBeNull().And.Match<StatusCodeResult>(r => r.StatusCode == (int)HttpStatusCode.Forbidden));
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingAndActionAndControllerAreNotDecoratedWithDasAuthorizeAttribute_ThenShouldNotSetResult()
+        {
+            return TestAsync(f => f.OnAuthorizationAsync(), f => f.AuthorizationFilterContext.Result.Should().BeNull());
+        }
+
+        [Test]
+        public Task OnActionExecuting_WhenActionIsExecutingMoreThanOnce_ThenShouldNotGetDasAuthorizeAttributeMoreThanOnce()
+        {
+            return TestAsync(f => f.SetActionDasAuthorizeAttribute().SetControllerDasAuthorizeAttribute(), f => f.OnAuthorizationAsyncMoreThanOnce(), f =>
+            {
+                f.MethodInfo.Verify(i => i.GetCustomAttributes(typeof(DasAuthorizeAttribute), true), Times.Once);
+                f.ControllerTypeInfo.Verify(i => i.GetCustomAttributes(typeof(DasAuthorizeAttribute), true), Times.Once);
+            });
+        }
+    }
+
+    public class AuthorizationFilterTestsFixture
+    {
+        public AuthorizationFilterContext AuthorizationFilterContext { get; set; }
+        public ActionContext ActionContext { get; set; }
+        public Mock<HttpContext> HttpContext { get; set; }
+        public ControllerActionDescriptor ActionDescriptor { get; set; }
+        public Mock<TypeInfo> ControllerTypeInfo { get; set; }
+        public Mock<MethodInfo> MethodInfo { get; set; }
+        public AuthorizationFilter AuthorizationFilter { get; set; }
+        public Mock<IAuthorizationService> AuthorizationService { get; set; }
+        public string[] ActionOptions { get; set; }
+        public string[] ControllerOptions { get; set; }
+
+        public AuthorizationFilterTestsFixture()
+        {
+            ControllerTypeInfo = new Mock<TypeInfo>();
+            MethodInfo = new Mock<MethodInfo>();
+            
+            ActionDescriptor = new ControllerActionDescriptor
+            {
+                ControllerName = Guid.NewGuid().ToString(),
+                ControllerTypeInfo = ControllerTypeInfo.Object,
+                ActionName = Guid.NewGuid().ToString(),
+                MethodInfo = MethodInfo.Object
+            };
+            
+            HttpContext = new Mock<HttpContext>();
+            ActionContext = new ActionContext(HttpContext.Object, new RouteData(),  ActionDescriptor);
+            AuthorizationFilterContext = new AuthorizationFilterContext(ActionContext, new List<IFilterMetadata>());
+            AuthorizationService = new Mock<IAuthorizationService>();
+            ActionOptions = new string[0];
+            ControllerOptions = new string[0];
+
+            ControllerTypeInfo.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
+            MethodInfo.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] {});
+            
+            AuthorizationFilter = new AuthorizationFilter(AuthorizationService.Object);
+        }
+
+        public Task OnAuthorizationAsync()
+        {
+            return AuthorizationFilter.OnAuthorizationAsync(AuthorizationFilterContext);
+        }
+
+        public async Task OnAuthorizationAsyncMoreThanOnce()
+        {
+            await AuthorizationFilter.OnAuthorizationAsync(AuthorizationFilterContext);
+            await AuthorizationFilter.OnAuthorizationAsync(AuthorizationFilterContext);
+        }
+
+        public AuthorizationFilterTestsFixture SetActionDasAuthorizeAttribute()
+        {
+            ActionOptions = new[] { "Action.Option" };
+            MethodInfo.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] { new DasAuthorizeAttribute(ActionOptions) });
+
+            return this;
+        }
+
+        public AuthorizationFilterTestsFixture SetControllerDasAuthorizeAttribute()
+        {
+            ControllerOptions = new[] { "Controller.Option" };
+            ControllerTypeInfo.Setup(d => d.GetCustomAttributes(typeof(DasAuthorizeAttribute), true)).Returns(new object[] { new DasAuthorizeAttribute(ControllerOptions) });
+
+            return this;
+        }
+
+        public AuthorizationFilterTestsFixture SetAuthorizedActionOptions()
+        {
+            AuthorizationService.Setup(a => a.IsAuthorizedAsync(It.Is<string[]>(o => ActionOptions.All(o.Contains)))).ReturnsAsync(true);
+
+            return this;
+        }
+
+        public AuthorizationFilterTestsFixture SetAuthorizedControllerOptions()
+        {
+            AuthorizationService.Setup(a => a.IsAuthorizedAsync(It.Is<string[]>(o => ControllerOptions.All(o.Contains)))).ReturnsAsync(true);
+
+            return this;
+        }
+    }
+}
+#elif NET462
 using System;
 using System.Linq;
 using System.Net;
@@ -70,9 +227,9 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
     public class AuthorizationFilterTestsFixture
     {
         public ActionExecutingContext ActionExecutingContext { get; set; }
+        public Mock<ActionDescriptor> ActionDescriptor { get; set; }
         public AuthorizationFilter AuthorizationFilter { get; set; }
         public Mock<IAuthorizationService> AuthorizationService { get; set; }
-        public Mock<ActionDescriptor> ActionDescriptor { get; set; }
         public string[] ActionOptions { get; set; }
         public string[] ControllerOptions { get; set; }
 

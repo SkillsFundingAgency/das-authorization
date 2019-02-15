@@ -1,5 +1,4 @@
-﻿#if NET462
-using System.Globalization;
+﻿using System.Globalization;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
@@ -17,11 +16,10 @@ namespace SFA.DAS.Authorization.WebApi
 
                 if (authorizationContext.TryGet(bindingContext.ModelMetadata.PropertyName, out object value))
                 {
-                    var key = bindingContext.ModelName;
                     var valueProviderResult = new ValueProviderResult(value, value.ToString(), CultureInfo.InvariantCulture);
 
                     bindingContext.Model = value;
-                    bindingContext.ModelState.SetModelValue(key, valueProviderResult);
+                    bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
 
                     return true;
                 }
@@ -31,4 +29,3 @@ namespace SFA.DAS.Authorization.WebApi
         }
     }
 }
-#endif

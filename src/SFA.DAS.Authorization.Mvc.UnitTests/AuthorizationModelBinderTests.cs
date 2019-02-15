@@ -1,4 +1,80 @@
-﻿#if NET462
+﻿#if NETCOREAPP2_0
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Testing;
+
+namespace SFA.DAS.Authorization.Mvc.UnitTests
+{
+    [TestFixture]
+    [Parallelizable]
+    public class AuthorizationModelBinderTests : FluentTest<AuthorizationModelBinderTestsFixture>
+    {
+        [Test]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
+        {
+            return TestAsync(f => f.SetAuthorizationContext(), f => f.BindModel(), f =>
+            {
+                f.BindingContext.VerifySet(c => c.Result = It.Is<ModelBindingResult>(m => m.Model.Equals(f.UserRef) && m.IsModelSet));
+            });
+        }
+
+        [Test]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
+        {
+            return TestAsync(f => f.BindModel(), f =>
+            {
+                f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
+            });
+        }
+    }
+
+    public class AuthorizationModelBinderTestsFixture
+    {
+        public Guid UserRef { get; set; }
+        public ModelMetadataProvider ModelMetadataProvider { get; set; }
+        public ModelMetadata ModelMetadata { get; set; }
+        public ModelStateDictionary ModelState { get; set; }
+        public Mock<ModelBindingContext> BindingContext { get; set; }
+        public IModelBinder ModelBinder { get; set; }
+        public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
+        public IAuthorizationContext AuthorizationContext { get; set; }
+
+        public AuthorizationModelBinderTestsFixture()
+        {
+            UserRef = Guid.NewGuid();
+
+            ModelMetadataProvider = new EmptyModelMetadataProvider();
+            ModelMetadata = ModelMetadataProvider.GetMetadataForProperty(typeof(AuthorizationContextModelStub), nameof(AuthorizationContextModelStub.UserRef));
+            ModelState = new ModelStateDictionary();
+            BindingContext = new Mock<ModelBindingContext>();
+            AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();
+            AuthorizationContext = new AuthorizationContext();
+
+            BindingContext.Setup(c => c.ModelMetadata).Returns(ModelMetadata);
+            BindingContext.Setup(c => c.ModelState).Returns(ModelState);
+            BindingContext.Setup(c => c.ModelName).Returns("");
+            AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(AuthorizationContext);
+
+            ModelBinder = new AuthorizationModelBinder(AuthorizationContextProvider.Object);
+        }
+
+        public Task BindModel()
+        {
+            return ModelBinder.BindModelAsync(BindingContext.Object);
+        }
+
+        public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
+        {
+            AuthorizationContext.Set(nameof(UserRef), UserRef);
+
+            return this;
+        }
+    }
+}
+#elif NET462
 using System;
 using System.Collections.Specialized;
 using System.Web;

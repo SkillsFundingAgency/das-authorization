@@ -1,5 +1,4 @@
-﻿#if NET462
-using System;
+﻿using System;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 
@@ -13,4 +12,3 @@ namespace SFA.DAS.Authorization.WebApi
         }
     }
 }
-#endif

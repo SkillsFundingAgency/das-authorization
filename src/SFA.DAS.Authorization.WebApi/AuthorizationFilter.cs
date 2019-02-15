@@ -1,5 +1,4 @@
-﻿#if NET462
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Controllers;
@@ -27,4 +26,3 @@ namespace SFA.DAS.Authorization.WebApi
         }
     }
 }
-#endif

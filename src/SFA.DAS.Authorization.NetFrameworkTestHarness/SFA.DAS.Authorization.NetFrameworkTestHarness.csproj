@@ -17,7 +17,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44396</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -44,10 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.7.2" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.6" />
-    <PackageReference Include="Microsoft.AspNet.TelemetryCorrelation" Version="1.0.4" />
     <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="2.0.1" />
     <PackageReference Include="Microsoft.Owin" Version="4.0.0" />
     <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.0.0" />
@@ -55,14 +54,14 @@
     <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.0.0" />
     <PackageReference Include="NLog.Schema" Version="4.5.10" />
     <PackageReference Include="SFA.DAS.AutoConfiguration" Version="2.0.1" />
-    <PackageReference Include="SFA.DAS.EmployerUsers.WebClientComponents" Version="1.0.0.52781" />
     <PackageReference Include="SFA.DAS.HashingService" Version="1.0.0.57835" />
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.1.5" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.1.5" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="StructureMap.MVC5" Version="3.1.1.134" />
+    <PackageReference Include="WebApi.StructureMap" Version="1.0.21" />
     <PackageReference Include="WebGrease" Version="1.6.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.2" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -88,10 +87,12 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Controllers\HomeController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authorization\TestOption.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -112,12 +113,12 @@
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="Startup\AspNetStartup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Views\Account\Unauthenticated.cshtml" />
-    <Content Include="Views\Account\Unauthorized.cshtml" />
+    <Content Include="Views\Account\Http401.cshtml" />
+    <Content Include="Views\Account\Http403.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -148,6 +149,10 @@
       <Project>{7ed85d95-9ea6-491f-bcd0-15fb1fc0bc5e}</Project>
       <Name>SFA.DAS.Authorization.ProviderPermissions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Authorization.WebApi\SFA.DAS.Authorization.WebApi.csproj">
+      <Project>{96b25561-d617-4d11-848a-6520258fd565}</Project>
+      <Name>SFA.DAS.Authorization.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj">
       <Project>{e03e43ca-7fea-4cf1-a142-276268c05889}</Project>
       <Name>SFA.DAS.Authorization</Name>
@@ -174,7 +179,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>55601</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55601/</IISUrl>
+          <IISUrl>https://localhost:44396/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
