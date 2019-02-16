@@ -195,9 +195,9 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountLegalEntityId` & `Ukprn` authorization context values are required for this package.
 
-### MVC
+### MVC & MVC Core
 
-The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
+The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute`/`Microsoft.AspNetCore.Authorization.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
 
 ```c#
 [DasAuthorize]
@@ -234,15 +234,6 @@ public class AddLegalEntityViewModel: IAuthorizationContextModel
 {
     public long AccountId { get; set; }
     public string UserRef { get; set; }
-}
-```
-
-Html helpers can also be used that includes the synchronous methods from `IAuthorizationService`:
-
-```razor
-if (@Html.IsAuthorized(EmployerUserRole.Owner))
-{
-    <a href="@Url.Action("Add", "LegalEntities")">Add legal entity</a>
 }
 ```
 
