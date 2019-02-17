@@ -16,7 +16,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/account/http401"));
                 
-            services.AddMvc(o => o.AddDasAuthorization())
+            services.AddMvc(o => o.AddAuthorization())
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -29,6 +29,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
         public void Configure(IApplicationBuilder app)
         {
             app.UseDeveloperExceptionPage()
+                .UseUnauthorizedAccessExceptionHandler()
                 .UseStatusCodePagesWithReExecute("/account/http{0}")
                 .UseHttpsRedirection()
                 .UseStaticFiles()

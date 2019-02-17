@@ -5,10 +5,9 @@ namespace SFA.DAS.Authorization.Mvc
 {
     public static class MvcOptionsExtensions
     {
-        public static void AddDasAuthorization(this MvcOptions mvcOptions)
+        public static void AddAuthorization(this MvcOptions mvcOptions)
         {
             mvcOptions.Filters.Add<AuthorizationFilter>();
-            mvcOptions.Filters.Add<UnauthorizedAccessExceptionFilter>();
             mvcOptions.ModelBinderProviders.Insert(0, new AuthorizationModelBinderProvider());
         }
     }
