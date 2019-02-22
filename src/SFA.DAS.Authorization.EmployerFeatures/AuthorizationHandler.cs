@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => EmployerFeature.Namespace;
+        public string Prefix => EmployerFeature.Prefix;
         
         private readonly IFeatureTogglesService _featureTogglesService;
         private readonly ILogger _logger;

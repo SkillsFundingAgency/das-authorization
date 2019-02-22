@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => ProviderOperation.Namespace;
+        public string Prefix => ProviderOperation.Prefix;
         
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
         private readonly ILogger _logger;

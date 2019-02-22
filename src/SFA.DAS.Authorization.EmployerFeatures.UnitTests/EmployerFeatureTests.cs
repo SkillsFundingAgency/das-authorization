@@ -15,13 +15,11 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         [Test]
         public void EveryEmployerFeatureNameMustMatchAFeatureEnumValue()
         {
-            var nakedEmployerFeaturePos = EmployerFeature.Namespace.Length + 1;
-            
             var employerFeatures = typeof(EmployerFeature)
                 .GetFields()
                 .Select(f => f.GetRawConstantValue())
                 .Cast<string>()
-                .Select(o => o.Substring(nakedEmployerFeaturePos));
+                .Select(o => o.Substring(EmployerFeature.Prefix.Length));
 
             foreach (var employerFeature in employerFeatures)
             {

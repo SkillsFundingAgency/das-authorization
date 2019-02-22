@@ -2,9 +2,9 @@
 {
     public static class ProviderOperation
     {
-        internal const string Namespace = "ProviderOperation";
+        internal const string Prefix = "ProviderOperation.";
         internal const string CreateCohortOption = "CreateCohort";
         
-        public const string CreateCohort = Namespace + "." + CreateCohortOption;
+        public const string CreateCohort = Prefix + CreateCohortOption;
     }
 }
