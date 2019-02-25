@@ -16,13 +16,11 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         [Test]
         public void EveryProviderOperationNameMustMatchAProviderRelationshipsOperationEnumValue()
         {
-            var nakedProviderOperationPos = ProviderOperation.Namespace.Length + 1;
-            
             var providerOperations = typeof(ProviderOperation)
                 .GetFields()
                 .Select(f => f.GetRawConstantValue())
                 .Cast<string>()
-                .Select(o => o.Substring(nakedProviderOperationPos));
+                .Select(o => o.Substring(ProviderOperation.Prefix.Length));
 
             foreach (var providerOperation in providerOperations)
             {

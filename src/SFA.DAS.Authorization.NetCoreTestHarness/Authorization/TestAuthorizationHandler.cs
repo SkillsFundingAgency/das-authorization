@@ -8,7 +8,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Authorization
 {
     public class TestAuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => TestOption.Namespace;
+        public string Prefix => TestOption.Prefix;
         
         private readonly ILogger _logger;
 

@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Namespace => EmployerUserRole.Namespace;
+        public string Prefix => EmployerUserRole.Prefix;
 
         private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
         private readonly ILogger _logger;

@@ -39,12 +39,17 @@ namespace SFA.DAS.Authorization
         public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
         {
             var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
+            var unrecognisedOptions = options.Where(o => !_handlers.Any(h => o.Contains(h.Prefix))).ToList();
+
+            if (unrecognisedOptions.Any())
+            {
+                throw new ArgumentException($"Options '{string.Join(", ", unrecognisedOptions)}' were unrecognized", nameof(options));
+            }
             
             var authorizationResults = await Task.WhenAll(
                 from h in _handlers
-                let n = h.Namespace + "."
-                let hno = options.Where(o => o.Contains(n)).Select(o => o.Replace(n, "")).ToList()
-                select h.GetAuthorizationResult(hno, authorizationContext)).ConfigureAwait(false);
+                let o = options.Where(o => o.Contains(h.Prefix)).Select(o => o.Replace(h.Prefix, "")).ToList()
+                select h.GetAuthorizationResult(o, authorizationContext)).ConfigureAwait(false);
             
             var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
             

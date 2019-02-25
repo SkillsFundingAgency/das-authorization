@@ -16,15 +16,13 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests
         [Test]
         public void EveryEmployerUserRoleNameMustMatchAEmployerAccountsUserRoleEnumValue()
         {
-            var nakedEmployerUserRolePos = EmployerUserRole.Namespace.Length + 1;
-            
             var employerUserRoles = typeof(EmployerUserRole)
                 .GetFields()
                 .Select(f => f.GetRawConstantValue())
                 .Cast<string>()
                 .Where(o => o != EmployerUserRole.Any)
                 .SelectMany(o => o.Split(','))
-                .Select(o => o.Substring(nakedEmployerUserRolePos));
+                .Select(o => o.Substring(EmployerUserRole.Prefix.Length));
 
             foreach (var employerUserRole in employerUserRoles)
             {

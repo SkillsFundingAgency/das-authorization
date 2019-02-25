@@ -5,7 +5,7 @@ namespace SFA.DAS.Authorization
 {
     public interface IAuthorizationHandler
     {
-        string Namespace { get; }
+        string Prefix { get; }
 
         Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext);
     }
