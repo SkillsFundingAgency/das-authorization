@@ -17,6 +17,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             var employerFeatures = typeof(EmployerFeature)
                 .GetFields()
+                .Where( f => f.Name != nameof(EmployerFeature.Prefix))
                 .Select(f => f.GetRawConstantValue())
                 .Cast<string>()
                 .Select(o => o.Substring(EmployerFeature.Prefix.Length));

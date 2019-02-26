@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
+      <ProjectReference Include="..\SFA.DAS.Authorization.Mvc\SFA.DAS.Authorization.Mvc.csproj" />
+    </ItemGroup>
+
+</Project>
