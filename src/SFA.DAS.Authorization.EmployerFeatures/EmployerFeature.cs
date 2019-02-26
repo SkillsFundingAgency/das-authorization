@@ -6,5 +6,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
         internal const string ProviderRelationshipsOption = "ProviderRelationships";
         
         public const string ProviderRelationships = Prefix + ProviderRelationshipsOption;
+
+        public const string OptionalPAYE =  Prefix + "OptionalPAYE";
     }
 }
