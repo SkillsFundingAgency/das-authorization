@@ -8,7 +8,6 @@ This package includes:
   * Provider permissions - Provider permission checks for an organisation.
 * Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
-* Html helper extensions for Mvc.
 
 ## Configuration
 
@@ -196,9 +195,9 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountLegalEntityId` & `Ukprn` authorization context values are required for this package.
 
-### MVC & MVC Core
+### MVC
 
-The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute`/`Microsoft.AspNetCore.Authorization.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
+The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
 
 ```c#
 [DasAuthorize]
@@ -206,6 +205,47 @@ The `DasAuthorizeAttribute` attribute can be used to check users' authorization.
 public class LegalEntitiesController : Controller
 {
     [Route]
+    public ActionResult Index()
+    {
+        return View();
+    }
+    
+    [DasAuthorize(EmployerUserRole.Owner)]
+    [Route("add")]
+    public ActionResult Add()
+    {
+        return View(new AddLegalEntityViewModel());
+    }
+
+    [HttpPost]
+    [DasAuthorize(EmployerUserRole.Owner)]
+    [Route("add")]
+    public ActionResult Add(AddLegalEntityViewModel model)
+    {
+        return RedirectToAction("Index");
+    }
+}
+```
+
+By adding the `IAuthorizationContextModel` marker interface to a controller action's model then any properties on the model of which a corresponding property can be found in the authorization context will be set:
+
+```c#
+public class AddLegalEntityViewModel: IAuthorizationContextModel
+{
+    public long AccountId { get; set; }
+    public string UserRef { get; set; }
+}
+```
+
+### MVC Core
+
+The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `Microsoft.AspNetCore.Authorization.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
+
+```c#
+[DasAuthorize]
+[Route("legalentities")]
+public class LegalEntitiesController : Controller
+{
     public ActionResult Index()
     {
         return View();
