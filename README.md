@@ -17,14 +17,12 @@ In addition to the `SFA.DAS.Authorization` package one or more of the following 
 * `SFA.DAS.Authorization.EmployerUserRoles`
 * `SFA.DAS.Authorization.ProviderPermissions`
 
-### StructureMap
-
-The authorization packages include StructureMap registries for wiring up their components:
+### MVC Core
 
 ```c#
-c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
-c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
-c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
+services.AddEmployerFeaturesAuthorization();
+services.AddMvc(o => o.AddAuthorization());
+app.UseUnauthorizedAccessExceptionHandler();
 ```
 
 ### MVC
@@ -35,13 +33,6 @@ filters.AddAuthorizationFilter();
 filters.AddUnauthorizedAccessExceptionFilter();
 ```
 
-### MVC Core
-
-```c#
-app.UseUnauthorizedAccessExceptionHandler();
-services.AddMvc(o => o.AddAuthorization());
-```
-
 ### WebApi
 
 ```c#
@@ -49,6 +40,18 @@ config.Services.UseAuthorizationModelBinder();
 config.Filters.AddAuthorizationFilter();
 config.Filters.AddUnauthorizedAccessExceptionFilter();
 ```
+
+### StructureMap
+
+If you're not using .NET Core then the authorization packages also include StructureMap registries for wiring up their components:
+
+```c#
+c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
+c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
+c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
+```
+
+> Please note, currently only the `SFA.DAS.Authorization.EmployerFeatures` package includes .NET Core DI `IServiceCollection` extensions.
 
 ### Table Storage
 
