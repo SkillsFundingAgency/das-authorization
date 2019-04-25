@@ -102,7 +102,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IFeatureTogglesService> FeatureTogglesService { get; set; }
-        public Mock<ILogger> Logger { get; set; }
+        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long AccountId = 1;
         public const string UserEmail = "foo@bar.com";
@@ -112,7 +112,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             FeatureTogglesService = new Mock<IFeatureTogglesService>();
-            Logger = new Mock<ILogger>();
+            Logger = new Mock<ILogger<AuthorizationHandler>>();
             Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
         }
 

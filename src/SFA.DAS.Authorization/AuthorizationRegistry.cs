@@ -11,6 +11,7 @@ namespace SFA.DAS.Authorization
             For<IAuthorizationService>().Use<AuthorizationService>();
             For<ILogger>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory().CreateLogger(c.ParentType));
             For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();
+            For(typeof(ILogger<>)).Use(typeof(Logger<>));
         }
     }
 }

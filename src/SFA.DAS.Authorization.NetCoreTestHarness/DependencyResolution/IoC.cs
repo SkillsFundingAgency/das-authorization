@@ -11,7 +11,6 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
         public static void Initialize(Registry registry)
         {
             registry.IncludeRegistry<AutoConfigurationRegistry>();
-            registry.IncludeRegistry<EmployerFeaturesAuthorizationRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<ProviderPermissionsAuthorizationRegistry>();
             registry.IncludeRegistry<TestAuthorizationRegistry>();

@@ -12,7 +12,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
         private readonly IFeatureTogglesService _featureTogglesService;
         private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger logger)
+        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
             _featureTogglesService = featureTogglesService;
             _logger = logger;
