@@ -8,6 +8,7 @@ namespace SFA.DAS.Authorization
         public AuthorizationRegistry()
         {
             For<IAuthorizationContext>().Use<AuthorizationContext>();
+            For<IAuthorizationContextProvider>().DecorateAllWith<AuthorizationContextCache>();
             For<IAuthorizationService>().Use<AuthorizationService>();
             For<ILogger>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory().CreateLogger(c.ParentType));
             For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();

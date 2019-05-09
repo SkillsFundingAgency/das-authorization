@@ -17,8 +17,6 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/account/http401"));
 
-            services.AddEmployerFeaturesAuthorization();
-
             services.AddMvc(o => o.AddAuthorization())
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
