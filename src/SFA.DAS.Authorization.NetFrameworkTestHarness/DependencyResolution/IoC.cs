@@ -13,15 +13,15 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
         public static IContainer Initialize()
         {
             return new Container(c =>
-                {
-                    c.AddRegistry<AutoConfigurationRegistry>();
-                    c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
-                    c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
-                    c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
-                    c.AddRegistry<TestAuthorizationRegistry>();
-                    c.AddRegistry<DefaultRegistry>();
-                }
-            );
+            {
+                c.AddRegistry<AuthorizationRegistry>();
+                c.AddRegistry<AutoConfigurationRegistry>();
+                c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
+                c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
+                c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
+                c.AddRegistry<TestAuthorizationRegistry>();
+                c.AddRegistry<DefaultRegistry>();
+            });
         }
     }
 }

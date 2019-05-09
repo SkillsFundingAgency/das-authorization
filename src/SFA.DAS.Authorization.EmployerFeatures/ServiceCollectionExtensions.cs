@@ -4,10 +4,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddEmployerFeaturesAuthorization<T>(this IServiceCollection services) where T : class, IAuthorizationContextProvider
+        public static IServiceCollection AddEmployerFeaturesAuthorization(this IServiceCollection services)
         {
-            return services.AddAuthorization<T>()
-                .AddScoped<IAuthorizationHandler, AuthorizationHandler>()
+            return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
                 .AddSingleton<IFeatureTogglesService, FeatureTogglesService>();
         }
     }
