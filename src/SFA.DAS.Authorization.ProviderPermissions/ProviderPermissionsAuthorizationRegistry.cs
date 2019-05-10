@@ -7,7 +7,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions
     {
         public ProviderPermissionsAuthorizationRegistry()
         {
-            IncludeRegistry<AuthorizationRegistry>();
             IncludeRegistry<ProviderRelationshipsApiClientRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
         }

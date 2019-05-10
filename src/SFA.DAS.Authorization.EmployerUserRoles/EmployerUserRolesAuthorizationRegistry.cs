@@ -7,7 +7,6 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
     {
         public EmployerUserRolesAuthorizationRegistry()
         {
-            IncludeRegistry<AuthorizationRegistry>();
             IncludeRegistry<EmployerAccountsApiClientRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
         }

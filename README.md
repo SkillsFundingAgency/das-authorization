@@ -20,6 +20,7 @@ In addition to the `SFA.DAS.Authorization` package one or more of the following 
 ### MVC Core
 
 ```c#
+services.AddAuthorization<AuthorizationContextProvider>();
 services.AddEmployerFeaturesAuthorization();
 services.AddMvc(o => o.AddAuthorization());
 app.UseUnauthorizedAccessExceptionHandler();
@@ -46,6 +47,7 @@ config.Filters.AddUnauthorizedAccessExceptionFilter();
 If you're not using .NET Core then the authorization packages also include StructureMap registries for wiring up their components:
 
 ```c#
+c.AddRegistry<AuthorizationRegistry>();
 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();

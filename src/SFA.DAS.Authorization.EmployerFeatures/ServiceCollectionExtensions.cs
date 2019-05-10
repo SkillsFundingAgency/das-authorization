@@ -6,8 +6,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     {
         public static IServiceCollection AddEmployerFeaturesAuthorization(this IServiceCollection services)
         {
-            return services.AddAuthorization()
-                .AddScoped<IAuthorizationHandler, AuthorizationHandler>()
+            return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
                 .AddSingleton<IFeatureTogglesService, FeatureTogglesService>();
         }
     }
