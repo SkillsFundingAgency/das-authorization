@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void GetAuthorizationContext_WhenGettingAuthorizationContext_ThenShouldReturnAuthorizationContext()
         {
-            Test(f => f.GetAuthorizationContext(), (f, r) => r.Should().NotBeNull());
+            Test(f => f.GetAuthorizationContext(), (f, r) => r.SingleOrDefault().Should().NotBeNull());
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void GetAuthorizationContext_WhenGettingAuthorizationContextMultipleTimes_ThenShouldReturnSameAuthorizationContext()
         {
-            Test(f => f.GetAuthorizationContext(3), (f, r) => f.AuthorizationContexts.ForEach(c => c.Should().Be(r)));
+            Test(f => f.GetAuthorizationContext(3), (f, r) => r.ForEach(c => c.Should().Be(r.First())));
         }
     }
 
@@ -40,25 +40,25 @@ namespace SFA.DAS.Authorization.UnitTests
     {
         public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
         public IAuthorizationContextProvider AuthorizationContextCache { get; set; }
-        public List<IAuthorizationContext> AuthorizationContexts { get; set; }
 
         public AuthorizationContextCacheTestsFixture()
         {
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();
             AuthorizationContextCache = new AuthorizationContextCache(AuthorizationContextProvider.Object);
-            AuthorizationContexts = new List<IAuthorizationContext>();
 
             AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(() => new AuthorizationContext());
         }
 
-        public IAuthorizationContext GetAuthorizationContext(int? count = 1)
+        public List<IAuthorizationContext> GetAuthorizationContext(int count = 1)
         {
+            var authorizationContexts = new List<IAuthorizationContext>();
+            
             for (var i = 0; i < count; i++)
             {
-                AuthorizationContexts.Add(AuthorizationContextCache.GetAuthorizationContext());
+                authorizationContexts.Add(AuthorizationContextCache.GetAuthorizationContext());
             }
 
-            return AuthorizationContexts.First();
+            return authorizationContexts;
         }
     }
 }
