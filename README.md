@@ -200,16 +200,15 @@ if (!authorizationResult.IsAuthorized)
 
 > `AccountLegalEntityId` & `Ukprn` authorization context values are required for this package.
 
-### MVC
+### MVC Core
 
-The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
+The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `Microsoft.AspNetCore.Authorization.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
 
 ```c#
 [DasAuthorize]
-[RoutePrefix("legalentities")]
+[Route("legalentities")]
 public class LegalEntitiesController : Controller
 {
-    [Route]
     public ActionResult Index()
     {
         return View();
@@ -242,15 +241,16 @@ public class AddLegalEntityViewModel: IAuthorizationContextModel
 }
 ```
 
-### MVC Core
+### MVC
 
-The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `Microsoft.AspNetCore.Authorization.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
+The `DasAuthorizeAttribute` attribute can be used to check users' authorization. It inherits from the default `System.Web.Mvc.AuthorizeAttribute` attribute and so can replace any current usages to ensure the current user is authenticated:
 
 ```c#
 [DasAuthorize]
-[Route("legalentities")]
+[RoutePrefix("legalentities")]
 public class LegalEntitiesController : Controller
 {
+    [Route]
     public ActionResult Index()
     {
         return View();
