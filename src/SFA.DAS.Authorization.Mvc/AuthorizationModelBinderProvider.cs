@@ -1,6 +1,8 @@
 #if NETCOREAPP2_0
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Authorization.Mvc
 {
@@ -8,9 +10,16 @@ namespace SFA.DAS.Authorization.Mvc
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            return typeof(IAuthorizationContextModel).IsAssignableFrom(context.Metadata.ContainerType)
-                ? new BinderTypeModelBinder(typeof(AuthorizationModelBinder))
-                : null;
+            if (typeof(IAuthorizationContextModel).IsAssignableFrom(context.Metadata.ContainerType) && !context.Metadata.IsComplexType)
+            {
+                var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
+                var simpleTypeModelBinder = new SimpleTypeModelBinder(context.Metadata.ModelType, loggerFactory);
+                var authorizationModelBinder = new AuthorizationModelBinder(simpleTypeModelBinder);
+
+                return authorizationModelBinder;
+            }
+
+            return null;
         }
     }
 }

@@ -29,6 +29,15 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
                 f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
             });
         }
+
+        [Test]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldCallFallbackModelBinder()
+        {
+            return TestAsync(f => f.BindModel(), f =>
+            {
+                f.FallbackModelBinder.Verify(b => b.BindModelAsync(f.BindingContext.Object), Times.Once);
+            });
+        }
     }
 
     public class AuthorizationModelBinderTestsFixture
@@ -39,6 +48,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public ModelStateDictionary ModelState { get; set; }
         public Mock<ModelBindingContext> BindingContext { get; set; }
         public IModelBinder ModelBinder { get; set; }
+        public Mock<IModelBinder> FallbackModelBinder { get; set; }
         public Mock<IAuthorizationContextProvider> AuthorizationContextProvider { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
 
@@ -50,15 +60,18 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             ModelMetadata = ModelMetadataProvider.GetMetadataForProperty(typeof(AuthorizationContextModelStub), nameof(AuthorizationContextModelStub.UserRef));
             ModelState = new ModelStateDictionary();
             BindingContext = new Mock<ModelBindingContext>();
+            FallbackModelBinder = new Mock<IModelBinder>();
             AuthorizationContextProvider = new Mock<IAuthorizationContextProvider>();
             AuthorizationContext = new AuthorizationContext();
 
+            BindingContext.Setup(c => c.HttpContext.RequestServices.GetService(typeof(IAuthorizationContextProvider))).Returns(AuthorizationContextProvider.Object);
             BindingContext.Setup(c => c.ModelMetadata).Returns(ModelMetadata);
             BindingContext.Setup(c => c.ModelState).Returns(ModelState);
             BindingContext.Setup(c => c.ModelName).Returns("");
+            FallbackModelBinder.Setup(b => b.BindModelAsync(BindingContext.Object)).Returns(Task.CompletedTask);
             AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(AuthorizationContext);
 
-            ModelBinder = new AuthorizationModelBinder(AuthorizationContextProvider.Object);
+            ModelBinder = new AuthorizationModelBinder(FallbackModelBinder.Object);
         }
 
         public Task BindModel()
