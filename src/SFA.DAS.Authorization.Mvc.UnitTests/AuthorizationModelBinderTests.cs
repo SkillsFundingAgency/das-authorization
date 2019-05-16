@@ -135,12 +135,12 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
         {
-            return TestAsync(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), f =>
+            Test(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), (f, r) =>
             {
-                f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
-                f.FallbackModelBinder.Verify(b => b.BindModelAsync(f.BindingContext.Object), Times.Once);
+                r.Should().NotBeNull();
+                r.UserRef.Should().BeNull();
             });
         }
 
@@ -167,7 +167,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
         public AuthorizationModelBinderTestsFixture()
         {
-            UserRef = Guid.NewGuid();
+            UserRef = "XYZ";
             ControllerContext = new ControllerContext(Mock.Of<HttpContextBase>(), new RouteData(), Mock.Of<ControllerBase>());
             ValueProvider = new NameValueCollectionValueProvider(new NameValueCollection(), null);
 
@@ -200,7 +200,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
         {
-            AuthorizationContext.Set(nameof(UserRef), "ABC");
+            AuthorizationContext.Set(nameof(UserRef), UserRef);
 
             return this;
         }
