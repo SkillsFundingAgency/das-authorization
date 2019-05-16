@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
-            return TestAsync(f => f.SetAuthorizationContext(), f => f.BindModel(), f =>
+            return TestAsync(f => f.SetAuthorizationContextTo(f.UserRef), f => f.BindModel(), f =>
             {
                 f.BindingContext.VerifySet(c => c.Result = It.Is<ModelBindingResult>(m => m.Model.Equals(f.UserRef) && m.IsModelSet));
             });
@@ -96,13 +96,6 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
             return this;
         }
-
-        public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
-        {
-            AuthorizationContext.Set(nameof(UserRef), UserRef);
-
-            return this;
-        }
     }
 }
 #elif NET462
@@ -125,7 +118,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
-            Test(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
+            Test(f => f.SetAuthorizationContextTo(f.UserRef), f => f.BindModel(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.UserRef.Should().Be(f.UserRef);
@@ -194,13 +187,6 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public AuthorizationModelBinderTestsFixture SetAuthorizationContextTo(string value)
         {
             AuthorizationContext.Set(nameof(UserRef), value);
-
-            return this;
-        }
-
-        public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
-        {
-            AuthorizationContext.Set(nameof(UserRef), UserRef);
 
             return this;
         }
