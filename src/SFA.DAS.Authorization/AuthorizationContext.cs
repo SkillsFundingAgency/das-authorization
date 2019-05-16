@@ -26,16 +26,9 @@ namespace SFA.DAS.Authorization
         {
             var exists = _data.TryGetValue(key, out var obj);
 
-            string s = obj is null? null : obj.ToString();
-            if (string.IsNullOrWhiteSpace(s))
-            {
-                exists = false;
-                value = default;
-            }
-
             value = exists ? (T) obj : default;
 
-            return exists;
+            return (value != null);
         }
     }
 }

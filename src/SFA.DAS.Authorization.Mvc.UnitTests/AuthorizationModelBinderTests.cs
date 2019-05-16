@@ -20,12 +20,10 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             });
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
+        [Test]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsButHasANullValueInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
-            return TestAsync(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), f =>
+            return TestAsync(f => f.SetAuthorizationContextTo(null), f => f.BindModel(), f =>
             {
                 f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
                 f.FallbackModelBinder.Verify(b => b.BindModelAsync(f.BindingContext.Object), Times.Once);
@@ -125,12 +123,10 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             });
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
+        [Test]
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsButHasANullValueInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
-            Test(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), (f, r) =>
+            Test(f => f.SetAuthorizationContextTo(null), f => f.BindModel(), (f, r) =>
             {
                 r.Should().NotBeNull();
                 r.UserRef.Should().BeNull();
