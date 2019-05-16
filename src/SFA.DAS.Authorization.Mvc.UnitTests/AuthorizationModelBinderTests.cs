@@ -1,5 +1,4 @@
 ﻿#if NETCOREAPP2_0
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
@@ -18,6 +17,18 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             return TestAsync(f => f.SetAuthorizationContext(), f => f.BindModel(), f =>
             {
                 f.BindingContext.VerifySet(c => c.Result = It.Is<ModelBindingResult>(m => m.Model.Equals(f.UserRef) && m.IsModelSet));
+            });
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
+        {
+            return TestAsync(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), f =>
+            {
+                f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
+                f.FallbackModelBinder.Verify(b => b.BindModelAsync(f.BindingContext.Object), Times.Once);
             });
         }
 
@@ -42,7 +53,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
     public class AuthorizationModelBinderTestsFixture
     {
-        public Guid UserRef { get; set; }
+        public string UserRef { get; set; }
         public ModelMetadataProvider ModelMetadataProvider { get; set; }
         public ModelMetadata ModelMetadata { get; set; }
         public ModelStateDictionary ModelState { get; set; }
@@ -54,7 +65,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
         public AuthorizationModelBinderTestsFixture()
         {
-            UserRef = Guid.NewGuid();
+            UserRef = "XYZ";
 
             ModelMetadataProvider = new EmptyModelMetadataProvider();
             ModelMetadata = ModelMetadataProvider.GetMetadataForProperty(typeof(AuthorizationContextModelStub), nameof(AuthorizationContextModelStub.UserRef));
@@ -77,6 +88,13 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
         public Task BindModel()
         {
             return ModelBinder.BindModelAsync(BindingContext.Object);
+        }
+
+        public AuthorizationModelBinderTestsFixture SetAuthorizationContextTo(string value)
+        {
+            AuthorizationContext.Set(nameof(UserRef), value);
+
+            return this;
         }
 
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
@@ -114,6 +132,18 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             });
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public Task BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsAsAnEmptyStringInTheAuthorizationContext_ThenShouldNotSetThePropertyValue(string value)
+        {
+            return TestAsync(f => f.SetAuthorizationContextTo(value), f => f.BindModel(), f =>
+            {
+                f.BindingContext.VerifySet(c => c.Result = It.IsAny<ModelBindingResult>(), Times.Never);
+                f.FallbackModelBinder.Verify(b => b.BindModelAsync(f.BindingContext.Object), Times.Once);
+            });
+        }
+
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameDoesNotExistInTheAuthorizationContext_ThenShouldNotSetThePropertyValue()
         {
@@ -127,7 +157,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
 
     public class AuthorizationModelBinderTestsFixture
     {
-        public Guid UserRef { get; set; }
+        public string UserRef { get; set; }
         public ControllerContext ControllerContext { get; set; }
         public ModelBindingContext BindingContext { get; set; }
         public IValueProvider ValueProvider { get; set; }
@@ -161,9 +191,16 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests
             return ModelBinder.BindModel(ControllerContext, BindingContext) as AuthorizationContextModelStub;
         }
 
+        public AuthorizationModelBinderTestsFixture SetAuthorizationContextTo(string value)
+        {
+            AuthorizationContext.Set(nameof(UserRef), value);
+
+            return this;
+        }
+
         public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
         {
-            AuthorizationContext.Set(nameof(UserRef), UserRef);
+            AuthorizationContext.Set(nameof(UserRef), "ABC");
 
             return this;
         }
