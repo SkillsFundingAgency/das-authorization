@@ -23,10 +23,20 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
         [Test]
         public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContext_ThenShouldSetThePropertyValue()
         {
-            Test(f => f.SetAuthorizationContext(), f => f.BindModel(), (f, r) =>
+            Test(f => f.SetAuthorizationContext(f.UserRef), f => f.BindModel(), (f, r) =>
             {
                 r.Should().BeTrue();
                 f.BindingContext.Model.Should().Be(f.UserRef);
+            });
+        }
+
+        [Test]
+        public void BindModel_WhenBindingAnAuthorizationContextModelAndAPropertyNameExistsInTheAuthorizationContextButContextValueIsNull_ThenShouldSetThePropertyValueToNull()
+        {
+            Test(f => f.SetAuthorizationContext(null), f => f.BindModel(), (f, r) =>
+            {
+                r.Should().BeTrue();
+                f.BindingContext.Model.Should().Be(null);
             });
         }
 
@@ -89,9 +99,9 @@ namespace SFA.DAS.Authorization.WebApi.UnitTests
             return ModelBinder.BindModel(ActionContext, BindingContext);
         }
 
-        public AuthorizationModelBinderTestsFixture SetAuthorizationContext()
+        public AuthorizationModelBinderTestsFixture SetAuthorizationContext(Guid? value)
         {
-            AuthorizationContext.Set(nameof(UserRef), UserRef);
+            AuthorizationContext.Set(nameof(UserRef), value);
 
             return this;
         }
