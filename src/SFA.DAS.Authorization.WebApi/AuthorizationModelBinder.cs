@@ -17,7 +17,7 @@ namespace SFA.DAS.Authorization.WebApi
 
                 if (authorizationContext.TryGet(bindingContext.ModelMetadata.PropertyName, out object value))
                 {
-                    var valueProviderResult = new ValueProviderResult(value, value.ToString(), CultureInfo.InvariantCulture);
+                    var valueProviderResult = new ValueProviderResult(value, value?.ToString(), CultureInfo.InvariantCulture);
 
                     bindingContext.Model = value;
                     bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);

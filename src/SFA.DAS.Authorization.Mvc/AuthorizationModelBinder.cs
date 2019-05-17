@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.Mvc
 
             if (authorizationContext.TryGet(bindingContext.ModelMetadata.PropertyName, out object value))
             {
-                bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value, value.ToString());
+                bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value, value?.ToString());
                 bindingContext.Result = ModelBindingResult.Success(value);
 
                 return Task.CompletedTask;
@@ -58,7 +58,7 @@ namespace SFA.DAS.Authorization.Mvc
                 if (authorizationContext.TryGet(propertyDescriptor.Name, out object value))
                 {
                     var key = CreateSubPropertyName(bindingContext.ModelName, propertyDescriptor.Name);
-                    var valueProviderResult = new ValueProviderResult(value, value.ToString(), CultureInfo.InvariantCulture);
+                    var valueProviderResult = new ValueProviderResult(value, value?.ToString(), CultureInfo.InvariantCulture);
 
                     propertyDescriptor.SetValue(bindingContext.Model, value);
                     bindingContext.ModelState.SetModelValue(key, valueProviderResult);
