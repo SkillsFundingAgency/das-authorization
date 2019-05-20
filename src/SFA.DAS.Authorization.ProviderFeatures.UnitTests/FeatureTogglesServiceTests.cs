@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
+namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
 {
     [TestFixture]
     [Parallelizable]
@@ -26,7 +26,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
     {
         public string Feature { get; set; }
         public IFeatureTogglesService FeatureToggleService { get; set; }
-        public EmployerFeaturesConfiguration EmployerFeaturesConfiguration { get; set; }
+        public ProviderFeaturesConfiguration ProviderFeaturesConfiguration { get; set; }
         public List<FeatureToggle> FeatureToggles { get; set; }
         public FeatureToggle FeatureToggle { get; set; }
         
@@ -34,12 +34,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             Feature = "ProviderRelationships";
             FeatureToggles = new List<FeatureToggle>();
-            EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
+            ProviderFeaturesConfiguration = new ProviderFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
         }
 
         public FeatureToggle GetFeatureToggle()
         {
-            FeatureToggleService = new FeatureTogglesService(EmployerFeaturesConfiguration);
+            FeatureToggleService = new FeatureTogglesService(ProviderFeaturesConfiguration);
             
             return FeatureToggleService.GetFeatureToggle(Feature);
         }
@@ -48,7 +48,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             FeatureToggle = new FeatureToggle(Feature, true, null);
             FeatureToggles.Add(FeatureToggle);
-            EmployerFeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
+            ProviderFeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
             
             return this;
         }

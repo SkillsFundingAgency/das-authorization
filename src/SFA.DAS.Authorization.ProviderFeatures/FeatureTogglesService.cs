@@ -1,13 +1,13 @@
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.ProviderFeatures
 {
     public class FeatureTogglesService : IFeatureTogglesService
     {
         private readonly ConcurrentDictionary<string, FeatureToggle> _featureToggles;
 
-        public FeatureTogglesService(EmployerFeaturesConfiguration configuration)
+        public FeatureTogglesService(ProviderFeaturesConfiguration configuration)
         {
             _featureToggles = new ConcurrentDictionary<string, FeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
         }

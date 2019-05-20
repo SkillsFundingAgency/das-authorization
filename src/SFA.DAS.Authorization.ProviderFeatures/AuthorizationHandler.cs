@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.ProviderFeatures
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => EmployerFeature.Prefix;
+        public string Prefix => ProviderFeature.Prefix;
         
         private readonly IFeatureTogglesService _featureTogglesService;
         private readonly ILogger _logger;
@@ -27,17 +27,17 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
 
-                var values = authorizationContext.GetEmployerFeatureValues();
+                var values = authorizationContext.GetProviderFeatureValues();
                 var feature = options.Single();
                 var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
                 if (!featureToggle.IsEnabled)
                 {
-                    authorizationResult.AddError(new EmployerFeatureNotEnabled());
+                    authorizationResult.AddError(new ProviderFeatureNotEnabled());
                 }
-                else if (featureToggle.IsWhitelistEnabled && !featureToggle.IsUserWhitelisted(values.AccountId, values.UserEmail))
+                else if (featureToggle.IsWhitelistEnabled && !featureToggle.IsUserWhitelisted(values.Ukprn, values.UserEmail))
                 {
-                    authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
+                    authorizationResult.AddError(new ProviderFeatureUserNotWhitelisted());
                 }
             }
 

@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
@@ -32,7 +31,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
             return View("Authorized");
         }
 
-        [DasAuthorize(EmployerFeature.ProviderRelationships)]
+        [DasAuthorize("EmployerFeature.ProviderRelationships")]
         public ActionResult EmployerFeatureProviderRelationships()
         {
             return View("Authorized");
@@ -46,6 +45,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
 
         [DasAuthorize(EmployerUserRole.Any)]
         public ActionResult EmployerUserRoleAny()
+        {
+            return View("Authorized");
+        }
+
+        [DasAuthorize("ProviderFeature.ProviderRelationships")]
+        public ActionResult ProviderFeatureProviderRelationships()
         {
             return View("Authorized");
         }

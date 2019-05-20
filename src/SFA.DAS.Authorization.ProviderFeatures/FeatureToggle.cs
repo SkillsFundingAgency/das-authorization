@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.ProviderFeatures
 {
     public class FeatureToggle
     {
@@ -18,9 +18,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures
             Whitelist = whitelist;
         }
 
-        public bool IsUserWhitelisted(long accountId, string userEmail)
+        public bool IsUserWhitelisted(long ukprn, string userEmail)
         {
-            return Whitelist.Any(w => w.AccountId == accountId && (w.UserEmails == null || !w.UserEmails.Any() || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
+            return Whitelist.Any(w => w.Ukprn == ukprn && (w.UserEmails == null || !w.UserEmails.Any() || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
         }
     }
 }

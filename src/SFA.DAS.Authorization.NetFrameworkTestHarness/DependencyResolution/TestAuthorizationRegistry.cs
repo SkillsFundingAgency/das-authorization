@@ -2,6 +2,7 @@
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
+using SFA.DAS.Authorization.ProviderFeatures;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
@@ -12,11 +13,25 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
         {
             For<EmployerFeaturesConfiguration>().Use(new EmployerFeaturesConfiguration
             {
-                FeatureToggles = new List<FeatureToggle> 
+                FeatureToggles = new List<EmployerFeatures.FeatureToggle> 
                 {
-                    new FeatureToggle(Feature.ProviderRelationships, true, new List<FeatureToggleWhitelistItem>
+                    new EmployerFeatures.FeatureToggle("ProviderRelationships", true, new List<EmployerFeatures.FeatureToggleWhitelistItem>
                     {
-                        new FeatureToggleWhitelistItem(Account.Id, new List<string>
+                        new EmployerFeatures.FeatureToggleWhitelistItem(Account.Id, new List<string>
+                        {
+                            User.Email
+                        })
+                    })
+                }
+            });
+            
+            For<ProviderFeaturesConfiguration>().Use(new ProviderFeaturesConfiguration
+            {
+                FeatureToggles = new List<ProviderFeatures.FeatureToggle> 
+                {
+                    new ProviderFeatures.FeatureToggle("ProviderRelationships", true, new List<ProviderFeatures.FeatureToggleWhitelistItem>
+                    {
+                        new ProviderFeatures.FeatureToggleWhitelistItem(Provider.Ukprn, new List<string>
                         {
                             User.Email
                         })

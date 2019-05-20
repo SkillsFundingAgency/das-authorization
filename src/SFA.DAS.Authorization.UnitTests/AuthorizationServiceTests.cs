@@ -179,13 +179,13 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeature.ProviderRelationships,
+                EmployerFeature.Prefix + "ProviderRelationships",
                 EmployerUserRole.OwnerOrTransactor,
                 ProviderOperation.CreateCohort
             };
             
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
-                    new [] { EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
+                    new [] { "ProviderRelationships" }, AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult());
             
             EmployerRolesAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
@@ -203,7 +203,7 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeature.ProviderRelationships,
+                EmployerFeature.Prefix + "ProviderRelationships",
                 EmployerUserRole.OwnerOrTransactor,
                 ProviderOperation.CreateCohort
             };
@@ -213,7 +213,7 @@ namespace SFA.DAS.Authorization.UnitTests
             ProviderPermissionNotGranted = new ProviderPermissionNotGranted();
 
             EmployerFeatureAuthorizationHandler.Setup(h => h.GetAuthorizationResult(
-                    new [] { EmployerFeature.ProviderRelationshipsOption }, AuthorizationContext.Object))
+                    new [] { "ProviderRelationships" }, AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult(EmployerFeatureUserNotWhitelisted));
 
             EmployerRolesAuthorizationHandler.Setup(h => h.GetAuthorizationResult(

@@ -3,8 +3,9 @@
 This package includes:
 
 * Facade to aggregate multiple authorization concerns into a single call including:
-  * Employer features - Toggling, toggling by user whitelisting, toggling by agreement signing.
+  * Employer features - Toggling, toggling by account whitelisting, toggling by user whitelisting, toggling by agreement signing.
   * Employer user roles - User membership checks for an account, user role checks for an account.
+  * Provider features - Toggling, toggling by provider whitelisting, toggling by user whitelisting.
   * Provider permissions - Provider permission checks for an organisation.
 * Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
@@ -15,6 +16,7 @@ In addition to the `SFA.DAS.Authorization` package one or more of the following 
 
 * `SFA.DAS.Authorization.EmployerFeatures`
 * `SFA.DAS.Authorization.EmployerUserRoles`
+* `SFA.DAS.Authorization.ProviderFeatures`
 * `SFA.DAS.Authorization.ProviderPermissions`
 
 ### MVC Core
@@ -50,16 +52,15 @@ If you're not using .NET Core then the authorization packages also include Struc
 c.AddRegistry<AuthorizationRegistry>();
 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
+c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 ```
 
-> Please note, currently only the `SFA.DAS.Authorization.EmployerFeatures` package includes .NET Core DI `IServiceCollection` extensions.
+> Please note, currently only the `SFA.DAS.Authorization.EmployerFeatures` & `SFA.DAS.Authorization.ProviderFeatures` packages include .NET Core DI `IServiceCollection` extensions.
 
-### Table Storage
+### Employer Features Configuration
 
-All of the `SFA.DAS.Authorization` packages bootstrap their own configuration from table storage using the `SFA.DAS.AutoConfiguration` package except for `SFA.DAS.Authorization.EmployerFeatures` which requires an instance of `SFA.DAS.Authorization.EmployerFeatures.EmployerFeaturesConfiguration` registering in your application's container.
-
-If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+`SFA.DAS.Authorization.EmployerFeatures` requires an instance of `SFA.DAS.Authorization.EmployerFeatures.EmployerFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
 
 ```json
 {
@@ -71,6 +72,26 @@ If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` 
             "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
         }, {
            "AccountId": 222222222,
+           "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
+        }]
+    }]
+}
+```
+
+### Provider Features Configuration
+
+`SFA.DAS.Authorization.ProviderFeatures` requires an instance of `SFA.DAS.Authorization.ProviderFeatures.ProviderFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `ProviderFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+
+```json
+{
+    "FeatureToggles": [{
+        "Feature": "ProviderRelationships",
+        "IsEnabled": true,
+        "Whitelist": [{
+            "Ukprn": 111111111,
+            "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
+        }, {
+           "Ukprn": 222222222,
            "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
         }]
     }]
@@ -125,7 +146,7 @@ The options that can be included in an authorization check will depend on which 
 To check if a feature is enabled:
 
 ```c#
-var isAuthorized = _authorizationService.IsAuthorized(EmployerFeature.ProviderRelationships);
+var isAuthorized = _authorizationService.IsAuthorized("EmployerFeature.ProviderRelationships");
 ```
 
 Alternatively, if you're interested in why an authorization check has failed:
@@ -175,6 +196,34 @@ if (!authorizationResult.IsAuthorized)
 ```
 
 > `AccountId` & `UserRef` authorization context values are required for this package.
+
+### SFA.DAS.Authorization.ProviderFeatures
+
+To check if a feature is enabled:
+
+```c#
+var isAuthorized = _authorizationService.IsAuthorized("ProviderFeature.ProviderRelationships");
+```
+
+Alternatively, if you're interested in why an authorization check has failed:
+
+```c#
+var authorizationResult = _authorizationService.GetAuthorizationResult("ProviderFeature.ProviderRelationships");
+
+if (!authorizationResult.IsAuthorized)
+{
+    if (authorizationResult.HasError<ProviderFeatureNotEnabled>())
+    {
+        // Handle feature not enabled
+    }
+    else if (authorizationResult.HasError<ProviderFeatureUserNotWhitelisted>())
+    {
+        // Handle user not whitelisted
+    }
+}
+```
+
+> `Ukprn` & `UserEmail` authorization context values are required for this package.
 
 ### SFA.DAS.Authorization.ProviderPermissions
 

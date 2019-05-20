@@ -1,4 +1,4 @@
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.ProviderFeatures
 {
     public interface IFeatureTogglesService
     {
