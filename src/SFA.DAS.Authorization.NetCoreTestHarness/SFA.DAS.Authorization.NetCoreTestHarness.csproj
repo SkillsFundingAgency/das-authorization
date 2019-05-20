@@ -29,6 +29,7 @@
         <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.EmployerUserRoles\SFA.DAS.Authorization.EmployerUserRoles.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.Mvc\SFA.DAS.Authorization.Mvc.csproj" />
+        <ProjectReference Include="..\SFA.DAS.Authorization.ProviderFeatures\SFA.DAS.Authorization.ProviderFeatures.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>

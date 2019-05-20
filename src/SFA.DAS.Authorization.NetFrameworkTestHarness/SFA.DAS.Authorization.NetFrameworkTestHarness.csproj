@@ -145,6 +145,10 @@
       <Project>{8b45b6ba-fed2-4115-967d-3a45b57f7247}</Project>
       <Name>SFA.DAS.Authorization.Mvc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Authorization.ProviderFeatures\SFA.DAS.Authorization.ProviderFeatures.csproj">
+      <Project>{09ccbbc2-a6fb-4d0e-823d-92e2e3070db5}</Project>
+      <Name>SFA.DAS.Authorization.ProviderFeatures</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj">
       <Project>{7ed85d95-9ea6-491f-bcd0-15fb1fc0bc5e}</Project>
       <Name>SFA.DAS.Authorization.ProviderPermissions</Name>

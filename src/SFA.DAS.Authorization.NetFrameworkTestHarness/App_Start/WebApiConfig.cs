@@ -2,6 +2,7 @@ using System.Web.Http;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution;
+using SFA.DAS.Authorization.ProviderFeatures;
 using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Authorization.WebApi;
 using SFA.DAS.AutoConfiguration.DependencyResolution;
@@ -28,6 +29,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness
                 c.AddRegistry<AutoConfigurationRegistry>();
                 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
                 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
+                c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
                 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
                 c.AddRegistry<TestAuthorizationRegistry>();
                 c.AddRegistry<DefaultRegistry>();
