@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class FeatureTogglesService : IFeatureTogglesService
     {
-        private readonly Dictionary<Feature, FeatureToggle> _featureToggles;
+        private readonly ConcurrentDictionary<string, FeatureToggle> _featureToggles;
 
         public FeatureTogglesService(EmployerFeaturesConfiguration configuration)
         {
-            _featureToggles = Enum.GetValues(typeof(Feature)).Cast<Feature>().ToDictionary(f => f, f => 
-                configuration.FeatureToggles.SingleOrDefault(t => t.Feature == f) ?? new FeatureToggle(f, false, null));
+            _featureToggles = new ConcurrentDictionary<string, FeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
         }
 
-        public FeatureToggle GetFeatureToggle(Feature feature)
+        public FeatureToggle GetFeatureToggle(string feature)
         {
-            return _featureToggles[feature];
+            return _featureToggles.GetOrAdd(feature, f => new FeatureToggle(f, false, null));
         }
     }
 }

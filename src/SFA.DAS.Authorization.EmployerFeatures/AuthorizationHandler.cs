@@ -28,7 +28,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 options.EnsureNoOrOptions();
 
                 var values = authorizationContext.GetEmployerFeatureValues();
-                var feature = options.Select(o => o.ToEnum<Feature>()).Single();
+                var feature = options.Single();
                 var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
                 if (!featureToggle.IsEnabled)

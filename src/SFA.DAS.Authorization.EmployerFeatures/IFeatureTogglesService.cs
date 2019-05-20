@@ -2,6 +2,6 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public interface IFeatureTogglesService
     {
-        FeatureToggle GetFeatureToggle(Feature feature);
+        FeatureToggle GetFeatureToggle(string feature);
     }
 }

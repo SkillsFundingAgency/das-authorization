@@ -1,5 +1,4 @@
 using System.Web.Http;
-using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using SFA.DAS.Authorization.ProviderPermissions;
@@ -37,7 +36,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Api.Controllers
         }
 
         [HttpGet]
-        [DasAuthorize(EmployerFeature.ProviderRelationships)]
+        [DasAuthorize("EmployerFeature.ProviderRelationships")]
         public IHttpActionResult EmployerFeatureProviderRelationships()
         {
             return Ok("Authorized");

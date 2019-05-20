@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
             {
                 FeatureToggles = new List<FeatureToggle> 
                 {
-                    new FeatureToggle(Feature.ProviderRelationships, true, new List<FeatureToggleWhitelistItem>
+                    new FeatureToggle("ProviderRelationships", true, new List<FeatureToggleWhitelistItem>
                     {
                         new FeatureToggleWhitelistItem(Account.Id, new List<string>
                         {

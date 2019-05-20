@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
@@ -32,7 +31,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Controllers
             return View("Authorized");
         }
 
-        [DasAuthorize(EmployerFeature.ProviderRelationships)]
+        [DasAuthorize("EmployerFeature.ProviderRelationships")]
         public ActionResult EmployerFeatureProviderRelationships()
         {
             return View("Authorized");

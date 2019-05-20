@@ -6,12 +6,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class FeatureToggle
     {
-        public Feature Feature { get; }
+        public string Feature { get; }
         public bool IsEnabled { get; }
         public List<FeatureToggleWhitelistItem> Whitelist { get; }
         public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Any();
 
-        public FeatureToggle(Feature feature, bool isEnabled, List<FeatureToggleWhitelistItem> whitelist)
+        public FeatureToggle(string feature, bool isEnabled, List<FeatureToggleWhitelistItem> whitelist)
         {
             Feature = feature;
             IsEnabled = isEnabled;

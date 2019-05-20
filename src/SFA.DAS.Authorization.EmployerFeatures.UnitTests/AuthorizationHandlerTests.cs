@@ -130,21 +130,21 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetAndedOptions()
         {
-            Options.AddRange(new [] { EmployerFeature.ProviderRelationshipsOption, "Tickles" });
+            Options.AddRange(new [] { "ProviderRelationships", "Tickles" });
             
             return this;
         }
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetOredOption()
         {
-            Options.Add($"{EmployerFeature.ProviderRelationshipsOption},{EmployerFeature.ProviderRelationshipsOption}");
+            Options.Add($"ProviderRelationships,ProviderRelationships");
             
             return this;
         }
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetOption()
         {
-            Options.AddRange(new [] { EmployerFeature.ProviderRelationshipsOption });
+            Options.AddRange(new [] { "ProviderRelationships" });
 
             return this;
         }
@@ -172,7 +172,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetFeatureToggle(bool isEnabled, bool? isAccountIdWhitelisted = null, bool? isUserEmailWhitelisted = null)
         {
-            var option = Options.Select(o => o.ToEnum<Feature>()).Single();
+            var option = Options.Single();
             var whitelist = new List<FeatureToggleWhitelistItem>();
 
             if (isAccountIdWhitelisted != null)
@@ -187,7 +187,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
                 whitelist.Add(new FeatureToggleWhitelistItem(isAccountIdWhitelisted == true ? AccountId : 0, userEmails));
             }
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle(Feature.ProviderRelationships, isEnabled, whitelist));
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle("ProviderRelationships", isEnabled, whitelist));
             
             return this;
         }

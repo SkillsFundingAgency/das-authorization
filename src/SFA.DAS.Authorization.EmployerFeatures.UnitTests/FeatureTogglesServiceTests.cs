@@ -24,7 +24,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
 
     public class FeatureTogglesServiceTestsFixture
     {
-        public Feature Feature { get; set; }
+        public string Feature { get; set; }
         public IFeatureTogglesService FeatureToggleService { get; set; }
         public EmployerFeaturesConfiguration EmployerFeaturesConfiguration { get; set; }
         public List<FeatureToggle> FeatureToggles { get; set; }
@@ -32,7 +32,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         
         public FeatureTogglesServiceTestsFixture()
         {
-            Feature = Feature.ProviderRelationships;
+            Feature = "ProviderRelationships";
             FeatureToggles = new List<FeatureToggle>();
             EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
         }
