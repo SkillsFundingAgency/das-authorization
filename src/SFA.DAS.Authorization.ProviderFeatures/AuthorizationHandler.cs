@@ -26,8 +26,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures
             {
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
-
-                var values = authorizationContext.GetProviderFeatureValues();
+                
                 var feature = options.Single();
                 var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
@@ -35,9 +34,14 @@ namespace SFA.DAS.Authorization.ProviderFeatures
                 {
                     authorizationResult.AddError(new ProviderFeatureNotEnabled());
                 }
-                else if (featureToggle.IsWhitelistEnabled && !featureToggle.IsUserWhitelisted(values.Ukprn, values.UserEmail))
+                else if (featureToggle.IsWhitelistEnabled)
                 {
-                    authorizationResult.AddError(new ProviderFeatureUserNotWhitelisted());
+                    var values = authorizationContext.GetProviderFeatureValues();
+
+                    if (!featureToggle.IsUserWhitelisted(values.Ukprn, values.UserEmail))
+                    {
+                        authorizationResult.AddError(new ProviderFeatureUserNotWhitelisted());
+                    }
                 }
             }
 

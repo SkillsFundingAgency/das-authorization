@@ -33,24 +33,33 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         }
         
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingAccountId(), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingUserEmail_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingUserEmail_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingUserEmail(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingUserEmail(), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [TestCase(1, null)]
         [TestCase(1, "")]
         [TestCase(null, "foo@bar.com")]
         [TestCase(null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? accountId, string userEmail)
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? accountId, string userEmail)
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(accountId, userEmail), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextValues(accountId, userEmail), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<InvalidOperationException>());
         }
 
         [Test]
