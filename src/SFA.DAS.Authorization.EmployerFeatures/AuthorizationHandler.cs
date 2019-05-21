@@ -2,17 +2,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => EmployerFeature.Prefix;
+        public string Prefix => "EmployerFeature.";
         
-        private readonly IFeatureTogglesService _featureTogglesService;
+        private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
         private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
             _featureTogglesService = featureTogglesService;
             _logger = logger;

@@ -24,6 +24,7 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ProjectReference Include="..\SFA.DAS.Authorization.Features\SFA.DAS.Authorization.Features.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>
 

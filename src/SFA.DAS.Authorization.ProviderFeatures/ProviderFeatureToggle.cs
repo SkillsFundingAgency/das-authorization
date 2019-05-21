@@ -1,22 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.ProviderFeatures
 {
-    public class FeatureToggle
+    public class ProviderFeatureToggle : FeatureToggle
     {
-        public string Feature { get; }
-        public bool IsEnabled { get; }
-        public List<FeatureToggleWhitelistItem> Whitelist { get; }
+        public List<ProviderFeatureToggleWhitelistItem> Whitelist { get; set; }
         public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Any();
-
-        public FeatureToggle(string feature, bool isEnabled, List<FeatureToggleWhitelistItem> whitelist)
-        {
-            Feature = feature;
-            IsEnabled = isEnabled;
-            Whitelist = whitelist;
-        }
 
         public bool IsUserWhitelisted(long ukprn, string userEmail)
         {

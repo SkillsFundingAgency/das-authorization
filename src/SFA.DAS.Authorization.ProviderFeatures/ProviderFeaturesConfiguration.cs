@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.ProviderFeatures
 {
-    public class ProviderFeaturesConfiguration
+    public class ProviderFeaturesConfiguration : IFeaturesConfiguration<ProviderFeatureToggle>
     {
-        public List<FeatureToggle> FeatureToggles { get; set; }
+        public List<ProviderFeatureToggle> FeatureToggles { get; set; }
     }
 }

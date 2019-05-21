@@ -3,18 +3,20 @@ using System.Linq;
 
 namespace SFA.DAS.Authorization.Features
 {
-    public class FeatureTogglesService : IFeatureTogglesService
+    public class FeatureTogglesService<TConfiguration, TFeatureToggle> : IFeatureTogglesService<TFeatureToggle>
+        where TConfiguration : IFeaturesConfiguration<TFeatureToggle>, new()
+        where TFeatureToggle : FeatureToggle, new()
     {
-        private readonly ConcurrentDictionary<string, FeatureToggle> _featureToggles;
+        private readonly ConcurrentDictionary<string, TFeatureToggle> _featureToggles;
 
-        public FeatureTogglesService(FeaturesConfiguration configuration)
+        public FeatureTogglesService(TConfiguration configuration)
         {
-            _featureToggles = new ConcurrentDictionary<string, FeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
+            _featureToggles = new ConcurrentDictionary<string, TFeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
         }
 
-        public FeatureToggle GetFeatureToggle(string feature)
+        public TFeatureToggle GetFeatureToggle(string feature)
         {
-            return _featureToggles.GetOrAdd(feature, f => new FeatureToggle(f, false));
+            return _featureToggles.GetOrAdd(feature, f => new TFeatureToggle { Feature = f, IsEnabled = false });
         }
     }
 }

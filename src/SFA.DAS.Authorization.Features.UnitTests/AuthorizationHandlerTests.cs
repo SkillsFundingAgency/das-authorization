@@ -52,14 +52,14 @@ namespace SFA.DAS.Authorization.Features.UnitTests
         public List<string> Options { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
-        public Mock<IFeatureTogglesService> FeatureTogglesService { get; set; }
+        public Mock<IFeatureTogglesService<FeatureToggle>> FeatureTogglesService { get; set; }
         public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public EmployerFeaturesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
-            FeatureTogglesService = new Mock<IFeatureTogglesService>();
+            FeatureTogglesService = new Mock<IFeatureTogglesService<FeatureToggle>>();
             Logger = new Mock<ILogger<AuthorizationHandler>>();
             Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
         }
@@ -101,7 +101,7 @@ namespace SFA.DAS.Authorization.Features.UnitTests
         {
             var option = Options.Single();
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle("ProviderRelationships", isEnabled));
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled });
             
             return this;
         }

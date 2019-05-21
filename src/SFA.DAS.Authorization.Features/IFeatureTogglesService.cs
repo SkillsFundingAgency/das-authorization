@@ -1,7 +1,7 @@
 namespace SFA.DAS.Authorization.Features
 {
-    public interface IFeatureTogglesService
+    public interface IFeatureTogglesService<T> where T : FeatureToggle, new()
     {
-        FeatureToggle GetFeatureToggle(string feature);
+        T GetFeatureToggle(string feature);
     }
 }

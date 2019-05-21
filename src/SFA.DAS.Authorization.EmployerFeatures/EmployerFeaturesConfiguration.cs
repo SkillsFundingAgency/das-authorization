@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
-    public class EmployerFeaturesConfiguration
+    public class EmployerFeaturesConfiguration : IFeaturesConfiguration<EmployerFeatureToggle>
     {
-        public List<FeatureToggle> FeatureToggles { get; set; }
+        public List<EmployerFeatureToggle> FeatureToggles { get; set; }
     }
 }

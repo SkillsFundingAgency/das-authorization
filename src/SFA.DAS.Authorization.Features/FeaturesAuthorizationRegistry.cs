@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.Features
         public FeaturesAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
-            For<IFeatureTogglesService>().Use<FeatureTogglesService>().Singleton();
+            For<IFeatureTogglesService<FeatureToggle>>().Use<FeatureTogglesService<FeaturesConfiguration, FeatureToggle>>().Singleton();
         }
     }
 }

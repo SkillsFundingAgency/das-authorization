@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.Features
         public static IServiceCollection AddFeaturesAuthorization(this IServiceCollection services)
         {
             return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
-                .AddSingleton<IFeatureTogglesService, FeatureTogglesService>();
+                .AddSingleton<IFeatureTogglesService<FeatureToggle>, FeatureTogglesService<FeaturesConfiguration, FeatureToggle>>();
         }
     }
 }

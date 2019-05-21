@@ -7,12 +7,12 @@ namespace SFA.DAS.Authorization.Features
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => Feature.Prefix;
+        public string Prefix => "Feature.";
         
-        private readonly IFeatureTogglesService _featureTogglesService;
+        private readonly IFeatureTogglesService<FeatureToggle> _featureTogglesService;
         private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IFeatureTogglesService<FeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
             _featureTogglesService = featureTogglesService;
             _logger = logger;

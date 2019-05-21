@@ -25,7 +25,7 @@ namespace SFA.DAS.Authorization.Features.UnitTests
     public class FeatureTogglesServiceTestsFixture
     {
         public string Feature { get; set; }
-        public IFeatureTogglesService FeatureToggleService { get; set; }
+        public IFeatureTogglesService<FeatureToggle> FeatureToggleService { get; set; }
         public FeaturesConfiguration FeaturesConfiguration { get; set; }
         public List<FeatureToggle> FeatureToggles { get; set; }
         public FeatureToggle FeatureToggle { get; set; }
@@ -39,14 +39,14 @@ namespace SFA.DAS.Authorization.Features.UnitTests
 
         public FeatureToggle GetFeatureToggle()
         {
-            FeatureToggleService = new FeatureTogglesService(FeaturesConfiguration);
+            FeatureToggleService = new FeatureTogglesService<FeaturesConfiguration, FeatureToggle>(FeaturesConfiguration);
             
             return FeatureToggleService.GetFeatureToggle(Feature);
         }
 
         public FeatureTogglesServiceTestsFixture SetFeatureToggle()
         {
-            FeatureToggle = new FeatureToggle(Feature, true);
+            FeatureToggle = new FeatureToggle { Feature = Feature, IsEnabled = true };
             FeatureToggles.Add(FeatureToggle);
             FeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
             

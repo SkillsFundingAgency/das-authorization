@@ -133,7 +133,7 @@ namespace SFA.DAS.Authorization.UnitTests
             ProviderOperationAuthorizationHandler = new Mock<IAuthorizationHandler>();
             
             AuthorizationContextProvider.Setup(p => p.GetAuthorizationContext()).Returns(AuthorizationContext.Object);
-            EmployerFeatureAuthorizationHandler.Setup(h => h.Prefix).Returns(EmployerFeature.Prefix);
+            EmployerFeatureAuthorizationHandler.Setup(h => h.Prefix).Returns("EmployerFeature.");
             EmployerRolesAuthorizationHandler.Setup(h => h.Prefix).Returns(EmployerUserRole.Prefix);
             ProviderOperationAuthorizationHandler.Setup(h => h.Prefix).Returns(ProviderOperation.Prefix);
 
@@ -179,7 +179,7 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeature.Prefix + "ProviderRelationships",
+                "EmployerFeature.ProviderRelationships",
                 EmployerUserRole.OwnerOrTransactor,
                 ProviderOperation.CreateCohort
             };
@@ -203,7 +203,7 @@ namespace SFA.DAS.Authorization.UnitTests
         {
             Options = new []
             {
-                EmployerFeature.Prefix + "ProviderRelationships",
+                "EmployerFeature.ProviderRelationships",
                 EmployerUserRole.OwnerOrTransactor,
                 ProviderOperation.CreateCohort
             };
