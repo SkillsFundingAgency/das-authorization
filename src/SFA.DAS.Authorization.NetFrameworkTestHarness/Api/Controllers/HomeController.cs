@@ -57,6 +57,13 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Api.Controllers
         }
 
         [HttpGet]
+        [DasAuthorize("Feature.ProviderRelationships")]
+        public IHttpActionResult FeatureProviderRelationships()
+        {
+            return Ok("Authorized");
+        }
+
+        [HttpGet]
         [DasAuthorize("ProviderFeature.ProviderRelationships")]
         public IHttpActionResult ProviderFeatureProviderRelationships()
         {

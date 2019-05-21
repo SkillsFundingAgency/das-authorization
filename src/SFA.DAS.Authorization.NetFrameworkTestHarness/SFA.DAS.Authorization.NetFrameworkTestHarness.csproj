@@ -141,6 +141,10 @@
       <Project>{03fd0131-c861-418a-91ca-b3884de9d1d9}</Project>
       <Name>SFA.DAS.Authorization.EmployerUserRoles</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Authorization.Features\SFA.DAS.Authorization.Features.csproj">
+      <Project>{f2303732-e42e-4d19-9963-c82c2cff57bd}</Project>
+      <Name>SFA.DAS.Authorization.Features</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Authorization.Mvc\SFA.DAS.Authorization.Mvc.csproj">
       <Project>{8b45b6ba-fed2-4115-967d-3a45b57f7247}</Project>
       <Name>SFA.DAS.Authorization.Mvc</Name>

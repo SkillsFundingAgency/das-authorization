@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
+using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
 using SFA.DAS.Authorization.NetCoreTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
@@ -11,6 +12,14 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
     {
         public TestAuthorizationRegistry()
         {
+            For<FeaturesConfiguration>().Use(new FeaturesConfiguration
+            {
+                FeatureToggles = new List<Features.FeatureToggle> 
+                {
+                    new Features.FeatureToggle("ProviderRelationships", true)
+                }
+            });
+            
             For<EmployerFeaturesConfiguration>().Use(new EmployerFeaturesConfiguration
             {
                 FeatureToggles = new List<EmployerFeatures.FeatureToggle> 

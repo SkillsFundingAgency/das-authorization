@@ -49,6 +49,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Controllers
             return View("Authorized");
         }
 
+        [DasAuthorize("Feature.ProviderRelationships")]
+        public ActionResult FeatureProviderRelationships()
+        {
+            return View("Authorized");
+        }
+
         [DasAuthorize("ProviderFeature.ProviderRelationships")]
         public ActionResult ProviderFeatureProviderRelationships()
         {

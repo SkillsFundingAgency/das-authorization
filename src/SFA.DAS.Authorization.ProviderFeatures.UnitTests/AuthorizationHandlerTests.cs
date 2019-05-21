@@ -36,7 +36,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
         {
             return TestExceptionAsync(
-                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingAccountId(), 
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingUkprn(), 
                 f => f.GetAuthorizationResult(), 
                 (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
@@ -130,7 +130,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
             return Handler.GetAuthorizationResult(Options, AuthorizationContext);
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetNonEmployerFeatureOptions()
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetNonProviderFeatureOptions()
         {
             Options.AddRange(new [] { "Foo", "Bar" });
 
@@ -158,7 +158,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextMissingAccountId()
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextMissingUkprn()
         {
             AuthorizationContext.Set(AuthorizationContextKey.UserEmail, UserEmail);
             
