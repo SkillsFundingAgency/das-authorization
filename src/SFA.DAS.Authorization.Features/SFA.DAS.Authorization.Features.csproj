@@ -4,9 +4,9 @@
         <LangVersion>latest</LangVersion>
         <TargetFramework>netstandard2.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        
+
         <Authors>DAS</Authors>
-        <Description>Employer features integration for SFA.DAS.Authorization</Description>
+        <Description>Features integration for SFA.DAS.Authorization</Description>
         <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
 
@@ -15,16 +15,15 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.1" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
         <PackageReference Include="NLog" Version="4.5.11" />
         <PackageReference Include="NLog.Extensions.Logging" Version="1.3.0" />
     </ItemGroup>
-    
+
     <ItemGroup>
-        <ProjectReference Include="..\SFA.DAS.Authorization.Features\SFA.DAS.Authorization.Features.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>
 

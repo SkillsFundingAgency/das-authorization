@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
         {
             var authorizationResult = new AuthorizationResult();
             
-            if (options.Any())
+            if (options.Count > 0)
             {
                 switch (options.Single())
                 {
@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
             
             return Task.FromResult(authorizationResult);
         }

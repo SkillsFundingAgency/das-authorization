@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using SFA.DAS.Authorization.Features;
+using StructureMap;
 
 namespace SFA.DAS.Authorization.EmployerFeatures
 {
@@ -7,7 +8,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
         public EmployerFeaturesAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
-            For<IFeatureTogglesService>().Use<FeatureTogglesService>().Singleton();
+            For<IFeatureTogglesService<EmployerFeatureToggle>>().Use<FeatureTogglesService<EmployerFeaturesConfiguration, EmployerFeatureToggle>>().Singleton();
         }
     }
 }

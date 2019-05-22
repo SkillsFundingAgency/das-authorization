@@ -2,18 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Authorization.Features;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.Features
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => "EmployerFeature.";
+        public string Prefix => "Feature.";
         
-        private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
+        private readonly IFeatureTogglesService<FeatureToggle> _featureTogglesService;
         private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IFeatureTogglesService<FeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
             _featureTogglesService = featureTogglesService;
             _logger = logger;
@@ -33,16 +32,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
 
                 if (!featureToggle.IsEnabled)
                 {
-                    authorizationResult.AddError(new EmployerFeatureNotEnabled());
-                }
-                else if (featureToggle.IsWhitelistEnabled)
-                {
-                    var values = authorizationContext.GetEmployerFeatureValues();
-                    
-                    if (!featureToggle.IsUserWhitelisted(values.AccountId, values.UserEmail))
-                    {
-                        authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
-                    }
+                    authorizationResult.AddError(new FeatureNotEnabled());
                 }
             }
 

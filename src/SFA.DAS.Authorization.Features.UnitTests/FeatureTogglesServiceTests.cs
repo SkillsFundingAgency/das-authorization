@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Testing;
 
-namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
+namespace SFA.DAS.Authorization.Features.UnitTests
 {
     [TestFixture]
     [Parallelizable]
@@ -25,8 +25,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
     public class FeatureTogglesServiceTestsFixture
     {
         public string Feature { get; set; }
-        public IFeatureTogglesService FeatureToggleService { get; set; }
-        public EmployerFeaturesConfiguration EmployerFeaturesConfiguration { get; set; }
+        public IFeatureTogglesService<FeatureToggle> FeatureToggleService { get; set; }
+        public FeaturesConfiguration FeaturesConfiguration { get; set; }
         public List<FeatureToggle> FeatureToggles { get; set; }
         public FeatureToggle FeatureToggle { get; set; }
         
@@ -34,21 +34,21 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests
         {
             Feature = "ProviderRelationships";
             FeatureToggles = new List<FeatureToggle>();
-            EmployerFeaturesConfiguration = new EmployerFeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
+            FeaturesConfiguration = new FeaturesConfiguration { FeatureToggles = new List<FeatureToggle>() };
         }
 
         public FeatureToggle GetFeatureToggle()
         {
-            FeatureToggleService = new FeatureTogglesService(EmployerFeaturesConfiguration);
+            FeatureToggleService = new FeatureTogglesService<FeaturesConfiguration, FeatureToggle>(FeaturesConfiguration);
             
             return FeatureToggleService.GetFeatureToggle(Feature);
         }
 
         public FeatureTogglesServiceTestsFixture SetFeatureToggle()
         {
-            FeatureToggle = new FeatureToggle(Feature, true, null);
+            FeatureToggle = new FeatureToggle { Feature = Feature, IsEnabled = true };
             FeatureToggles.Add(FeatureToggle);
-            EmployerFeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
+            FeaturesConfiguration.FeatureToggles.Add(FeatureToggle);
             
             return this;
         }

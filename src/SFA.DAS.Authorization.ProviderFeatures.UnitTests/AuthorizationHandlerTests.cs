@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Authorization.Features;
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
@@ -33,24 +34,33 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
         }
         
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingUkprn_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingAccountId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingUkprn(), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingUserEmail_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingUserEmail_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingUserEmail(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingUserEmail(), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [TestCase(1, null)]
         [TestCase(1, "")]
         [TestCase(null, "foo@bar.com")]
         [TestCase(null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? accountId, string userEmail)
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? ukprn, string userEmail)
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(accountId, userEmail), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
+            return TestExceptionAsync(
+                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextValues(ukprn, userEmail), 
+                f => f.GetAuthorizationResult(), 
+                (f, r) => r.Should().Throw<InvalidOperationException>());
         }
 
         [Test]
@@ -61,14 +71,14 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndUkprnIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelistedAndUserEmailIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndUkprnIsWhitelistedAndUserEmailIsWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
@@ -82,14 +92,14 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsNotWhitelisted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndUkprnIsNotWhitelisted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderFeatureUserNotWhitelisted>()));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelistedAndUserEmailIsNotWhitelisted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndUkprnIsWhitelistedAndUserEmailIsNotWhitelisted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true, false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderFeatureUserNotWhitelisted>()));
@@ -101,17 +111,17 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
         public List<string> Options { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
-        public Mock<IFeatureTogglesService> FeatureTogglesService { get; set; }
+        public Mock<IFeatureTogglesService<ProviderFeatureToggle>> FeatureTogglesService { get; set; }
         public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
-        public const long AccountId = 1;
+        public const long Ukprn = 1;
         public const string UserEmail = "foo@bar.com";
         
         public EmployerFeaturesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
-            FeatureTogglesService = new Mock<IFeatureTogglesService>();
+            FeatureTogglesService = new Mock<IFeatureTogglesService<ProviderFeatureToggle>>();
             Logger = new Mock<ILogger<AuthorizationHandler>>();
             Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
         }
@@ -121,7 +131,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
             return Handler.GetAuthorizationResult(Options, AuthorizationContext);
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetNonEmployerFeatureOptions()
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetNonProviderFeatureOptions()
         {
             Options.AddRange(new [] { "Foo", "Bar" });
 
@@ -149,7 +159,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextMissingAccountId()
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextMissingUkprn()
         {
             AuthorizationContext.Set(AuthorizationContextKey.UserEmail, UserEmail);
             
@@ -158,24 +168,24 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
 
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextMissingUserEmail()
         {
-            AuthorizationContext.Set(AuthorizationContextKey.Ukprn, AccountId);
+            AuthorizationContext.Set(AuthorizationContextKey.Ukprn, Ukprn);
             
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountId = AccountId, string userEmail = UserEmail)
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? ukprn = Ukprn, string userEmail = UserEmail)
         {
-            AuthorizationContext.AddProviderFeatureValues(accountId, userEmail);
+            AuthorizationContext.AddProviderFeatureValues(ukprn, userEmail);
             
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetFeatureToggle(bool isEnabled, bool? isAccountIdWhitelisted = null, bool? isUserEmailWhitelisted = null)
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetFeatureToggle(bool isEnabled, bool? isUkprnWhitelisted = null, bool? isUserEmailWhitelisted = null)
         {
             var option = Options.Single();
-            var whitelist = new List<FeatureToggleWhitelistItem>();
+            var whitelist = new List<ProviderFeatureToggleWhitelistItem>();
 
-            if (isAccountIdWhitelisted != null)
+            if (isUkprnWhitelisted != null)
             {
                 var userEmails = new List<string>();
 
@@ -184,10 +194,10 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests
                     userEmails.Add(isUserEmailWhitelisted == true ? UserEmail : "");
                 }
                 
-                whitelist.Add(new FeatureToggleWhitelistItem(isAccountIdWhitelisted == true ? AccountId : 0, userEmails));
+                whitelist.Add(new ProviderFeatureToggleWhitelistItem { Ukprn = isUkprnWhitelisted == true ? Ukprn : 0, UserEmails = userEmails });
             }
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new FeatureToggle("ProviderRelationships", isEnabled, whitelist));
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new ProviderFeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled, Whitelist = whitelist });
             
             return this;
         }

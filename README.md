@@ -3,6 +3,7 @@
 This package includes:
 
 * Facade to aggregate multiple authorization concerns into a single call including:
+  * Features - Toggling.
   * Employer features - Toggling, toggling by account whitelisting, toggling by user whitelisting, toggling by agreement signing.
   * Employer user roles - User membership checks for an account, user role checks for an account.
   * Provider features - Toggling, toggling by provider whitelisting, toggling by user whitelisting.
@@ -14,6 +15,7 @@ This package includes:
 
 In addition to the `SFA.DAS.Authorization` package one or more of the following packages should be referenced depending on your application's requirements:
 
+* `SFA.DAS.Authorization.Features`
 * `SFA.DAS.Authorization.EmployerFeatures`
 * `SFA.DAS.Authorization.EmployerUserRoles`
 * `SFA.DAS.Authorization.ProviderFeatures`
@@ -50,13 +52,27 @@ If you're not using .NET Core then the authorization packages also include Struc
 
 ```c#
 c.AddRegistry<AuthorizationRegistry>();
+c.AddRegistry<FeaturesAuthorizationRegistry>();
 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
 c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 ```
 
-> Please note, currently only the `SFA.DAS.Authorization.EmployerFeatures` & `SFA.DAS.Authorization.ProviderFeatures` packages include .NET Core DI `IServiceCollection` extensions.
+> Please note, the `SFA.DAS.Authorization.EmployerUserRoles` & `SFA.DAS.Authorization.ProviderPermissions` packages don't currently include .NET Core DI `IServiceCollection` extensions.
+
+### Features Configuration
+
+`SFA.DAS.Authorization.Features` requires an instance of `SFA.DAS.Authorization.Features.FeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `FeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+
+```json
+{
+    "FeatureToggles": [{
+        "Feature": "ProviderRelationships",
+        "IsEnabled": true
+    }]
+}
+```
 
 ### Employer Features Configuration
 
@@ -71,8 +87,8 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
             "AccountId": 111111111,
             "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
         }, {
-           "AccountId": 222222222,
-           "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
+            "AccountId": 222222222,
+            "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
         }]
     }]
 }
@@ -91,8 +107,8 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
             "Ukprn": 111111111,
             "UserEmails": ["foo1@foo.com", "foo2@foo.com"]
         }, {
-           "Ukprn": 222222222,
-           "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
+            "Ukprn": 222222222,
+            "UserEmails": ["bar1@bar.com", "bar2@bar.com"]
         }]
     }]
 }

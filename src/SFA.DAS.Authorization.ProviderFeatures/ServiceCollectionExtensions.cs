@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.ProviderFeatures
 {
@@ -7,7 +8,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures
         public static IServiceCollection AddProviderFeaturesAuthorization(this IServiceCollection services)
         {
             return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
-                .AddSingleton<IFeatureTogglesService, FeatureTogglesService>();
+                .AddSingleton<IFeatureTogglesService<ProviderFeatureToggle>, FeatureTogglesService<ProviderFeaturesConfiguration, ProviderFeatureToggle>>();
         }
     }
 }

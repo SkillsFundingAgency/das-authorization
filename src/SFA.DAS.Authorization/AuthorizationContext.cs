@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Authorization
 {
@@ -29,6 +30,11 @@ namespace SFA.DAS.Authorization
             value = exists ? (T)obj : default;
 
             return exists;
+        }
+
+        public override string ToString()
+        {
+            return _data.Count > 0 ? string.Join(", ", _data.Select(d => $"{d.Key}: {d.Value}")) : "None";
         }
     }
 }

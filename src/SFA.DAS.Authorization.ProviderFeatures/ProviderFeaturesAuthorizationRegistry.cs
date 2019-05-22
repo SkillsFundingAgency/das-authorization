@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using SFA.DAS.Authorization.Features;
+using StructureMap;
 
 namespace SFA.DAS.Authorization.ProviderFeatures
 {
@@ -7,7 +8,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures
         public ProviderFeaturesAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
-            For<IFeatureTogglesService>().Use<FeatureTogglesService>().Singleton();
+            For<IFeatureTogglesService<ProviderFeatureToggle>>().Use<FeatureTogglesService<ProviderFeaturesConfiguration, ProviderFeatureToggle>>().Singleton();
         }
     }
 }

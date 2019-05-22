@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.EmployerFeatures;
+using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
 using SFA.DAS.Authorization.NetCoreTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
@@ -11,31 +12,55 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
     {
         public TestAuthorizationRegistry()
         {
+            For<FeaturesConfiguration>().Use(new FeaturesConfiguration
+            {
+                FeatureToggles = new List<FeatureToggle> 
+                {
+                    new FeatureToggle
+                    {
+                        Feature = "ProviderRelationships",
+                        IsEnabled = true
+                    }
+                }
+            });
+            
             For<EmployerFeaturesConfiguration>().Use(new EmployerFeaturesConfiguration
             {
-                FeatureToggles = new List<EmployerFeatures.FeatureToggle> 
+                FeatureToggles = new List<EmployerFeatureToggle> 
                 {
-                    new EmployerFeatures.FeatureToggle("ProviderRelationships", true, new List<EmployerFeatures.FeatureToggleWhitelistItem>
+                    new EmployerFeatureToggle
                     {
-                        new EmployerFeatures.FeatureToggleWhitelistItem(Account.Id, new List<string>
+                        Feature = "ProviderRelationships",
+                        IsEnabled = true,
+                        Whitelist = new List<EmployerFeatureToggleWhitelistItem>
                         {
-                            User.Email
-                        })
-                    })
+                            new EmployerFeatureToggleWhitelistItem
+                            {
+                                AccountId = Account.Id,
+                                UserEmails = new List<string> { User.Email }
+                            }
+                        }
+                    }
                 }
             });
             
             For<ProviderFeaturesConfiguration>().Use(new ProviderFeaturesConfiguration
             {
-                FeatureToggles = new List<ProviderFeatures.FeatureToggle> 
+                FeatureToggles = new List<ProviderFeatureToggle> 
                 {
-                    new ProviderFeatures.FeatureToggle("ProviderRelationships", true, new List<ProviderFeatures.FeatureToggleWhitelistItem>
+                    new ProviderFeatureToggle
                     {
-                        new ProviderFeatures.FeatureToggleWhitelistItem(Provider.Ukprn, new List<string>
+                        Feature = "ProviderRelationships",
+                        IsEnabled = true,
+                        Whitelist = new List<ProviderFeatureToggleWhitelistItem>
                         {
-                            User.Email
-                        })
-                    })
+                            new ProviderFeatureToggleWhitelistItem
+                            {
+                                Ukprn = Provider.Ukprn,
+                                UserEmails = new List<string> { User.Email }
+                            }
+                        }
+                    }
                 }
             });
             

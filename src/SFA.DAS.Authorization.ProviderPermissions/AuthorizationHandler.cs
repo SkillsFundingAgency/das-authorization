@@ -26,7 +26,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         {
             var authorizationResult = new AuthorizationResult();
 
-            if (options.Any())
+            if (options.Count > 0)
             {
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
@@ -49,7 +49,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
 
             return authorizationResult;
         }

@@ -2,17 +2,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.Features;
 
 namespace SFA.DAS.Authorization.ProviderFeatures
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => ProviderFeature.Prefix;
+        public string Prefix => "ProviderFeature.";
         
-        private readonly IFeatureTogglesService _featureTogglesService;
+        private readonly IFeatureTogglesService<ProviderFeatureToggle> _featureTogglesService;
         private readonly ILogger _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IFeatureTogglesService<ProviderFeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
             _featureTogglesService = featureTogglesService;
             _logger = logger;
@@ -22,12 +23,11 @@ namespace SFA.DAS.Authorization.ProviderFeatures
         {
             var authorizationResult = new AuthorizationResult();
 
-            if (options.Any())
+            if (options.Count > 0)
             {
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
-
-                var values = authorizationContext.GetProviderFeatureValues();
+                
                 var feature = options.Single();
                 var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
@@ -35,13 +35,18 @@ namespace SFA.DAS.Authorization.ProviderFeatures
                 {
                     authorizationResult.AddError(new ProviderFeatureNotEnabled());
                 }
-                else if (featureToggle.IsWhitelistEnabled && !featureToggle.IsUserWhitelisted(values.Ukprn, values.UserEmail))
+                else if (featureToggle.IsWhitelistEnabled)
                 {
-                    authorizationResult.AddError(new ProviderFeatureUserNotWhitelisted());
+                    var values = authorizationContext.GetProviderFeatureValues();
+
+                    if (!featureToggle.IsUserWhitelisted(values.Ukprn, values.UserEmail))
+                    {
+                        authorizationResult.AddError(new ProviderFeatureUserNotWhitelisted());
+                    }
                 }
             }
 
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
             
             return Task.FromResult(authorizationResult);
         }
