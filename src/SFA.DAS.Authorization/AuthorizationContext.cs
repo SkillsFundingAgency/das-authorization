@@ -34,7 +34,7 @@ namespace SFA.DAS.Authorization
 
         public override string ToString()
         {
-            return _data.Any() ? string.Join(", ", _data.Select(d => $"{d.Key}: {d.Value}")) : "None";
+            return _data.Count > 0 ? string.Join(", ", _data.Select(d => $"{d.Key}: {d.Value}")) : "None";
         }
     }
 }

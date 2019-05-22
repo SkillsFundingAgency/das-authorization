@@ -8,11 +8,11 @@ namespace SFA.DAS.Authorization.EmployerFeatures
     public class EmployerFeatureToggle : FeatureToggle
     {
         public List<EmployerFeatureToggleWhitelistItem> Whitelist { get; set; }
-        public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Any();
+        public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Count > 0;
 
         public bool IsUserWhitelisted(long accountId, string userEmail)
         {
-            return Whitelist.Any(w => w.AccountId == accountId && (w.UserEmails == null || !w.UserEmails.Any() || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
+            return Whitelist.Any(w => w.AccountId == accountId && (w.UserEmails == null || w.UserEmails.Count == 0 || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
         }
     }
 }

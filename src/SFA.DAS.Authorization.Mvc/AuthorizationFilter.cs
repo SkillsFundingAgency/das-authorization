@@ -22,7 +22,7 @@ namespace SFA.DAS.Authorization.Mvc
             var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             var dasAuthorizeAttributes = controllerActionDescriptor.GetDasAuthorizeAttributes();
 
-            if (dasAuthorizeAttributes.Any())
+            if (dasAuthorizeAttributes.Count > 0)
             {
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 var isAuthorized = await _authorizationService.IsAuthorizedAsync(options);
@@ -56,7 +56,7 @@ namespace SFA.DAS.Authorization.Mvc
         {
             var dasAuthorizeAttributes = filterContext.ActionDescriptor.GetDasAuthorizeAttributes();
 
-            if (dasAuthorizeAttributes.Any())
+            if (dasAuthorizeAttributes.Count > 0)
             {
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 var isAuthorized = _authorizationService().IsAuthorized(options);

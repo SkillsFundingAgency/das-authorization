@@ -41,7 +41,7 @@ namespace SFA.DAS.Authorization
             var authorizationContext = _authorizationContextProvider.GetAuthorizationContext();
             var unrecognizedOptions = options.Where(o => !_handlers.Any(h => o.StartsWith(h.Prefix))).ToList();
 
-            if (unrecognizedOptions.Any())
+            if (unrecognizedOptions.Count > 0)
             {
                 throw new ArgumentException($"Options '{string.Join(", ", unrecognizedOptions)}' were unrecognized", nameof(options));
             }

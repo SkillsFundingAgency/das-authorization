@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization.WebApi
         {
             var dasAuthorizeAttributes = actionContext.ActionDescriptor.GetDasAuthorizeAttributes();
 
-            if (dasAuthorizeAttributes.Any())
+            if (dasAuthorizeAttributes.Count > 0)
             {
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 var isAuthorized = actionContext.Request.GetService<IAuthorizationService>().IsAuthorized(options);

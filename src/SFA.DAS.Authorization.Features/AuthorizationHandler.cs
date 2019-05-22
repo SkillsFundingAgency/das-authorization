@@ -22,7 +22,7 @@ namespace SFA.DAS.Authorization.Features
         {
             var authorizationResult = new AuthorizationResult();
 
-            if (options.Any())
+            if (options.Count > 0)
             {
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
