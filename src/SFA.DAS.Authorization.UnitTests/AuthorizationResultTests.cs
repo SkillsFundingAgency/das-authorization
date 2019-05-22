@@ -65,18 +65,6 @@ namespace SFA.DAS.Authorization.UnitTests
                 r.Errors.Should().HaveCount(f.Errors.Count).And.Contain(f.Errors);
             });
         }
-
-        [Test]
-        public void GetDescription_WhenAuthorized_ThenShouldReturnAuthorizedDescription()
-        {
-            Test(f => new AuthorizationResult(), (f, r) => r.GetDescription().Should().Be($"IsAuthorized: True, Errors: None"));
-        }
-
-        [Test]
-        public void GetDescription_WhenUnauthorized_ThenShouldReturnUnauthorizedDescription()
-        {
-            Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted), (f, r) => r.GetDescription().Should().Be($"IsAuthorized: False, Errors: {f.EmployerUserRoleNotAuthorized.Message}, {f.ProviderPermissionNotGranted.Message}"));
-        }
         
         [Test]
         public void HasError_WhenAnErrorOfTypeExists_ThenShouldReturnTrue()
@@ -88,6 +76,18 @@ namespace SFA.DAS.Authorization.UnitTests
         public void HasError_WhenAnErrorOfTypeDoesNotExist_ThenShouldReturnFalse()
         {
             Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).HasError<ProviderPermissionNotGranted>(), (f, r) => r.Should().BeFalse());
+        }
+
+        [Test]
+        public void ToString_WhenAuthorized_ThenShouldReturnAuthorizedDescription()
+        {
+            Test(f => new AuthorizationResult().ToString(), (f, r) => r.Should().Be($"IsAuthorized: True, Errors: None"));
+        }
+
+        [Test]
+        public void ToString_WhenUnauthorized_ThenShouldReturnUnauthorizedDescription()
+        {
+            Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted).ToString(), (f, r) => r.Should().Be($"IsAuthorized: False, Errors: {f.EmployerUserRoleNotAuthorized.Message}, {f.ProviderPermissionNotGranted.Message}"));
         }
     }
 

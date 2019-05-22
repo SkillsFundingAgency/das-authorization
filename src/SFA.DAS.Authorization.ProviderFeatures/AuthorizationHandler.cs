@@ -46,7 +46,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures
                 }
             }
 
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext.GetDescription()}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
             
             return Task.FromResult(authorizationResult);
         }

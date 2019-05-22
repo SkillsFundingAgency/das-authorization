@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' with result '{authorizationResult}'");
             
             return Task.FromResult(authorizationResult);
         }

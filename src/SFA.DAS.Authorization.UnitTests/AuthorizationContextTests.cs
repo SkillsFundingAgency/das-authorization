@@ -12,7 +12,7 @@ namespace SFA.DAS.Authorization.UnitTests
         [Test]
         public void Get_WhenKeyExists_ThenShouldReturnData()
         {
-            Test(f => f.SetData(), f => f.GetData(), (f, d) => d.Should().Be(f.Data));
+            Test(f => f.SetData(), f => f.GetData(), (f, d) => d.Should().Be(f.Value));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace SFA.DAS.Authorization.UnitTests
             Test(f => f.SetData(), f => f.TryGetData(), (f, r) =>
             {
                 r.Should().BeTrue();
-                f.Value.Should().NotBeNull().And.Be(f.Data);
+                f.ValueOut.Should().NotBeNull().And.Be(f.Value);
             });
         }
 
@@ -37,42 +37,64 @@ namespace SFA.DAS.Authorization.UnitTests
             Test(f => f.TryGetData(), (f, r) =>
             {
                 r.Should().BeFalse();
-                f.Value.Should().BeNull();
+                f.ValueOut.Should().BeNull();
             });
+        }
+
+        [Test]
+        public void ToString_WhenKeysExist_ThenShouldReturnAuthorizedDescription()
+        {
+            Test(f => f.SetData(3), f => f.AuthorizationContext.ToString(), (f, r) => r.Should().Be("Foo_0: Bar_0, Foo_1: Bar_1, Foo_2: Bar_2"));
+        }
+
+        [Test]
+        public void ToString_WhenKeysDoNotExist_ThenShouldReturnUnauthorizedDescription()
+        {
+            Test(f => f.AuthorizationContext.ToString(), (f, r) => r.Should().Be("None"));
         }
     }
 
     public class AuthorizationContextTestsFixture
     {
         public string Key { get; set; }
-        public object Data { get; set; }
-        public object Value { get; set; }
+        public string Value { get; set; }
+        public string ValueOut { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
 
         public AuthorizationContextTestsFixture()
         {
             Key = "Foo";
-            Data = new object();
+            Value = "Bar";
             AuthorizationContext = new AuthorizationContext();
         }
 
-        public object GetData()
+        public string GetData()
         {
-            return AuthorizationContext.Get<object>(Key);
+            return AuthorizationContext.Get<string>(Key);
         }
 
-        public AuthorizationContextTestsFixture SetData()
+        public AuthorizationContextTestsFixture SetData(int count = 1)
         {
-            AuthorizationContext.Set(Key, Data);
+            if (count == 1)
+            {
+                AuthorizationContext.Set(Key, Value);
+            }
+            else
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    AuthorizationContext.Set($"{Key}_{i}", $"{Value}_{i}");
+                }
+            }
 
             return this;
         }
 
         public bool TryGetData()
         {
-            var exists = AuthorizationContext.TryGet(Key, out object value);
+            var exists = AuthorizationContext.TryGet(Key, out string value);
 
-            Value = value;
+            ValueOut = value;
 
             return exists;
         }

@@ -49,7 +49,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext.GetDescription()}' with result '{authorizationResult.GetDescription()}'");
+            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
 
             return authorizationResult;
         }

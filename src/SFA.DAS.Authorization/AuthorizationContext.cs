@@ -32,7 +32,7 @@ namespace SFA.DAS.Authorization
             return exists;
         }
 
-        public string GetDescription()
+        public override string ToString()
         {
             return _data.Any() ? string.Join(", ", _data.Select(d => $"{d.Key}: {d.Value}")) : "None";
         }
