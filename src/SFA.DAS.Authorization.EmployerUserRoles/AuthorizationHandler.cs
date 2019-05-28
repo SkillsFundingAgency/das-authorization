@@ -13,9 +13,9 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
         public string Prefix => EmployerUserRole.Prefix;
 
         private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient, ILogger logger)
+        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient, ILogger<AuthorizationHandler> logger)
         {
             _employerAccountsApiClient = employerAccountsApiClient;
             _logger = logger;

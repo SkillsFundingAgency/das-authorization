@@ -88,7 +88,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public Mock<IEmployerAccountsApiClient> EmployerAccountsApiClient { get; set; }
         public AuthorizationHandler Handler { get; set; }
-        public Mock<ILogger> Logger { get; set; }
+        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
 
         public const long AccountId = 112L;
         public static readonly Guid UserRef = Guid.NewGuid();
@@ -98,7 +98,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             EmployerAccountsApiClient = new Mock<IEmployerAccountsApiClient>();
-            Logger = new Mock<ILogger>();
+            Logger = new Mock<ILogger<AuthorizationHandler>>();
             Handler = new AuthorizationHandler(EmployerAccountsApiClient.Object, Logger.Object);
         }
 

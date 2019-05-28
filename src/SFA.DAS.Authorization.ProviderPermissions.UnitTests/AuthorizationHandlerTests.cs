@@ -77,7 +77,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
-        public Mock<ILogger> Logger { get; set; }
+        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long AccountLegalEntityId = 22L;
         public const long Ukprn = 333L;
@@ -87,7 +87,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             ProviderRelationshipsApiClient = new Mock<IProviderRelationshipsApiClient>();
-            Logger = new Mock<ILogger>();
+            Logger = new Mock<ILogger<AuthorizationHandler>>();
             Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object, Logger.Object);
         }
 

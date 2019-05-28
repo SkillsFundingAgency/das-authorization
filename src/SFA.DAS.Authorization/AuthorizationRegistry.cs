@@ -11,9 +11,8 @@ namespace SFA.DAS.Authorization
             For<IAuthorizationContextProvider>().Use<DefaultAuthorizationContextProvider>();
             For<IAuthorizationContextProvider>().DecorateAllWith<AuthorizationContextCache>();
             For<IAuthorizationService>().Use<AuthorizationService>();
-            For<ILogger>().Use(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory().CreateLogger(c.ParentType));
             For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();
-            For(typeof(ILogger<>)).Use(typeof(Logger<>));
+            For(typeof(ILogger<>)).Use(typeof(Logger<>)).Ctor<ILoggerFactory>().Is(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory());
         }
     }
 }

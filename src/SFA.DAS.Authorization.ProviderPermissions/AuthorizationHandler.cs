@@ -13,10 +13,9 @@ namespace SFA.DAS.Authorization.ProviderPermissions
         public string Prefix => ProviderOperation.Prefix;
         
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient,
-            ILogger logger)
+        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient, ILogger<AuthorizationHandler> logger)
         {
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
             _logger = logger;

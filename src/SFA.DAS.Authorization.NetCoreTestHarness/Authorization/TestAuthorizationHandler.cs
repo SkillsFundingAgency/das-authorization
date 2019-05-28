@@ -10,9 +10,9 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Authorization
     {
         public string Prefix => TestOption.Prefix;
         
-        private readonly ILogger _logger;
+        private readonly ILogger<TestAuthorizationHandler> _logger;
 
-        public TestAuthorizationHandler(ILogger logger)
+        public TestAuthorizationHandler(ILogger<TestAuthorizationHandler> logger)
         {
             _logger = logger;
         }
