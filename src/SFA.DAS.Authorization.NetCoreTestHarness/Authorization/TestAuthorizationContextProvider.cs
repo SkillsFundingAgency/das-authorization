@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.EmployerFeatures;
+﻿using SFA.DAS.Authorization.CommitmentPermissions;
+using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.NetCoreTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
@@ -12,6 +13,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Authorization
         {
             var authorizationContext = new AuthorizationContext();
             
+            authorizationContext.AddCommitmentPermissionValues(Cohort.Id, Party.Type, Party.Id);
             authorizationContext.AddEmployerFeatureValues(Account.Id, User.Email);
             authorizationContext.AddEmployerUserRoleValues(Account.Id, User.Ref);
             authorizationContext.AddProviderFeatureValues(Provider.Ukprn, User.Email);

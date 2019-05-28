@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Authorization
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
+            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return Task.FromResult(authorizationResult);
         }

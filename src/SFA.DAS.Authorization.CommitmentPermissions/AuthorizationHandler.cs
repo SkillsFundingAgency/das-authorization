@@ -1,20 +1,17 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace SFA.DAS.Authorization.Features
+namespace SFA.DAS.Authorization.CommitmentPermissions
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
-        public string Prefix => "Feature.";
+        public string Prefix => CommitmentOperation.Prefix;
         
-        private readonly IFeatureTogglesService<FeatureToggle> _featureTogglesService;
         private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService<FeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(ILogger<AuthorizationHandler> logger)
         {
-            _featureTogglesService = featureTogglesService;
             _logger = logger;
         }
 
@@ -27,13 +24,7 @@ namespace SFA.DAS.Authorization.Features
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
                 
-                var feature = options.Single();
-                var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
-
-                if (!featureToggle.IsEnabled)
-                {
-                    authorizationResult.AddError(new FeatureNotEnabled());
-                }
+                var values = authorizationContext.GetCommitmentPermissionValues();
             }
             
             _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);

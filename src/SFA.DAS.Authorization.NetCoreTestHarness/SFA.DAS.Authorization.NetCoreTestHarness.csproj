@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SFA.DAS.Authorization.CommitmentPermissions\SFA.DAS.Authorization.CommitmentPermissions.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.EmployerUserRoles\SFA.DAS.Authorization.EmployerUserRoles.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization.Features\SFA.DAS.Authorization.Features.csproj" />

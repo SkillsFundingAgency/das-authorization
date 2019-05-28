@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Mvc;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
@@ -27,6 +28,12 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Controllers
 
         [DasAuthorize(TestOption.UnauthorizedMultipleErrors)]
         public ActionResult TestOptionUnauthorizedMultipleErrors()
+        {
+            return View("Authorized");
+        }
+
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
+        public ActionResult CommitmentOperationAccessCohort()
         {
             return View("Authorized");
         }

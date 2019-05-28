@@ -11,7 +11,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
         public string Prefix => "EmployerFeature.";
         
         private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthorizationHandler> _logger;
 
         public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
@@ -46,7 +46,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures
                 }
             }
 
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
+            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return Task.FromResult(authorizationResult);
         }

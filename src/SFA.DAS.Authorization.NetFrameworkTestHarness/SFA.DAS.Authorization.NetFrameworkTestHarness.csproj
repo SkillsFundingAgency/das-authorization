@@ -110,6 +110,8 @@
     <Compile Include="Authorization\TestAuthorizationHandler.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountLegalEntity.cs" />
+    <Compile Include="Models\Cohort.cs" />
+    <Compile Include="Models\Party.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,6 +135,10 @@
     <Content Include="Views\Home\Authorized.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Authorization.CommitmentPermissions\SFA.DAS.Authorization.CommitmentPermissions.csproj">
+      <Project>{56451627-67b2-4010-a380-54c211c5a9de}</Project>
+      <Name>SFA.DAS.Authorization.CommitmentPermissions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Authorization.EmployerFeatures\SFA.DAS.Authorization.EmployerFeatures.csproj">
       <Project>{de288f48-9deb-4d22-9c91-c01fa118583d}</Project>
       <Name>SFA.DAS.Authorization.EmployerFeatures</Name>
