@@ -8,7 +8,7 @@ namespace SFA.DAS.Authorization
     {
         public static void EnsureNoAndOptions(this IReadOnlyCollection<string> options)
         {
-            if (options.Count() > 1)
+            if (options.Count > 1)
             {
                 throw new NotImplementedException("Combining options (to specify AND) is not currently supported");
             }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -28,19 +30,28 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 options.EnsureNoOrOptions();
                 
                 var values = authorizationContext.GetCommitmentPermissionValues();
-                
-                var canAccessCohortRequest = new CanAccessCohortRequest
-                {
-                    CohortId = values.CohortId,
-                    PartyType = values.PartyType,
-                    PartyId = values.PartyId
-                };
+                var operation = options.Select(o => o.ToEnum<Operation>()).Single();
 
-                var canAccessCohort = await _commitmentsApiClient.CanAccessCohort(canAccessCohortRequest).ConfigureAwait(false);
-
-                if (!canAccessCohort)
+                switch (operation)
                 {
-                    authorizationResult.AddError(new CommitmentPermissionNotGranted());
+                    case Operation.AccessCohort:
+                        var canAccessCohortRequest = new CanAccessCohortRequest
+                        {
+                            CohortId = values.CohortId,
+                            PartyType = values.PartyType,
+                            PartyId = values.PartyId
+                        };
+
+                        var canAccessCohort = await _commitmentsApiClient.CanAccessCohort(canAccessCohortRequest).ConfigureAwait(false);
+
+                        if (!canAccessCohort)
+                        {
+                            authorizationResult.AddError(new CommitmentPermissionNotGranted());
+                        }
+                        
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             
