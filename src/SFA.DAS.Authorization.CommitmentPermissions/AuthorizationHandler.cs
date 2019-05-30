@@ -50,10 +50,18 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         }
     }
 
+    public enum PartyType
+    {
+        Unknown = 0,
+        Employer = 1,
+        Provider = 2,
+        TransferSender = 4
+    }
+
     public class CanAccessCohortRequest
     {
         public long CohortId { get; set; }
-        public string PartyType { get; set; }
+        public PartyType PartyType { get; set; }
         public long PartyId { get; set; }
     }
     
