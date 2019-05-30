@@ -8,10 +8,13 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public CommitmentPermissionsAuthorizationRegistry()
         {
+<<<<<<< HEAD
+            For<IAuthorizationHandler>().Add<AuthorizationHandler>();
+            For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
+=======
             For<IAuthorizationHandler>().Add<AuthorizationHandler>()
                 .DecorateWith((ctx, handler) => BuildCache(ctx, handler))
                 .Singleton();
-            For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
 
             For<IAuthorizationHandlerCacheConfig>()
                 .Add<AuthorizationContextCacheKeyProvider>()
@@ -22,6 +25,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         {
             var authCacheService = ctx.GetInstance<IAuthorizationCacheService>();
             return new AuthorizationHandlerCacheDecorator(authCacheService, handler);
+>>>>>>> IoC registration
         }
     }
 }
