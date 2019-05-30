@@ -62,7 +62,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public long CohortId { get; set; }
         public PartyType PartyType { get; set; }
-        public long PartyId { get; set; }
+        public string PartyId { get; set; }
     }
     
     public interface ICommitmentsApiClient

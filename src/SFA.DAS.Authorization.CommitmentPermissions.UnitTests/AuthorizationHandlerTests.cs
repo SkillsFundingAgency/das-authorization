@@ -53,9 +53,9 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         
         [TestCase(1L, null, null)]
         [TestCase(null, PartyType.Employer, null)]
-        [TestCase(null, null, 1L)]
+        [TestCase(null, null, "2")]
         [TestCase(null, null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? cohortId, PartyType partyType, long? partyId)
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? cohortId, PartyType partyType, string partyId)
         {
             return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(cohortId, partyType, partyId), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
         }
@@ -85,7 +85,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         
         public const long CohortId = 1L;
         public const PartyType PartyType = SFA.DAS.Authorization.CommitmentPermissions.PartyType.Employer;
-        public const long PartyId = 2L;
+        public const string PartyId = "2";
 
         public AuthorizationHandlerTestsFixture()
         {
@@ -146,7 +146,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
             return this;
         }
         
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? cohortId = CohortId, PartyType partyType = PartyType, long? partyId = PartyId)
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? cohortId = CohortId, PartyType partyType = PartyType, string partyId = PartyId)
         {
             AuthorizationContext.AddCommitmentPermissionValues(cohortId, partyType, partyId);
             
