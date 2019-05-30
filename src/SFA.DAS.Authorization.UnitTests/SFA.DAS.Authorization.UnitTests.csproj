@@ -21,5 +21,9 @@
         <ProjectReference Include="..\SFA.DAS.Authorization.ProviderPermissions\SFA.DAS.Authorization.ProviderPermissions.csproj" />
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Reference Include="System.IdentityModel" />
+    </ItemGroup>
 
 </Project>
