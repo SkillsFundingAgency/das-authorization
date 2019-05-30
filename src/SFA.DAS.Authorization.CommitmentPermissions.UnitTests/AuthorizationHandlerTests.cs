@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -57,6 +59,20 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         {
             return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(cohortId, partyType, partyId), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
         }
+        
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<CommitmentPermissionNotGranted>()));
+        }
     }
 
     public class AuthorizationHandlerTestsFixture
@@ -64,6 +80,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         public List<string> Options { get; set; }
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
+        public Mock<ICommitmentsApiClient> CommitmentsApiClient { get; set; }
         public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long CohortId = 1L;
@@ -74,8 +91,9 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
+            CommitmentsApiClient = new Mock<ICommitmentsApiClient>();
             Logger = new Mock<ILogger<AuthorizationHandler>>();
-            Handler = new AuthorizationHandler(Logger.Object);
+            Handler = new AuthorizationHandler(CommitmentsApiClient.Object, Logger.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -131,6 +149,19 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? cohortId = CohortId, string partyType = PartyType, long? partyId = PartyId)
         {
             AuthorizationContext.AddCommitmentPermissionValues(cohortId, partyType, partyId);
+            
+            return this;
+        }
+
+        public AuthorizationHandlerTestsFixture SetPermissionGranted(bool result)
+        {            
+            CommitmentsApiClient.Setup(c => c.CanAccessCohort(
+                    It.Is<CanAccessCohortRequest>(r =>
+                        r.CohortId == CohortId &&
+                        r.PartyType == PartyType &&
+                        r.PartyId == PartyId),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
             
             return this;
         }
