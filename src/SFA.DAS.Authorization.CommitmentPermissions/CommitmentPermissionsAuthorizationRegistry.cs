@@ -7,6 +7,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         public CommitmentPermissionsAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
+            For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
         }
     }
 }

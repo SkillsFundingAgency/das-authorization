@@ -6,7 +6,8 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public static IServiceCollection AddCommitmentPermissionsAuthorization(this IServiceCollection services)
         {
-            return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
+            return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
+                .AddSingleton<ICommitmentsApiClient, CommitmentsApiClient>();
         }
     }
 }

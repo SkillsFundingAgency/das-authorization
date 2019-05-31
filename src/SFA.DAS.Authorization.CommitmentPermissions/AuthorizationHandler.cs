@@ -80,4 +80,12 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         Task<bool> CanAccessCohort(CanAccessCohortRequest request, CancellationToken cancellationToken = default);
     }
+
+    public class CommitmentsApiClient : ICommitmentsApiClient
+    {
+        public Task<bool> CanAccessCohort(CanAccessCohortRequest request, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(true);
+        }
+    }
 }
