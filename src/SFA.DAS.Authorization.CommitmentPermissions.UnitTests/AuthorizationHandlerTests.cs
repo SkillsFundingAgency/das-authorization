@@ -40,9 +40,9 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingPartyType_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingParty_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingPartyType(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingParty(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
         
         [Test]
@@ -52,12 +52,12 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         }
         
         [TestCase(1L, null, null)]
-        [TestCase(null, PartyType.Employer, null)]
+        [TestCase(null, Party.Employer, null)]
         [TestCase(null, null, 2L)]
         [TestCase(null, null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? cohortId, PartyType? partyType, long partyId)
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? cohortId, Party? party, long partyId)
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(cohortId, partyType, partyId), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(cohortId, party, partyId), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
         }
         
         [Test]
@@ -84,7 +84,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long CohortId = 1;
-        public const PartyType PartyType = SFA.DAS.Authorization.CommitmentPermissions.PartyType.Employer;
+        public const Party Party = SFA.DAS.Authorization.CommitmentPermissions.Party.Employer;
         public const long PartyId = 2;
 
         public AuthorizationHandlerTestsFixture()
@@ -124,13 +124,13 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
 
         public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingCohortId()
         {
-            AuthorizationContext.Set(AuthorizationContextKey.PartyType, PartyType);
+            AuthorizationContext.Set(AuthorizationContextKey.Party, Party);
             AuthorizationContext.Set(AuthorizationContextKey.PartyId, PartyId);
             
             return this;
         }
 
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingPartyType()
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingParty()
         {
             AuthorizationContext.Set(AuthorizationContextKey.CohortId, CohortId);
             AuthorizationContext.Set(AuthorizationContextKey.PartyId, PartyId);
@@ -141,14 +141,14 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingPartyId()
         {
             AuthorizationContext.Set(AuthorizationContextKey.CohortId, CohortId);
-            AuthorizationContext.Set(AuthorizationContextKey.PartyType, PartyType);
+            AuthorizationContext.Set(AuthorizationContextKey.Party, Party);
             
             return this;
         }
         
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? cohortId = CohortId, PartyType? partyType = PartyType, long partyId = PartyId)
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? cohortId = CohortId, Party? party = Party, long partyId = PartyId)
         {
-            AuthorizationContext.AddCommitmentPermissionValues(cohortId, partyType, partyId);
+            AuthorizationContext.AddCommitmentPermissionValues(cohortId, party, partyId);
             
             return this;
         }
@@ -158,7 +158,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
             CommitmentsApiClient.Setup(c => c.CanAccessCohort(
                     It.Is<CanAccessCohortRequest>(r =>
                         r.CohortId == CohortId &&
-                        r.PartyType == PartyType &&
+                        r.Party == Party &&
                         r.PartyId == PartyId),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(result);

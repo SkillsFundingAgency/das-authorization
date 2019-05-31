@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Authorization
         {
             var authorizationContext = new AuthorizationContext();
             
-            authorizationContext.AddCommitmentPermissionValues(Cohort.Id, Party.Type, Party.Id);
+            authorizationContext.AddCommitmentPermissionValues(Cohort.Id, Party.Provider, Provider.Ukprn);
             authorizationContext.AddEmployerFeatureValues(Account.Id, User.Email);
             authorizationContext.AddEmployerUserRoleValues(Account.Id, User.Ref);
             authorizationContext.AddProviderFeatureValues(Provider.Ukprn, User.Email);

@@ -38,7 +38,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                         var canAccessCohortRequest = new CanAccessCohortRequest
                         {
                             CohortId = values.CohortId,
-                            PartyType = values.PartyType,
+                            Party = values.Party,
                             PartyId = values.PartyId
                         };
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                         
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(operation), operation, "The operation is not currently supported");
                 }
             }
             
@@ -61,9 +61,9 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         }
     }
 
-    public enum PartyType
+    public enum Party
     {
-        Unknown = 0,
+        None = 0,
         Employer = 1,
         Provider = 2,
         TransferSender = 4
@@ -72,7 +72,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     public class CanAccessCohortRequest
     {
         public long CohortId { get; set; }
-        public PartyType PartyType { get; set; }
+        public Party Party { get; set; }
         public long PartyId { get; set; }
     }
     
