@@ -94,6 +94,7 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authorization\TestOption.cs" />
+    <Compile Include="DependencyResolution\CommitmentPermissionsApiClientFactory.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountLegalEntity.cs" />
     <Compile Include="Models\Cohort.cs" />
-    <Compile Include="Models\Party.cs" />
+    <Compile Include="Models\PartyInstance.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,6 +4,6 @@
     {
         public const string CohortId = "CohortId";
         public const string PartyId = "PartyId";
-        public const string PartyType = "PartyType";
+        public const string Party = "Party";
     }
 }

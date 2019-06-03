@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using StructureMap;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions
 {
@@ -7,6 +8,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         public CommitmentPermissionsAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationHandler>();
+            For<ICommitmentPermissionsApiClient>().Use(c => c.GetInstance<ICommitmentPermissionsApiClientFactory>().CreateClient()).Singleton();
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions
 {
@@ -11,10 +13,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public string Prefix => CommitmentOperation.Prefix;
 
-        private readonly ICommitmentsApiClient _commitmentsApiClient;
+        private readonly ICommitmentPermissionsApiClient _commitmentsApiClient;
         private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(ICommitmentsApiClient commitmentsApiClient, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(ICommitmentPermissionsApiClient commitmentsApiClient, ILogger<AuthorizationHandler> logger)
         {
             _commitmentsApiClient = commitmentsApiClient;
             _logger = logger;
@@ -35,10 +37,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 switch (operation)
                 {
                     case Operation.AccessCohort:
-                        var canAccessCohortRequest = new CanAccessCohortRequest
+                        var canAccessCohortRequest = new CohortAccessRequest
                         {
                             CohortId = values.CohortId,
-                            PartyType = values.PartyType,
+                            Party = values.Party,
                             PartyId = values.PartyId
                         };
 
@@ -59,25 +61,5 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
             
             return authorizationResult;
         }
-    }
-
-    public enum PartyType
-    {
-        Unknown = 0,
-        Employer = 1,
-        Provider = 2,
-        TransferSender = 4
-    }
-
-    public class CanAccessCohortRequest
-    {
-        public long CohortId { get; set; }
-        public PartyType PartyType { get; set; }
-        public string PartyId { get; set; }
-    }
-    
-    public interface ICommitmentsApiClient
-    {
-        Task<bool> CanAccessCohort(CanAccessCohortRequest request, CancellationToken cancellationToken = default);
     }
 }
