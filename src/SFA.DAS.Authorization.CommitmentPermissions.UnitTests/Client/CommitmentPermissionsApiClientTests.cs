@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Client
         }
 
         [Test]
-        public async Task CanAccessCohort_VerifyUrlAndDataIsCorrectPassedIn()
+        public async Task CanAccessCohort_VerifyUrlAndDataIsCorrectlyPassedIn()
         {
             await _fixture.CommitmentPermissionsApiClient.CanAccessCohort(_fixture.CohortAccessRequest);
             _fixture.MockRestHttpClient.Verify(x => x.Get<bool>($"api/authorization/access-cohort",
