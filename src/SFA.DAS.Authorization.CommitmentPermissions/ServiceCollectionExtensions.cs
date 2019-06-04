@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Authorization.CommitmentPermissions.Client;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions
 {
@@ -6,7 +7,11 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public static IServiceCollection AddCommitmentPermissionsAuthorization(this IServiceCollection services)
         {
-            return services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
+            services.AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
+            services.AddSingleton<ICommitmentPermissionsApiClient>(sp=> sp.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
+
+            return services;
         }
     }
 }
