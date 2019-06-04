@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
     {
         public DefaultRegistry()
         {
-            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
+            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactoryForCore>();
         }
     }
 }
