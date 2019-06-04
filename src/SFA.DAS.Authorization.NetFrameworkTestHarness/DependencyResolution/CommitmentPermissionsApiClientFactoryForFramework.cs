@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Authorization.CommitmentPermissions.Client;
+
 using SFA.DAS.ProviderRelationships.Api.Client.Configuration;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution

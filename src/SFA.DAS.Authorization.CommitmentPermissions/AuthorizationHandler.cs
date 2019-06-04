@@ -53,7 +53,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                         
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(operation), operation, "The operation is not currently supported");
                 }
             }
             
