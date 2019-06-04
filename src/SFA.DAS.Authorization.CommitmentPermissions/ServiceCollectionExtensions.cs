@@ -9,7 +9,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         {
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
             services.AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactoryRegistryStub>();
-            services.AddSingleton<ICommitmentPermissionsApiClient>(sp=> sp.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
+            services.AddSingleton<ICommitmentPermissionsApiClient>(sp => sp.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
 
             return services;
         }
