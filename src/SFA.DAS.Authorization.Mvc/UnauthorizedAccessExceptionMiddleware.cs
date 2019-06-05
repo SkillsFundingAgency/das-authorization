@@ -19,7 +19,7 @@ namespace SFA.DAS.Authorization.Mvc
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (UnauthorizedAccessException)
             {
