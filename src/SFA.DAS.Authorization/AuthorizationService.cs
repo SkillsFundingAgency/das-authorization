@@ -18,7 +18,7 @@ namespace SFA.DAS.Authorization
 
         public void Authorize(params string[] options)
         {
-            AuthorizeAsync(options).GetAwaiter().GetResult();
+            Task.Run(() => AuthorizeAsync(options)).GetAwaiter().GetResult();
         }
 
         public async Task AuthorizeAsync(params string[] options)
@@ -58,7 +58,7 @@ namespace SFA.DAS.Authorization
 
         public bool IsAuthorized(params string[] options)
         {
-            return IsAuthorizedAsync(options).GetAwaiter().GetResult();
+            return Task.Run(() => IsAuthorizedAsync(options)).GetAwaiter().GetResult();
         }
 
         public async Task<bool> IsAuthorizedAsync(params string[] options)
