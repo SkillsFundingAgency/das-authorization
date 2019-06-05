@@ -30,7 +30,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
                     scan.WithDefaultConventions();
 					scan.With(new ControllerConvention());
                 });
-            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
+            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactoryForFramework>();
         }
 
         #endregion
