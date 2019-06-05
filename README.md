@@ -189,6 +189,10 @@ if (!authorizationResult.IsAuthorized)
 }
 ```
 
+## Registration Requirement
+
+In the consuming application you will need to re-register ICommitmentPermissionsApiClientFactory. We recommend you use the concrete class CommitmentPermissionsApiClientFactory and pass to that the IAzureActiveDirectoryClientConfiguration used by your application.
+
 ### SFA.DAS.Authorization.EmployerFeatures
 
 To check if a feature is enabled:
