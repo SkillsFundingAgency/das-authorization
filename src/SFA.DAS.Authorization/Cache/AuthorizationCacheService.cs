@@ -9,21 +9,16 @@ namespace SFA.DAS.Authorization.Cache
     public class AuthorizationCacheService : IAuthorizationCacheService
     {
         private readonly IMemoryCache _memoryCache;
-        private readonly Dictionary<Type, IAuthorizationHandlerCacheConfig> _cacheKeyProviders;
+        private readonly Dictionary<Type, IAuthorizationContextCacheKeyProvider> _cacheKeyProviders;
 
-        public AuthorizationCacheService(IMemoryCache memoryCache, IAuthorizationHandlerCacheConfig[] config)
+        public AuthorizationCacheService(IMemoryCache memoryCache, IAuthorizationContextCacheKeyProvider[] keyProvider)
         {
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
 
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (keyProvider == null) throw new ArgumentNullException(nameof(keyProvider));
 
-            _cacheKeyProviders = config
-                .SelectMany(cp => cp.SupportsHandlerTypes
-                                    .Select(sht => new {
-                                        KeyProvider = cp,
-                                        HandlerType = sht
-                                    }))
-                .ToDictionary(cp => cp.HandlerType, kp => kp.KeyProvider);
+            _cacheKeyProviders = keyProvider
+                .ToDictionary(cp => cp.SupportsHandlerType, kp => kp);
         }
 
         public Task<AuthorizationResult> GetOrAdd(
@@ -36,7 +31,7 @@ namespace SFA.DAS.Authorization.Cache
             return _memoryCache.GetOrCreateAsync(cacheDetails.Key, ce => BuildItemToCache(ce, handler, authorizationContext, options, cacheDetails.Config, cacheDetails.Key));
         }
 
-        private (IAuthorizationHandlerCacheConfig Config, object Key) GetCacheDetailsForAuthorizationHandlerType(
+        private (IAuthorizationContextCacheKeyProvider Config, object Key) GetCacheDetailsForAuthorizationHandlerType(
             IAuthorizationHandler handler, 
             IReadOnlyCollection<string> options,
             IAuthorizationContext authorizationContext)
@@ -46,7 +41,7 @@ namespace SFA.DAS.Authorization.Cache
             if (!_cacheKeyProviders.TryGetValue(handlerType, out var configure))
             {
                 throw new InvalidOperationException(
-                    $"The authorization handler type {handlerType.Name} does not have an implementation of {nameof(IAuthorizationHandlerCacheConfig)} that supports it.");
+                    $"The authorization handler type {handlerType.Name} does not have an implementation of {nameof(IAuthorizationContextCacheKeyProvider)} that supports it.");
             }
 
             var key = configure.GetAuthorizationKey(options, authorizationContext);
@@ -59,12 +54,12 @@ namespace SFA.DAS.Authorization.Cache
             IAuthorizationHandler handler, 
             IAuthorizationContext context, 
             IReadOnlyCollection<string> options, 
-            IAuthorizationHandlerCacheConfig config,
+            IAuthorizationContextCacheKeyProvider keyProvider,
             object key)
         {
             var authorizationResult = await handler.GetAuthorizationResult(options, context);
 
-            config.ConfigureCacheItem(cacheEntry, context, key, authorizationResult);
+            keyProvider.ConfigureCacheItem(cacheEntry, context, key, authorizationResult);
 
             return authorizationResult;
         }

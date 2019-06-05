@@ -7,14 +7,15 @@ using SFA.DAS.Authorization.Cache;
 namespace SFA.DAS.Authorization.UnitTests.Cache
 {
     [TestFixture]
-    public class AuthorizationHandlerCacheDecoratorTests
+    [Parallelizable(ParallelScope.All)]
+    public class AuthorizationHandlerCacheTests
     {
         [Test]
-        public void Prefix_WithWrappedHandler_ShouldPassthroughPrefix()
+        public void Prefix_WhenCalled_ThenShouldPassthroughToWrappedPrefix()
         {
             const string expectedPrefix = "ABC";
 
-            var fixtures = new AuthorizationHandlerCacheDecoratorTestFixtures()
+            var fixtures = new AuthorizationHandlerCacheTestFixtures()
                                 .WithPrefix(expectedPrefix);
 
             var sut = fixtures.CreateDecorator();
@@ -28,9 +29,9 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task Prefix_WithWrappedHandler_ShouldPassthroughIsValid(bool isAuthorized)
+        public async Task Prefix_WhenCalled_ThenShouldPassthroughIsValid(bool isAuthorized)
         {
-            var fixtures = new AuthorizationHandlerCacheDecoratorTestFixtures();
+            var fixtures = new AuthorizationHandlerCacheTestFixtures();
 
             // Act
             var actualResult = await fixtures.CheckAuthorization("ABC", new List<string>(), isAuthorized);
@@ -40,11 +41,11 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
 
         [Test]
-        public async Task Prefix_WithWrappedHandler_ShouldPassthroughSuppliedValues()
+        public async Task Prefix_WhenCalled_ThenShouldPassthroughSuppliedValues()
         {
             var options = new List<string>();
 
-            var fixtures = new AuthorizationHandlerCacheDecoratorTestFixtures();
+            var fixtures = new AuthorizationHandlerCacheTestFixtures();
 
             // Act
             await fixtures.CheckAuthorization("ABC", options, true);
@@ -55,9 +56,9 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
     }
 
-    class AuthorizationHandlerCacheDecoratorTestFixtures
+    class AuthorizationHandlerCacheTestFixtures
     {
-        public AuthorizationHandlerCacheDecoratorTestFixtures()
+        public AuthorizationHandlerCacheTestFixtures()
         {
             AuthorizationCacheServiceMock = new Mock<IAuthorizationCacheService>();
             AuthorizationHandlerMock = new Mock<IAuthorizationHandler>();
@@ -73,7 +74,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         public Mock<IAuthorizationContext> AuthorizationContextMock { get; }
         public IAuthorizationContext AuthorizationContext => AuthorizationContextMock.Object;
 
-        public AuthorizationHandlerCacheDecoratorTestFixtures WithPrefix(string prefix)
+        public AuthorizationHandlerCacheTestFixtures WithPrefix(string prefix)
         {
             AuthorizationHandlerMock
                 .Setup(ah => ah.Prefix)
@@ -82,7 +83,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
             return this;
         }
 
-        public AuthorizationHandlerCacheDecoratorTestFixtures WithExpectedAuthorizationResponse(IReadOnlyCollection<string> options, bool asAuthorized)
+        public AuthorizationHandlerCacheTestFixtures WithExpectedAuthorizationResponse(IReadOnlyCollection<string> options, bool asAuthorized)
         {
             var expectedResult = new AuthorizationResult();
             if (!asAuthorized)
@@ -97,9 +98,9 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
             return this;
         }
 
-        public AuthorizationHandlerCacheDecorator CreateDecorator()
+        public AuthorizationHandlerCache CreateDecorator()
         {
-            return new AuthorizationHandlerCacheDecorator(AuthorizationCacheService, AuthorizationHandler);
+            return new AuthorizationHandlerCache(AuthorizationCacheService, AuthorizationHandler);
         }
 
         public Task<AuthorizationResult> CheckAuthorization(string prefix, IReadOnlyCollection<string> options, bool asAuthorized)

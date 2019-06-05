@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 .Singleton();
             For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
 
-            For<IAuthorizationHandlerCacheConfig>()
+            For<IAuthorizationContextCacheKeyProvider>()
                 .Add<AuthorizationContextCacheKeyProvider>()
                 .Singleton();
         }
@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         private IAuthorizationHandler BuildCache(IContext ctx, IAuthorizationHandler handler)
         {
             var authCacheService = ctx.GetInstance<IAuthorizationCacheService>();
-            return new AuthorizationHandlerCacheDecorator(authCacheService, handler);
+            return new AuthorizationHandlerCache(authCacheService, handler);
         }
     }
 }

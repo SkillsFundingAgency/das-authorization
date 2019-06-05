@@ -8,19 +8,11 @@ using NUnit.Framework;
 namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.All)]
     public class AuthorizationContextCacheKeyProviderTests
     {
         [Test]
-        public void SupportedHandlerTypes_SupportsExpectedType()
-        {
-            var sut = new AuthorizationContextCacheKeyProviderTestFixtures()
-                .CreateSut();
-
-            Assert.Contains(typeof(SFA.DAS.Authorization.CommitmentPermissions.AuthorizationHandler), sut.SupportsHandlerTypes);
-        }
-
-        [Test]
-        public void GetAuthorizationKey_WithValuesInContext_ShouldNotReturnNullKey()
+        public void GetAuthorizationKey_WhenValuesInContext_ThenShouldNotReturnNullKey()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -29,7 +21,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void GetAuthorizationKey_WithPartyIdInContext_HasPartyTypeSet()
+        public void GetAuthorizationKey_WhenPartyIdInContext_ThenShouldHavePartyTypeSet()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -38,7 +30,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void GetAuthorizationKey_WithPartyIdInContext_HasPartyIdSet()
+        public void GetAuthorizationKey_WhenPartyIdInContext_ThenShouldHavePartyIdSet()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -47,7 +39,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void GetAuthorizationKey_WithCohortIdInContext_HasCohortIdSet()
+        public void GetAuthorizationKey_WhenCohortIdInContext_ThenShouldHaveCohortIdSet()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -56,7 +48,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void GetAuthorizationKey_WithOptionsSupplied_HasOptionsNotNull()
+        public void GetAuthorizationKey_WhenOptionsSupplied_ThenShouldHaveOptionsNotNull()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -65,7 +57,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void GetAuthorizationKey_WithOptionsSupplied_HasOptionsWithExpectedValues()
+        public void GetAuthorizationKey_WhenOptionsSupplied_ThenShouldHaveOptionsWithExpectedValues()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures()
                 .WithContext(Party.Employer, 2, 3);
@@ -79,7 +71,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void ConfigureCacheItem_WithCacheItem_ShouldSetSlidingExpiration()
+        public void ConfigureCacheItem_WhenCacheItem_ThenShouldSetSlidingExpiration()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures();
 
@@ -87,7 +79,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         }
 
         [Test]
-        public void ConfigureCacheItem_WithCacheItem_ShouldSetSlidingExpirationToSomethingReasonable()
+        public void ConfigureCacheItem_WhenCacheItem_ThenShouldSetSlidingExpirationToSomethingReasonable()
         {
             var fixtures = new AuthorizationContextCacheKeyProviderTestFixtures();
 

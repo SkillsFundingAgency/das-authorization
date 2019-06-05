@@ -1,33 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Castle.Components.DictionaryAdapter;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using SFA.DAS.Authorization.Cache;
+using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.UnitTests.Cache
 {
     [TestFixture]
-    public class AuthorizationCacheServiceTests
+    [Parallelizable(ParallelScope.All)]
+    public class AuthorizationCacheServiceTests : FluentTest<AuthorizationCacheServiceTestFixtures>
     {
         [Test]
-        public void Constructor_Valid_ShouldNotThrowException()
+        public void Constructor_WhenCallIsValid_ThenShouldNotThrowException()
         {
-            var fixtures = new AuthorizationCacheServiceTestFixtures();
-
-            fixtures.CreateService();
-
-            Assert.Pass("Constructed service without getting an exception");
+            Test(
+                act: fixtures => fixtures.CreateService(),
+                assert: fixtures => Assert.Pass("Constructed service without getting an exception"));
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public Task GetOrAdd_WithANonCachedResult_ShouldReturnResultFromAuthHandler(bool isAuthorized)
+        public Task GetOrAdd_WhenANonCachedResult_ThenShouldReturnResultFromAuthHandler(bool isAuthorized)
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -39,7 +36,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
 
         [Test]
-        public Task GetOrAdd_WithAnyValidReequest_ShouldQueryCache()
+        public Task GetOrAdd_WhenAnyValidRequest_ThenShouldQueryCache()
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -51,7 +48,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
 
         [Test]
-        public Task GetOrAdd_WithACachedResult_ShouldNotCallHandler()
+        public Task GetOrAdd_WhenACachedResult_ThenShouldNotCallHandler()
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -62,9 +59,8 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
             return fixtures.VerifyHandlerCalledWithKey(handlerMock, "ABC", Times.Never());
         }
 
-
         [Test]
-        public Task GetOrAdd_WithANonCachedResult_ShouldCallHandler()
+        public Task GetOrAdd_WhenANonCachedResult_ThenShouldCallHandler()
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -76,7 +72,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
 
         [Test]
-        public Task GetOrAdd_WithANonCachedResult_ShouldWriteResultToCache()
+        public Task GetOrAdd_WhenANonCachedResult_ThenShouldWriteResultToCache()
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -88,7 +84,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         }
 
         [Test]
-        public Task GetOrAdd_WithACachedResult_ShouldNotRewriteResultToCache()
+        public Task GetOrAdd_WhenACachedResult_ThenShouldNotRewriteResultToCache()
         {
             var fixtures = new AuthorizationCacheServiceTestFixtures()
                 .AddHandler(out var handlerMock)
@@ -103,7 +99,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
     public class AuthorizationCacheServiceTestFixtures
     {
         private readonly List<Mock<IAuthorizationHandler>> _authorizationHandlers;
-        private readonly List<Mock<IAuthorizationHandlerCacheConfig>> _authorizationHandlerCache;
+        private readonly List<Mock<IAuthorizationContextCacheKeyProvider>> _authorizationHandlerCache;
 
         public AuthorizationCacheServiceTestFixtures()
         {
@@ -116,15 +112,15 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
             AuthorizationContextMock = new Mock<IAuthorizationContext>();
 
             _authorizationHandlers = new List<Mock<IAuthorizationHandler>>();
-            _authorizationHandlerCache = new List<Mock<IAuthorizationHandlerCacheConfig>>();
+            _authorizationHandlerCache = new List<Mock<IAuthorizationContextCacheKeyProvider>>();
         }
 
         public Mock<IMemoryCache> MemoryCacheMock { get;  }
         public IMemoryCache MemoryCache => MemoryCacheMock.Object;
 
-        public IReadOnlyCollection<Mock<IAuthorizationHandlerCacheConfig>> AuthorizationHandlerCacheConfigsMock => _authorizationHandlerCache;
+        public IReadOnlyCollection<Mock<IAuthorizationContextCacheKeyProvider>> AuthorizationHandlerCacheConfigsMock => _authorizationHandlerCache;
 
-        public IAuthorizationHandlerCacheConfig[] AuthorizationHandlerCacheConfig => AuthorizationHandlerCacheConfigsMock.Select(m => m.Object).ToArray();
+        public IAuthorizationContextCacheKeyProvider[] AuthorizationContextCacheKeyProvider => AuthorizationHandlerCacheConfigsMock.Select(m => m.Object).ToArray();
 
         public Mock<IAuthorizationContext> AuthorizationContextMock { get; }
         public IAuthorizationContext AuthorizationContext => AuthorizationContextMock.Object;
@@ -140,15 +136,10 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
 
         public AuthorizationCacheServiceTestFixtures AddHandlerConfig(Mock<IAuthorizationHandler> handler, object key)
         {
-            return AddHandlerConfig(fixtures => new[] {handler}, key);
-        }
-
-        public AuthorizationCacheServiceTestFixtures AddHandlerConfig(Func<AuthorizationCacheServiceTestFixtures, Mock<IAuthorizationHandler>[]> getHandler, object key)
-        {
-            var mockConfig = new Mock<IAuthorizationHandlerCacheConfig>();
+            var mockConfig = new Mock<IAuthorizationContextCacheKeyProvider>();
             mockConfig
-                .Setup(c => c.SupportsHandlerTypes)
-                .Returns(() => getHandler(this).Select(hm => hm.Object.GetType()).ToArray());
+                .Setup(c => c.SupportsHandlerType)
+                .Returns(() => handler.Object.GetType());
 
             mockConfig
                 .Setup(c => c.GetAuthorizationKey(It.IsAny<IReadOnlyCollection<string>>(), It.IsAny<IAuthorizationContext>()))
@@ -197,7 +188,7 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
 
         public AuthorizationCacheService CreateService()
         {
-            return new AuthorizationCacheService(MemoryCache, AuthorizationHandlerCacheConfig);
+            return new AuthorizationCacheService(MemoryCache, AuthorizationContextCacheKeyProvider);
         }
 
         public async Task AssertGetOrAdd(Mock<IAuthorizationHandler> handlerMock, bool expectAuthorized)

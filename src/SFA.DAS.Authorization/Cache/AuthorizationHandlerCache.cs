@@ -7,13 +7,13 @@ namespace SFA.DAS.Authorization.Cache
     ///     Decorator for <see cref="IAuthorizationHandler"/> that will cache the results to optimize expensive
     ///     authorization calls.
     /// </summary>
-    public class AuthorizationHandlerCacheDecorator : IAuthorizationHandler
+    public class AuthorizationHandlerCache : IAuthorizationHandler
     {
 
         private readonly IAuthorizationHandler _wrapped;
         private readonly IAuthorizationCacheService _cacheService;
 
-        public AuthorizationHandlerCacheDecorator(IAuthorizationCacheService authorizationCacheService, IAuthorizationHandler authorizationHandler)
+        public AuthorizationHandlerCache(IAuthorizationCacheService authorizationCacheService, IAuthorizationHandler authorizationHandler)
         {
             _wrapped = authorizationHandler;
             _cacheService = authorizationCacheService;

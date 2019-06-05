@@ -6,9 +6,9 @@ using SFA.DAS.Authorization.Cache;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 {
-    public class AuthorizationContextCacheKeyProvider : IAuthorizationHandlerCacheConfig
+    public class AuthorizationContextCacheKeyProvider : IAuthorizationContextCacheKeyProvider
     {
-        public Type[] SupportsHandlerTypes { get; } = new Type[]{typeof(AuthorizationHandler)};
+        public Type SupportsHandlerType { get; } = typeof(AuthorizationHandler);
 
         public object GetAuthorizationKey(IReadOnlyCollection<string> options, IAuthorizationContext context)
         {

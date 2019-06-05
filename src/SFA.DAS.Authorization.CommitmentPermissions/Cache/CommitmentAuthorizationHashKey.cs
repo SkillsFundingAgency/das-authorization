@@ -32,8 +32,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
                    other.PartyType == PartyType &&
                    other.PartytId == PartytId &&
                    other.CohortId == CohortId &&
-                   other.Options.Count == Options.Count &&
-                   SameOptionsList(other.Options, Options);
+                   other.Options.IsSameAs(Options);
         }
 
         public static bool operator ==(CommitmentAuthorizationHashKey lhs, CommitmentAuthorizationHashKey rhs)
@@ -74,21 +73,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 
                 return hash;
             }
-        }
-
-        private bool SameOptionsList(IReadOnlyCollection<string> lhs, IReadOnlyCollection<string> rhs)
-        {
-            if (ReferenceEquals(lhs, rhs))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null) || lhs.Count != rhs.Count)
-            {
-                return false;
-            }
-
-            return lhs.SequenceEqual(rhs);
         }
     }
 }

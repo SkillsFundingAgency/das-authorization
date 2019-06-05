@@ -7,12 +7,12 @@ namespace SFA.DAS.Authorization.Cache
     /// <summary>
     ///     Provides handler specific details to the <see cref="IAuthorizationCacheService"/>.
     /// </summary>
-    public interface IAuthorizationHandlerCacheConfig
+    public interface IAuthorizationContextCacheKeyProvider
     {
         /// <summary>
-        ///     Which <see cref="IAuthorizationHandler"/> types can this instance support?
+        ///     Which <see cref="IAuthorizationHandler"/> type can this instance support?
         /// </summary>
-        Type[] SupportsHandlerTypes { get; }
+        Type SupportsHandlerType { get; }
 
         /// <summary>
         ///     Return the key that should be used for storing a specific authorization key.

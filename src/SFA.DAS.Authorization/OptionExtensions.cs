@@ -21,5 +21,20 @@ namespace SFA.DAS.Authorization
                 throw new NotImplementedException("Combining options (to specify OR) by comma separating them is not currently supported");
             }
         }
+
+        public static bool IsSameAs<T>(this IReadOnlyCollection<T> lhs, IReadOnlyCollection<T> rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null) || lhs.Count != rhs.Count)
+            {
+                return false;
+            }
+
+            return lhs.SequenceEqual(rhs);
+        }
     }
 }

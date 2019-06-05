@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using SFA.DAS.Authorization.CommitmentPermissions;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
@@ -66,6 +70,19 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
             
             For<IAuthorizationContextProvider>().Use<TestAuthorizationContextProvider>();
             For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();
+
+            For<IAuthorizationContextProvider>().Use<TestAuthorizationContextProvider>();
+            For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();
+            For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
+            For<IMemoryCache>().Use<MemoryCache>().Singleton();
+        }
+    }
+
+    public class CommitmentsApiClient : ICommitmentsApiClient
+    {
+        public Task<bool> CanAccessCohort(CanAccessCohortRequest request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(true);
         }
     }
 }
