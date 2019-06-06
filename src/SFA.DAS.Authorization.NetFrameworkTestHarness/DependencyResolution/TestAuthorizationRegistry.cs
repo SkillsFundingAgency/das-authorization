@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using SFA.DAS.Authorization.CommitmentPermissions;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
@@ -59,6 +61,8 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
             For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();
             For<ICommitmentsApiClient>().Use<CommitmentsApiClient>().Singleton();
             For<IMemoryCache>().Use<MemoryCache>().Singleton();
+            var memoryCacheOptions = new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions());
+            For<IOptions<MemoryCacheOptions>>().Use(memoryCacheOptions).Singleton();
         }
     }
 
