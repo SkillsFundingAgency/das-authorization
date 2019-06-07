@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SFA.DAS.Authorization.CommitmentPermissions.Cache;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Cache
 {

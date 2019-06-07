@@ -1,10 +1,11 @@
 using System;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions
 {
     public static class AuthorizationContextExtensions
     {
-        public static void AddCommitmentPermissionValues(this IAuthorizationContext authorizationContext, long? cohortId, Party? party, long partyId)
+        public static void AddCommitmentPermissionValues(this IAuthorizationContext authorizationContext, long? cohortId, Party? party, long? partyId)
         {
             authorizationContext.Set(AuthorizationContextKey.CohortId, cohortId);
             authorizationContext.Set(AuthorizationContextKey.Party, party);

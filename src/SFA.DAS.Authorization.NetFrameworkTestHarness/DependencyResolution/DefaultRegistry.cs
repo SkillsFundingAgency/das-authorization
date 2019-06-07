@@ -15,12 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Threading;
-using System.Threading.Tasks;
-using SFA.DAS.Authorization.CommitmentPermissions;
-
-namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
-{
+namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
     using StructureMap;
 
     public class DefaultRegistry : Registry
@@ -37,7 +32,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                     scan.With(new ControllerConvention());
                 });
         }
-
         #endregion
     }
 }

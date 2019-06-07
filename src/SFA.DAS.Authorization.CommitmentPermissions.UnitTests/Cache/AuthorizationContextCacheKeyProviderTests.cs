@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.Caching.Memory;
 using SFA.DAS.Authorization.Cache;
+using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 {

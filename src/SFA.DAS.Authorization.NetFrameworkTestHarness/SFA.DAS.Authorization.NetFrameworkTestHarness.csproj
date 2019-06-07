@@ -130,6 +130,7 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountLegalEntity.cs" />
     <Compile Include="Models\Cohort.cs" />
+    <Compile Include="Models\PartyInstance.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

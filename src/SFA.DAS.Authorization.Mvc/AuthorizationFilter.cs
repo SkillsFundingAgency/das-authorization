@@ -25,7 +25,7 @@ namespace SFA.DAS.Authorization.Mvc
             if (dasAuthorizeAttributes.Count > 0)
             {
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
-                var isAuthorized = await _authorizationService.IsAuthorizedAsync(options);
+                var isAuthorized = await _authorizationService.IsAuthorizedAsync(options).ConfigureAwait(false);
 
                 if (!isAuthorized)
                 {
