@@ -1,0 +1,21 @@
+﻿@model SFA.DAS.Authorization.NetCoreTestHarness.Controllers.OtherTestResult
+@using SFA.DAS.Authorization.CommitmentPermissions
+@using SFA.DAS.Authorization.EmployerFeatures
+@using SFA.DAS.Authorization.EmployerUserRoles
+@using SFA.DAS.Authorization.NetCoreTestHarness.Authorization
+@using SFA.DAS.Authorization.ProviderPermissions
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<ul>
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        <HR />
+        @Html.Raw(Model.Message)
+        <HR />
+    }
+    <li>@Html.ActionLink(TestOption.GetCommitmentsAuthorizationHandler, "GetCommitmentsAuthorizationHandler")</li>
+    <li>@Html.ActionLink(TestOption.GetIAuthorizationService, "GetIAuthorizationService")</li>
+</ul>
