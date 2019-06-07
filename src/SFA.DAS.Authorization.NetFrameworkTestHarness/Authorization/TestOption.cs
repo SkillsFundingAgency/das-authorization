@@ -10,5 +10,9 @@
         public const string Authorized = Prefix + AuthorizedOption;
         public const string UnauthorizedSingleError = Prefix + UnauthorizedSingleErrorOption;
         public const string UnauthorizedMultipleErrors = Prefix + UnauthorizedMultipleErrorsOptions;
+
+        public const string IoCPrefix = "Test IoC.";
+        public const string GetCommitmentsAuthorizationHandler = IoCPrefix + "Commitments Authorization Handler";
+        public const string GetIAuthorizationService = IoCPrefix + "IAuthorizationService";
     }
 }

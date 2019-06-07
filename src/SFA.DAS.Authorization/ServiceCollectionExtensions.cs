@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Authorization.Cache;
 
 namespace SFA.DAS.Authorization
 {
@@ -14,7 +16,9 @@ namespace SFA.DAS.Authorization
             return services.AddScoped<IAuthorizationContext, AuthorizationContext>()
                 .AddScoped<IAuthorizationContextProvider>(p => new AuthorizationContextCache(p.GetService<T>()))
                 .AddScoped<IAuthorizationService, AuthorizationService>()
-                .AddScoped<T>();
+                //TODO: add all implementations of IAuthorizationContextCacheKeyProvider by assembly scanning
+                .AddScoped<T>()
+                .AddSingleton<IAuthorizationCacheService, AuthorizationCacheService>();
         }
     }
 }
