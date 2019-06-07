@@ -15,8 +15,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using SFA.DAS.Authorization.CommitmentPermissions.Client;
-
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
     using StructureMap;
 
@@ -33,10 +31,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution {
                     scan.WithDefaultConventions();
                     scan.With(new ControllerConvention());
                 });
-            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactoryForFramework>();
         }
-
         #endregion
     }
-
 }

@@ -57,7 +57,7 @@ namespace SFA.DAS.Authorization.Cache
             IAuthorizationContextCacheKeyProvider keyProvider,
             object key)
         {
-            var authorizationResult = await handler.GetAuthorizationResult(options, context);
+            var authorizationResult = await handler.GetAuthorizationResult(options, context).ConfigureAwait(false);
 
             keyProvider.ConfigureCacheItem(cacheEntry, context, key, authorizationResult);
 

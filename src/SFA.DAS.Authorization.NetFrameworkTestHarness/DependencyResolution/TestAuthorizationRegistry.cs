@@ -11,6 +11,9 @@ using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
+using SFA.DAS.AutoConfiguration;
+using SFA.DAS.Http.Configuration;
+using SFA.DAS.ProviderRelationships.Api.Client.Configuration;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
@@ -60,10 +63,25 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
 
             For<IAuthorizationContextProvider>().Use<TestAuthorizationContextProvider>();
             For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();
-            For<ICommitmentPermissionsApiClient>().Use<CommitmentPermissionsApiClient>().Singleton();
             For<IMemoryCache>().Use<MemoryCache>().Singleton();
             var memoryCacheOptions = new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions());
             For<IOptions<MemoryCacheOptions>>().Use(memoryCacheOptions).Singleton();
+
+            For<IAzureActiveDirectoryClientConfiguration>().Use(c =>
+                c.GetInstance<IAutoConfigurationService>().Get<ConfigHolder>("SFA.DAS.ProviderCommitments")
+                    .CommitmentsClientApi).Singleton();
+            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
+
+        }
+
+        internal interface IConfigHolder
+        {
+            AzureActiveDirectoryClientConfiguration CommitmentsClientApi { get; set; }
+        }
+
+        internal class ConfigHolder : IConfigHolder
+        {
+            public AzureActiveDirectoryClientConfiguration CommitmentsClientApi { get; set; }
         }
     }
 }
