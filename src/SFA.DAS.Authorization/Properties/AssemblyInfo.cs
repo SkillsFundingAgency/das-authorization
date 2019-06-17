@@ -1,6 +1,8 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("SFA.DAS.Authorization.UnitTests")]
+[assembly: InternalsVisibleTo("SFA.DAS.Authorization.CommitmentPermissions")]
+[assembly: InternalsVisibleTo("SFA.DAS.Authorization.CommitmentPermissions.UnitTests")]
 [assembly: InternalsVisibleTo("SFA.DAS.Authorization.EmployerFeatures")]
 [assembly: InternalsVisibleTo("SFA.DAS.Authorization.EmployerFeatures.UnitTests")]
 [assembly: InternalsVisibleTo("SFA.DAS.Authorization.EmployerUserRoles")]

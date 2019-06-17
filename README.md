@@ -3,9 +3,10 @@
 This package includes:
 
 * Facade to aggregate multiple authorization concerns into a single call including:
-  * Features - Toggling.
+  * Commitment permissions - Commitment permission checks for an employer or provider.
   * Employer features - Toggling, toggling by account whitelisting, toggling by user whitelisting, toggling by agreement signing.
   * Employer user roles - User membership checks for an account, user role checks for an account.
+  * Features - Toggling.
   * Provider features - Toggling, toggling by provider whitelisting, toggling by user whitelisting.
   * Provider permissions - Provider permission checks for an organisation.
 * Cross cutting authorization infrastructure for Mvc and WebApi.
@@ -16,6 +17,7 @@ This package includes:
 In addition to the `SFA.DAS.Authorization` package one or more of the following packages should be referenced depending on your application's requirements:
 
 * `SFA.DAS.Authorization.Features`
+* `SFA.DAS.Authorization.CommitmentPermissions`
 * `SFA.DAS.Authorization.EmployerFeatures`
 * `SFA.DAS.Authorization.EmployerUserRoles`
 * `SFA.DAS.Authorization.ProviderFeatures`
@@ -25,7 +27,6 @@ In addition to the `SFA.DAS.Authorization` package one or more of the following 
 
 ```c#
 services.AddAuthorization<AuthorizationContextProvider>();
-services.AddEmployerFeaturesAuthorization();
 services.AddMvc(o => o.AddAuthorization());
 app.UseUnauthorizedAccessExceptionHandler();
 ```
@@ -46,20 +47,32 @@ config.Filters.AddAuthorizationFilter();
 config.Filters.AddUnauthorizedAccessExceptionFilter();
 ```
 
-### StructureMap
+### .NET Core DI
 
-If you're not using .NET Core then the authorization packages also include StructureMap registries for wiring up their components:
+If you're using .NET Core DI then the authorization packages also include `IServiceCollection` extensions for wiring up their components:
 
 ```c#
-c.AddRegistry<AuthorizationRegistry>();
-c.AddRegistry<FeaturesAuthorizationRegistry>();
-c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
-c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
-c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
-c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
+services.AddCommitmentPermissionsAuthorization();
+services.AddEmployerFeaturesAuthorization();
+services.AddFeaturesAuthorization();
+services.AddProviderFeaturesAuthorization();
 ```
 
 > Please note, the `SFA.DAS.Authorization.EmployerUserRoles` & `SFA.DAS.Authorization.ProviderPermissions` packages don't currently include .NET Core DI `IServiceCollection` extensions.
+
+### StructureMap
+
+If you're using StructureMap then the authorization packages also include registries for wiring up their components:
+
+```c#
+c.AddRegistry<AuthorizationRegistry>();
+c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
+c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
+c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
+c.AddRegistry<FeaturesAuthorizationRegistry>();
+c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
+c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
+```
 
 ### Features Configuration
 
@@ -125,14 +138,11 @@ public class AuthorizationContextProvider : IAuthorizationContextProvider
     {
         var authorizationContext = new AuthorizationContext();
         var accountId = 123456; // e.g. From the URL querystring
-        var accountLegalEntityId = 1; // e.g. From the URL querystring
-        var ukprn = 12345678 // e.g. From the URL querystring
         var userRef = "abcdef" // e.g. From the authentication claims
         var userEmail = "foo@bar.com" // e.g. From the authentication claims
         
         authorizationContext.AddEmployerFeatureValues(accountId, userEmail);
         authorizationContext.AddEmployerUserRoleValues(accountId, userRef);
-        authorizationContext.AddProviderPermissionValues(accountLegalEntityId, ukprn);
 
         return authorizationContext;
     }
@@ -157,6 +167,32 @@ public interface IAuthorizationService
 
 The options that can be included in an authorization check will depend on which authorization packages have been referenced from your application:
 
+### SFA.DAS.Authorization.CommitmentPermissions
+
+To check if a party has the required permission:
+
+```c#
+var isAuthorized = _authorizationService.IsAuthorized(CommitmentOperation.AccessCohort);
+```
+
+Alternatively, if you're interested in why an authorization check has failed:
+
+```c#
+var authorizationResult = _authorizationService.GetAuthorizationResult(CommitmentOperation.AccessCohort);
+
+if (!authorizationResult.IsAuthorized)
+{
+    if (authorizationResult.HasError<CommitmentPermissionNotGranted>())
+    {
+        // Handle permission not granted
+    }
+}
+```
+
+## Registration Requirement
+
+In the consuming application you will need to re-register ICommitmentPermissionsApiClientFactory. We recommend you use the concrete class CommitmentPermissionsApiClientFactory and pass to that the IAzureActiveDirectoryClientConfiguration used by your application.
+
 ### SFA.DAS.Authorization.EmployerFeatures
 
 To check if a feature is enabled:
@@ -168,7 +204,7 @@ var isAuthorized = _authorizationService.IsAuthorized("EmployerFeature.ProviderR
 Alternatively, if you're interested in why an authorization check has failed:
 
 ```c#
-var authorizationResult = _authorizationService.GetAuthorizationResult(EmployerFeature.ProviderRelationships);
+var authorizationResult = _authorizationService.GetAuthorizationResult("EmployerFeature.ProviderRelationships");
 
 if (!authorizationResult.IsAuthorized)
 {
@@ -212,6 +248,28 @@ if (!authorizationResult.IsAuthorized)
 ```
 
 > `AccountId` & `UserRef` authorization context values are required for this package.
+
+### SFA.DAS.Authorization.Features
+
+To check if a feature is enabled:
+
+```c#
+var isAuthorized = _authorizationService.IsAuthorized("Feature.ProviderRelationships");
+```
+
+Alternatively, if you're interested in why an authorization check has failed:
+
+```c#
+var authorizationResult = _authorizationService.GetAuthorizationResult("Feature.ProviderRelationships");
+
+if (!authorizationResult.IsAuthorized)
+{
+    if (authorizationResult.HasError<FeatureNotEnabled>())
+    {
+        // Handle feature not enabled
+    }
+}
+```
 
 ### SFA.DAS.Authorization.ProviderFeatures
 

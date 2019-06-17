@@ -16,6 +16,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                .ConfigureDasAppConfiguration()
                 .UseNLog()
                 .UseStructureMap()
                 .UseStartup<AspNetStartup>();

@@ -1,3 +1,4 @@
+using SFA.DAS.Authorization.CommitmentPermissions;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerUserRoles;
 using SFA.DAS.Authorization.Features;
@@ -14,6 +15,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
         {
             registry.IncludeRegistry<AuthorizationRegistry>();
             registry.IncludeRegistry<AutoConfigurationRegistry>();
+            registry.IncludeRegistry<CommitmentPermissionsAuthorizationRegistry>();
             registry.IncludeRegistry<EmployerFeaturesAuthorizationRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
             registry.IncludeRegistry<FeaturesAuthorizationRegistry>();

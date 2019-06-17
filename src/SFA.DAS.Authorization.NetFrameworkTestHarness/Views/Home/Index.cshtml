@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.Authorization.EmployerFeatures
+﻿@using SFA.DAS.Authorization.CommitmentPermissions
+@using SFA.DAS.Authorization.EmployerFeatures
 @using SFA.DAS.Authorization.EmployerUserRoles
 @using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 @using SFA.DAS.Authorization.ProviderPermissions
@@ -19,10 +20,15 @@
     <li>@Html.ActionLink(TestOption.Authorized, "TestOptionAuthorized")</li>
     <li>@Html.ActionLink(TestOption.UnauthorizedSingleError, "TestOptionUnauthorizedSingleError")</li>
     <li>@Html.ActionLink(TestOption.UnauthorizedMultipleErrors, "TestOptionUnauthorizedMultipleErrors")</li>
+    <li>@Html.ActionLink(CommitmentOperation.AccessCohort, "CommitmentOperationAccessCohort")</li>
     <li>@Html.ActionLink("EmployerFeature.ProviderRelationships", "EmployerFeatureProviderRelationships")</li>
     <li>@Html.ActionLink(EmployerUserRole.Owner, "EmployerUserRoleOwner")</li>
     <li>@Html.ActionLink(EmployerUserRole.Any, "EmployerUserRoleAny")</li>
     <li>@Html.ActionLink("Feature.ProviderRelationships", "FeatureProviderRelationships")</li>
     <li>@Html.ActionLink("ProviderFeature.ProviderRelationships", "ProviderFeatureProviderRelationships")</li>
     <li>@Html.ActionLink(ProviderOperation.CreateCohort, "ProviderOperationCreateCohort")</li>
+    
+    <HR />
+
+    <li>@Html.ActionLink("Test IoC", "Index", "OtherTests")</li>
 </ul>

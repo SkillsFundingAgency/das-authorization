@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization.Features
         public string Prefix => "Feature.";
         
         private readonly IFeatureTogglesService<FeatureToggle> _featureTogglesService;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthorizationHandler> _logger;
 
         public AuthorizationHandler(IFeatureTogglesService<FeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
         {
@@ -35,8 +35,8 @@ namespace SFA.DAS.Authorization.Features
                     authorizationResult.AddError(new FeatureNotEnabled());
                 }
             }
-
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
+            
+            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return Task.FromResult(authorizationResult);
         }

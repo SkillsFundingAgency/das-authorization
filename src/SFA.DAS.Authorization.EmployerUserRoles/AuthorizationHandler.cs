@@ -62,7 +62,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles
                 }
             }
             
-            _logger.LogInformation($"Finished running '{GetType().FullName}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
+            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
 
             return authorizationResult;
         }
