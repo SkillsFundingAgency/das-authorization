@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Cache;
 using SFA.DAS.Authorization.CommitmentPermissions.Cache;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
@@ -14,8 +15,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 .AddSingleton<IAuthorizationHandler>(serviceProvider =>
                 {
                     var handler = serviceProvider.GetService<AuthorizationHandler>();
-                    var cacheService = serviceProvider.GetService<IAuthorizationCacheService>();
-                    return new AuthorizationHandlerCache(cacheService, handler);
+                    var authorizationResultCacheKeyProviders = serviceProvider.GetServices<IAuthorizationContextCacheKeyProvider>();
+                    var memoryCache = serviceProvider.GetService<IMemoryCache>();
+                    
+                    return new AuthorizationResultCache(handler, authorizationResultCacheKeyProviders, memoryCache);
                 });
 
             services.AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactoryRegistryStub>();

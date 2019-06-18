@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.Cache;
+﻿using Microsoft.Extensions.Caching.Memory;
+using SFA.DAS.Authorization.Cache;
 using SFA.DAS.Authorization.CommitmentPermissions.Cache;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using StructureMap;
@@ -20,10 +21,12 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
             For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactoryRegistryStub>();
         }
 
-        private IAuthorizationHandler BuildCache(IContext ctx, IAuthorizationHandler handler)
+        private IAuthorizationHandler BuildCache(IContext ctx, IAuthorizationHandler authorizationHandler)
         {
-            var authCacheService = ctx.GetInstance<IAuthorizationCacheService>();
-            return new AuthorizationHandlerCache(authCacheService, handler);
+            var authorizationResultCacheKeyProviders = ctx.GetAllInstances<IAuthorizationContextCacheKeyProvider>();
+            var memoryCache = ctx.GetInstance<IMemoryCache>();
+            
+            return new AuthorizationResultCache(authorizationHandler, authorizationResultCacheKeyProviders, memoryCache);
         }
     }
 }

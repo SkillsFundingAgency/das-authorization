@@ -119,7 +119,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
         public AuthorizationContextCacheKeyProviderTestFixtures AssertHashKey(Action<CommitmentAuthorizationHashKey> checker, IReadOnlyCollection<string> options)
         {
             var sut = CreateSut();
-            var hashkey = sut.GetAuthorizationKey(options, AuthorizationContext);
+            var hashkey = sut.GetKey(options, AuthorizationContext);
 
             checker(hashkey as CommitmentAuthorizationHashKey);
 
@@ -135,7 +135,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 
             cacheEntryMock.SetupAllProperties();
 
-            sut.ConfigureCacheItem(cacheEntryMock.Object, AuthorizationContext, key, new AuthorizationResult());
+            sut.ConfigureCacheEntry(AuthorizationContext, key, cacheEntryMock.Object, new AuthorizationResult());
 
             checker(cacheEntryMock.Object);
 
