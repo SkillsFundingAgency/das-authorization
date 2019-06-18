@@ -1,14 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
-using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
 using SFA.DAS.AutoConfiguration;
@@ -18,9 +10,9 @@ using StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
 {
-    public class TestAuthorizationRegistry : Registry
+    public class ConfigurationRegistry : Registry
     {
-        public TestAuthorizationRegistry()
+        public ConfigurationRegistry()
         {
             For<FeaturesConfiguration>().Use(new FeaturesConfiguration {
                 FeatureToggles = new List<FeatureToggle> {
@@ -29,7 +21,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         IsEnabled = true
                     }
                 }
-            });
+            }).Singleton();
 
             For<EmployerFeaturesConfiguration>().Use(new EmployerFeaturesConfiguration {
                 FeatureToggles = new List<EmployerFeatureToggle> {
@@ -44,7 +36,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         }
                     }
                 }
-            });
+            }).Singleton();
 
             For<ProviderFeaturesConfiguration>().Use(new ProviderFeaturesConfiguration {
                 FeatureToggles = new List<ProviderFeatureToggle> {
@@ -59,27 +51,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         }
                     }
                 }
-            });
+            }).Singleton();
 
-            For<IAuthorizationContextProvider>().Use<TestAuthorizationContextProvider>();
-            For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();
-            For<IMemoryCache>().Use<MemoryCache>().Singleton();
-            var memoryCacheOptions = new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions());
-            For<IOptions<MemoryCacheOptions>>().Use(memoryCacheOptions).Singleton();
-
-            For<IAzureActiveDirectoryClientConfiguration>().Use(c =>
-                c.GetInstance<IAutoConfigurationService>().Get<ConfigHolder>("SFA.DAS.ProviderCommitments")
-                    .CommitmentsClientApi).Singleton();
-            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
-
+            For<IAzureActiveDirectoryClientConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ProviderCommitmentsConfiguration>("SFA.DAS.ProviderCommitments").CommitmentsClientApi).Singleton();
         }
 
-        internal interface IConfigHolder
-        {
-            AzureActiveDirectoryClientConfiguration CommitmentsClientApi { get; set; }
-        }
-
-        internal class ConfigHolder : IConfigHolder
+        internal class ProviderCommitmentsConfiguration
         {
             public AzureActiveDirectoryClientConfiguration CommitmentsClientApi { get; set; }
         }

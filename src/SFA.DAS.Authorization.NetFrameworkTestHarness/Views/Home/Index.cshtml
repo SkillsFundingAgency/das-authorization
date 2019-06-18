@@ -1,5 +1,4 @@
 ﻿@using SFA.DAS.Authorization.CommitmentPermissions
-@using SFA.DAS.Authorization.EmployerFeatures
 @using SFA.DAS.Authorization.EmployerUserRoles
 @using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 @using SFA.DAS.Authorization.ProviderPermissions
@@ -27,8 +26,4 @@
     <li>@Html.ActionLink("Feature.ProviderRelationships", "FeatureProviderRelationships")</li>
     <li>@Html.ActionLink("ProviderFeature.ProviderRelationships", "ProviderFeatureProviderRelationships")</li>
     <li>@Html.ActionLink(ProviderOperation.CreateCohort, "ProviderOperationCreateCohort")</li>
-    
-    <HR />
-
-    <li>@Html.ActionLink("Test IoC", "Index", "OtherTests")</li>
 </ul>

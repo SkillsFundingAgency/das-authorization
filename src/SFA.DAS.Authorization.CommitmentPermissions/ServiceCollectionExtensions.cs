@@ -10,22 +10,12 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
     {
         public static IServiceCollection AddCommitmentPermissionsAuthorization(this IServiceCollection services)
         {
-            services.AddScoped<IAuthorizationHandler, AuthorizationHandler>()
+            return services.AddMemoryCache()
+                .AddScoped<AuthorizationHandler>()
+                .AddScoped<IAuthorizationHandler>(p => new AuthorizationResultCache(p.GetService<AuthorizationHandler>(), p.GetServices<IAuthorizationResultCachingStrategy>(), p.GetService<IMemoryCache>()))
                 .AddSingleton<IAuthorizationResultCachingStrategy, AuthorizationResultCachingStrategy>()
-                .AddSingleton<IAuthorizationHandler>(serviceProvider =>
-                {
-                    var handler = serviceProvider.GetService<AuthorizationHandler>();
-                    var authorizationResultCachingStrategies = serviceProvider.GetServices<IAuthorizationResultCachingStrategy>();
-                    var memoryCache = serviceProvider.GetService<IMemoryCache>();
-                    
-                    return new AuthorizationResultCache(handler, authorizationResultCachingStrategies, memoryCache);
-                });
-
-            services.AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactoryRegistryStub>();
-            services.AddSingleton<ICommitmentPermissionsApiClient>(sp => sp.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient());
-
-            services.AddMemoryCache();
-            return services;
+                .AddSingleton(p => p.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient())
+                .AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactoryRegistryStub>();
         }
     }
 }

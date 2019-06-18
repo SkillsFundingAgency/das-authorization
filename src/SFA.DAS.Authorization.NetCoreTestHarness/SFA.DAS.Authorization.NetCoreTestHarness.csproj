@@ -37,4 +37,8 @@
         <ProjectReference Include="..\SFA.DAS.Authorization\SFA.DAS.Authorization.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\OtherTests\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

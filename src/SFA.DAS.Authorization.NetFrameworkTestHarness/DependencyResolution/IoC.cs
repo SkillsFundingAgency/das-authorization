@@ -18,12 +18,12 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                 c.AddRegistry<AuthorizationRegistry>();
                 c.AddRegistry<AutoConfigurationRegistry>();
                 c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
+                c.AddRegistry<ConfigurationRegistry>();
                 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
                 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
                 c.AddRegistry<FeaturesAuthorizationRegistry>();
                 c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
                 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
-                c.AddRegistry<TestAuthorizationRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }

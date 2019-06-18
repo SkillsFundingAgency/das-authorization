@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Client
 {
-    public class  CommitmentPermissionsApiClientFactoryRegistryStub : ICommitmentPermissionsApiClientFactory
+    public class CommitmentPermissionsApiClientFactoryRegistryStub : ICommitmentPermissionsApiClientFactory
     {
         public ICommitmentPermissionsApiClient CreateClient()
         {
@@ -10,5 +10,4 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
                                               "application with the appropriate IAzureActiveDirectoryClientConfiguration config");
         }
     }
-
 }
