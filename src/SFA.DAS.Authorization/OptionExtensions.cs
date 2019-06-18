@@ -22,7 +22,7 @@ namespace SFA.DAS.Authorization
             }
         }
 
-        public static bool IsSameAs<T>(this IReadOnlyCollection<T> lhs, IReadOnlyCollection<T> rhs)
+        public static bool IsSameAs(this IReadOnlyCollection<string> lhs, IReadOnlyCollection<string> rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {

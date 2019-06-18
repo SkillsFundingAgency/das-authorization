@@ -14,8 +14,8 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 .DecorateWith((ctx, handler) => BuildCache(ctx, handler))
                 .Singleton();
 
-            For<IAuthorizationContextCacheKeyProvider>()
-                .Add<AuthorizationContextCacheKeyProvider>()
+            For<IAuthorizationResultCachingStrategy>()
+                .Add<AuthorizationResultCachingStrategy>()
                 .Singleton();
             For<ICommitmentPermissionsApiClient>().Use(c => c.GetInstance<ICommitmentPermissionsApiClientFactory>().CreateClient()).Singleton();
             For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactoryRegistryStub>();
@@ -23,10 +23,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
 
         private IAuthorizationHandler BuildCache(IContext ctx, IAuthorizationHandler authorizationHandler)
         {
-            var authorizationResultCacheKeyProviders = ctx.GetAllInstances<IAuthorizationContextCacheKeyProvider>();
+            var authorizationResultCachingStrategies = ctx.GetAllInstances<IAuthorizationResultCachingStrategy>();
             var memoryCache = ctx.GetInstance<IMemoryCache>();
             
-            return new AuthorizationResultCache(authorizationHandler, authorizationResultCacheKeyProviders, memoryCache);
+            return new AuthorizationResultCache(authorizationHandler, authorizationResultCachingStrategies, memoryCache);
         }
     }
 }
