@@ -5,7 +5,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
 {
     public static class AuthorizationContextExtensions
     {
-        public static void AddCommitmentPermissionValues(this IAuthorizationContext authorizationContext, long? cohortId, Party? party, long? partyId)
+        public static void AddCommitmentPermissionValues(this IAuthorizationContext authorizationContext, long cohortId, Party party, long partyId)
         {
             authorizationContext.Set(AuthorizationContextKey.CohortId, cohortId);
             authorizationContext.Set(AuthorizationContextKey.Party, party);
@@ -14,26 +14,16 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         
         internal static (long CohortId, Party Party, long PartyId) GetCommitmentPermissionValues(this IAuthorizationContext authorizationContext)
         {
-            var cohortId = authorizationContext.Get<long?>(AuthorizationContextKey.CohortId);
-            var party = authorizationContext.Get<Party?>(AuthorizationContextKey.Party);
-            var partyId = authorizationContext.Get<long?>(AuthorizationContextKey.PartyId);
-
-            if (cohortId == null)
-            {
-                throw new InvalidOperationException($"Value for authorization context key '{AuthorizationContextKey.CohortId}' cannot be null");
-            }
-            
-            if (party == null)
-            {
-                throw new InvalidOperationException($"Value for authorization context key '{AuthorizationContextKey.Party}' cannot be null");
-            }
-
-            if (partyId == null)
-            {
-                throw new InvalidOperationException($"Value for authorization context key '{AuthorizationContextKey.PartyId}' cannot be null");
-            }
-            
-            return (cohortId.Value, party.Value, partyId.Value);
+            return (authorizationContext.Get<long>(AuthorizationContextKey.CohortId),
+                authorizationContext.Get<Party>(AuthorizationContextKey.Party),
+                authorizationContext.Get<long>(AuthorizationContextKey.PartyId));
+        }
+        
+        internal static bool TryGetCommitmentPermissionValues(this IAuthorizationContext authorizationContext, out long cohortId, out Party party, out long partyId)
+        {
+            return authorizationContext.TryGet(AuthorizationContextKey.CohortId, out cohortId) &
+                authorizationContext.TryGet(AuthorizationContextKey.Party, out party) &
+                authorizationContext.TryGet(AuthorizationContextKey.PartyId, out partyId);
         }
     }
 }

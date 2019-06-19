@@ -14,12 +14,14 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 
         public CacheKey(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
-            var values = authorizationContext.GetCommitmentPermissionValues();
-            
             Options = options;
-            CohortId = values.CohortId;
-            Party = values.Party;
-            PartyId = values.PartyId;
+            
+            if (authorizationContext.TryGetCommitmentPermissionValues(out var cohortId, out var party, out var partyId))
+            {
+                CohortId = cohortId;
+                Party = party;
+                PartyId = partyId;
+            }
             
             _hashCode = CalculateHashCode();
         }
