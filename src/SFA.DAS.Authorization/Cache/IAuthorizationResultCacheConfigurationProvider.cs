@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace SFA.DAS.Authorization.Cache
 {
-    public interface IAuthorizationResultCachingStrategy
+    public interface IAuthorizationResultCacheConfigurationProvider
     {
         Type HandlerType { get; }
         

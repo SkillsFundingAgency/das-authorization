@@ -49,8 +49,8 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
     {
         public IAuthorizationHandler AuthorizationResultCache { get; set; }
         public Mock<IAuthorizationHandler> AuthorizationHandler { get; set; }
-        public List<Mock<IAuthorizationResultCachingStrategy>> AuthorizationResultCachingStrategies { get; set; }
-        public Mock<IAuthorizationResultCachingStrategy> AuthorizationResultCachingStrategy { get; set; }
+        public List<Mock<IAuthorizationResultCacheConfigurationProvider>> AuthorizationResultCachingStrategies { get; set; }
+        public Mock<IAuthorizationResultCacheConfigurationProvider> AuthorizationResultCacheConfigurationProvider { get; set; }
         public Mock<IMemoryCache> MemoryCache { get; set; }
         public string AuthorizationHandlerPrefix { get; set; }
         public IReadOnlyCollection<string> Options { get; set; }
@@ -61,8 +61,8 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
         public AuthorizationHandlerCacheTestsFixture()
         {
             AuthorizationHandler = new Mock<IAuthorizationHandler>();
-            AuthorizationResultCachingStrategy = new Mock<IAuthorizationResultCachingStrategy>();
-            AuthorizationResultCachingStrategies = new List<Mock<IAuthorizationResultCachingStrategy>> { AuthorizationResultCachingStrategy };
+            AuthorizationResultCacheConfigurationProvider = new Mock<IAuthorizationResultCacheConfigurationProvider>();
+            AuthorizationResultCachingStrategies = new List<Mock<IAuthorizationResultCacheConfigurationProvider>> { AuthorizationResultCacheConfigurationProvider };
             MemoryCache = new Mock<IMemoryCache>();
             AuthorizationHandlerPrefix = "Foo.";
             Options = new List<string>();
@@ -72,8 +72,8 @@ namespace SFA.DAS.Authorization.UnitTests.Cache
             
             AuthorizationHandler.Setup(h => h.Prefix).Returns(AuthorizationHandlerPrefix);
             AuthorizationHandler.Setup(h => h.GetAuthorizationResult(Options, AuthorizationContext)).ReturnsAsync(AuthorizationResult);
-            AuthorizationResultCachingStrategy.Setup(p => p.HandlerType).Returns(AuthorizationHandler.Object.GetType());
-            AuthorizationResultCachingStrategy.Setup(p => p.GetCacheKey(Options, AuthorizationContext)).Returns(AuthorizationResultCacheKey);
+            AuthorizationResultCacheConfigurationProvider.Setup(p => p.HandlerType).Returns(AuthorizationHandler.Object.GetType());
+            AuthorizationResultCacheConfigurationProvider.Setup(p => p.GetCacheKey(Options, AuthorizationContext)).Returns(AuthorizationResultCacheKey);
             MemoryCache.Setup(mc => mc.CreateEntry(AuthorizationResultCacheKey)).Returns(Mock.Of<ICacheEntry>());
             
             AuthorizationResultCache = new AuthorizationResultCache(AuthorizationHandler.Object, AuthorizationResultCachingStrategies.Select(m => m.Object), MemoryCache.Object);

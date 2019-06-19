@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.Cache;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Cache
 {
-    public class AuthorizationResultCachingStrategy : IAuthorizationResultCachingStrategy
+    public class AuthorizationResultCacheConfigurationProvider : IAuthorizationResultCacheConfigurationProvider
     {
         public Type HandlerType { get; } = typeof(AuthorizationHandler);
 

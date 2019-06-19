@@ -13,7 +13,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Cache
 {
     [TestFixture]
     [Parallelizable]
-    public class AuthorizationResultCachingStrategyTests : FluentTest<AuthorizationResultCachingStrategyTestsFixture>
+    public class AuthorizationResultCacheConfigurationProviderTests : FluentTest<AuthorizationResultCacheConfigurationProviderTestsFixture>
     {
         [Test]
         public void GetCacheKey_WhenGettingKey_ThenShouldReturnKey()
@@ -33,7 +33,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Cache
         }
     }
 
-    public class AuthorizationResultCachingStrategyTestsFixture
+    public class AuthorizationResultCacheConfigurationProviderTestsFixture
     {
         public IReadOnlyCollection<string> Options { get; set; }
         public long CohortId { get; set; }
@@ -42,9 +42,9 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Cache
         public IAuthorizationContext AuthorizationContext { get; set; }
         public Mock<ICacheEntry> CacheEntry { get; set; }
         public TimeSpan? SlidingExpiration { get; set; }
-        public IAuthorizationResultCachingStrategy AuthorizationResultCachingStrategy { get; set; }
+        public IAuthorizationResultCacheConfigurationProvider AuthorizationResultCacheConfigurationProvider { get; set; }
         
-        public AuthorizationResultCachingStrategyTestsFixture()
+        public AuthorizationResultCacheConfigurationProviderTestsFixture()
         {
             Options = new List<string> { "A", "B", "C" };
             CohortId = 1;
@@ -57,17 +57,17 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Cache
             AuthorizationContext.AddCommitmentPermissionValues(CohortId, Party, PartyId);
             CacheEntry.SetupAllProperties();
             
-            AuthorizationResultCachingStrategy = new AuthorizationResultCachingStrategy();
+            AuthorizationResultCacheConfigurationProvider = new AuthorizationResultCacheConfigurationProvider();
         }
         
         public object GetCacheKey()
         {
-            return AuthorizationResultCachingStrategy.GetCacheKey(Options, AuthorizationContext);
+            return AuthorizationResultCacheConfigurationProvider.GetCacheKey(Options, AuthorizationContext);
         }
 
         public void ConfigureCacheEntry()
         {
-            AuthorizationResultCachingStrategy.ConfigureCacheEntry(CacheEntry.Object);
+            AuthorizationResultCacheConfigurationProvider.ConfigureCacheEntry(CacheEntry.Object);
         }
     }
 }

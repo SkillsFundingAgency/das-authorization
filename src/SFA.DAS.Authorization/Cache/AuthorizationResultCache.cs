@@ -11,31 +11,31 @@ namespace SFA.DAS.Authorization.Cache
         public string Prefix => _authorizationHandler.Prefix;
         
         private readonly IAuthorizationHandler _authorizationHandler;
-        private readonly Dictionary<Type, IAuthorizationResultCachingStrategy> _authorizationResultCachingStrategies;
+        private readonly Dictionary<Type, IAuthorizationResultCacheConfigurationProvider> _authorizationResultCacheConfigurationProviders;
         private readonly IMemoryCache _memoryCache;
 
-        public AuthorizationResultCache(IAuthorizationHandler authorizationHandler, IEnumerable<IAuthorizationResultCachingStrategy> authorizationResultCachingStrategies, IMemoryCache memoryCache)
+        public AuthorizationResultCache(IAuthorizationHandler authorizationHandler, IEnumerable<IAuthorizationResultCacheConfigurationProvider> authorizationResultCacheConfigurationProviders, IMemoryCache memoryCache)
         {
             _authorizationHandler = authorizationHandler;
-            _authorizationResultCachingStrategies = authorizationResultCachingStrategies.ToDictionary(p => p.HandlerType);
+            _authorizationResultCacheConfigurationProviders = authorizationResultCacheConfigurationProviders.ToDictionary(p => p.HandlerType);
             _memoryCache = memoryCache;
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationHandlerType = _authorizationHandler.GetType();
-            var authorizationResultCachingStrategy = _authorizationResultCachingStrategies[authorizationHandlerType];
-            var key = authorizationResultCachingStrategy.GetCacheKey(options, authorizationContext);
-            var authorizationResult = _memoryCache.GetOrCreateAsync(key, e => CreateCacheEntryValue(_authorizationHandler, options, authorizationContext, authorizationResultCachingStrategy, e));
+            var authorizationResultCacheConfigurationProvider = _authorizationResultCacheConfigurationProviders[authorizationHandlerType];
+            var key = authorizationResultCacheConfigurationProvider.GetCacheKey(options, authorizationContext);
+            var authorizationResult = _memoryCache.GetOrCreateAsync(key, e => CreateCacheEntryValue(_authorizationHandler, options, authorizationContext, authorizationResultCacheConfigurationProvider, e));
 
             return authorizationResult;
         }
 
-        private async Task<AuthorizationResult> CreateCacheEntryValue(IAuthorizationHandler authorizationHandler, IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext, IAuthorizationResultCachingStrategy authorizationResultCachingStrategy, ICacheEntry cacheEntry)
+        private async Task<AuthorizationResult> CreateCacheEntryValue(IAuthorizationHandler authorizationHandler, IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext, IAuthorizationResultCacheConfigurationProvider authorizationResultCacheConfigurationProvider, ICacheEntry cacheEntry)
         {
             var authorizationResult = await authorizationHandler.GetAuthorizationResult(options, authorizationContext).ConfigureAwait(false);
 
-            authorizationResultCachingStrategy.ConfigureCacheEntry(cacheEntry);
+            authorizationResultCacheConfigurationProvider.ConfigureCacheEntry(cacheEntry);
 
             return authorizationResult;
         }

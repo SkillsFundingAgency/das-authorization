@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
         public CommitmentPermissionsAuthorizationRegistry()
         {
             For<IAuthorizationHandler>().Add<AuthorizationResultCache>().Ctor<IAuthorizationHandler>().Is<AuthorizationHandler>();
-            For<IAuthorizationResultCachingStrategy>().Add<AuthorizationResultCachingStrategy>().Singleton();
+            For<IAuthorizationResultCacheConfigurationProvider>().Add<AuthorizationResultCacheConfigurationProvider>().Singleton();
             For<ICommitmentPermissionsApiClient>().Use(c => c.GetInstance<ICommitmentPermissionsApiClientFactory>().CreateClient()).Singleton();
             For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
         }
