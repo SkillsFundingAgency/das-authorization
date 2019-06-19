@@ -1,0 +1,26 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace SFA.DAS.Authorization.Cache
+{
+    public static class MemoryCacheExtensions
+    {
+        public static async Task<T> GetOrCreateAsync<T>(this IMemoryCache memoryCache, object key, Func<ICacheEntry, Task<T>> valueFactory)
+        {
+            var exists = memoryCache.TryGetValue(key, out T value);
+
+            if (!exists)
+            {
+                var cacheEntry = memoryCache.CreateEntry(key);
+                
+                value = await valueFactory(cacheEntry).ConfigureAwait(false);
+                
+                cacheEntry.SetValue(value);
+                cacheEntry.Dispose();
+            }
+
+            return value;
+        }
+    }
+}
