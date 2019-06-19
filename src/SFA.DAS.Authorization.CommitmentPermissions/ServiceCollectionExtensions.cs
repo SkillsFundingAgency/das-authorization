@@ -15,7 +15,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions
                 .AddScoped<IAuthorizationHandler>(p => new AuthorizationResultCache(p.GetService<AuthorizationHandler>(), p.GetServices<IAuthorizationResultCachingStrategy>(), p.GetService<IMemoryCache>()))
                 .AddSingleton<IAuthorizationResultCachingStrategy, AuthorizationResultCachingStrategy>()
                 .AddSingleton(p => p.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient())
-                .AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactoryRegistryStub>();
+                .AddScoped<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
         }
     }
 }

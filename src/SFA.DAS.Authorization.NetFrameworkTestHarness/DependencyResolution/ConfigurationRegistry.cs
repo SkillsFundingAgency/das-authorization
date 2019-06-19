@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
+using SFA.DAS.Authorization.NetFrameworkTestHarness.Configuration;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Models;
 using SFA.DAS.Authorization.ProviderFeatures;
 using SFA.DAS.AutoConfiguration;
-using SFA.DAS.Http.Configuration;
-using SFA.DAS.ProviderRelationships.Api.Client.Configuration;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
@@ -21,7 +21,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         IsEnabled = true
                     }
                 }
-            }).Singleton();
+            });
 
             For<EmployerFeaturesConfiguration>().Use(new EmployerFeaturesConfiguration {
                 FeatureToggles = new List<EmployerFeatureToggle> {
@@ -36,7 +36,7 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         }
                     }
                 }
-            }).Singleton();
+            });
 
             For<ProviderFeaturesConfiguration>().Use(new ProviderFeaturesConfiguration {
                 FeatureToggles = new List<ProviderFeatureToggle> {
@@ -51,14 +51,9 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                         }
                     }
                 }
-            }).Singleton();
+            });
 
-            For<IAzureActiveDirectoryClientConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ProviderCommitmentsConfiguration>("SFA.DAS.ProviderCommitments").CommitmentsClientApi).Singleton();
-        }
-
-        internal class ProviderCommitmentsConfiguration
-        {
-            public AzureActiveDirectoryClientConfiguration CommitmentsClientApi { get; set; }
+            For<CommitmentPermissionsApiClientConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ProviderCommitmentsConfiguration>("SFA.DAS.ProviderCommitments").CommitmentsClientApi).Singleton();
         }
     }
 }

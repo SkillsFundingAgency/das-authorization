@@ -7,7 +7,6 @@ using SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution;
 using SFA.DAS.Authorization.ProviderFeatures;
 using SFA.DAS.Authorization.ProviderPermissions;
 using SFA.DAS.Authorization.WebApi;
-using SFA.DAS.AutoConfiguration.DependencyResolution;
 using WebApi.StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness
@@ -29,7 +28,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness
             config.UseStructureMap(c =>
             {
                 c.AddRegistry<AuthorizationRegistry>();
-                c.AddRegistry<AutoConfigurationRegistry>();
                 c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
                 c.AddRegistry<ConfigurationRegistry>();
                 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();

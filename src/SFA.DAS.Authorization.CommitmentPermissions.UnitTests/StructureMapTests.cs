@@ -1,4 +1,3 @@
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using StructureMap;
@@ -16,6 +15,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
             {
                 c.AddRegistry<AuthorizationRegistry>();
                 c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
+                c.AddRegistry<LoggerRegistry>();
                 c.AddRegistry<MemoryCacheRegistry>();
                 c.AddRegistry<OptionsRegistry>();
                 c.AddRegistry<DefaultRegistry>();
@@ -29,12 +29,14 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests
         {
             public DefaultRegistry()
             {
-                var commitmentPermissionsApiClientFactory = new Mock<ICommitmentPermissionsApiClientFactory>();
-                var commitmentPermissionsApiClient = new Mock<ICommitmentPermissionsApiClient>();
-
-                commitmentPermissionsApiClientFactory.Setup(f => f.CreateClient()).Returns(commitmentPermissionsApiClient.Object);
-                
-                For<ICommitmentPermissionsApiClientFactory>().Use(commitmentPermissionsApiClientFactory.Object);
+                For<CommitmentPermissionsApiClientConfiguration>().Use(new CommitmentPermissionsApiClientConfiguration
+                {
+                    ApiBaseUrl = "https://localhost",
+                    Tenant = "",
+                    ClientId = "",
+                    ClientSecret = "",
+                    IdentifierUri = ""
+                });
             }
         }
     }

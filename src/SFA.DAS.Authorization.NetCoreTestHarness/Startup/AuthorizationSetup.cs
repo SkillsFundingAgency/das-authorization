@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
@@ -17,8 +16,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
                 .AddEmployerFeaturesAuthorization()
                 .AddFeaturesAuthorization()
                 .AddProviderFeaturesAuthorization()
-                .AddScoped<IAuthorizationHandler, TestAuthorizationHandler>()
-                .AddSingleton<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
+                .AddScoped<IAuthorizationHandler, TestAuthorizationHandler>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.Features;
 using SFA.DAS.Authorization.NetCoreTestHarness.Models;
@@ -65,13 +66,12 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
                         }
                     }
                 })
-                .AddSingleton<IAzureActiveDirectoryClientConfiguration>(p => p.GetService<IConfiguration>().GetSection("SFA.DAS.ProviderCommitments:CommitmentsClientApi").Get<AzureActiveDirectoryClientConfiguration>());
+                .AddSingleton(p => p.GetService<IConfiguration>().GetSection("SFA.DAS.ProviderCommitments:CommitmentsClientApi").Get<CommitmentPermissionsApiClientConfiguration>());
         }
         
         public static IWebHostBuilder ConfigureDasAppConfiguration(this IWebHostBuilder hostBuilder)
         {
-            return hostBuilder.ConfigureAppConfiguration(c => c
-                .AddAzureTableStorage("SFA.DAS.ProviderCommitments"));
+            return hostBuilder.ConfigureAppConfiguration(c => c.AddAzureTableStorage("SFA.DAS.ProviderCommitments"));
         }
     }
 }

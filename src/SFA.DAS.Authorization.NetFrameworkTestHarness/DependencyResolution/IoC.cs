@@ -16,7 +16,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
             return new Container(c =>
             {
                 c.AddRegistry<AuthorizationRegistry>();
-                c.AddRegistry<AutoConfigurationRegistry>();
                 c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
                 c.AddRegistry<ConfigurationRegistry>();
                 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();

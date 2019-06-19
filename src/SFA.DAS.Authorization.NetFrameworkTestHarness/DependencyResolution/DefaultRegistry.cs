@@ -10,7 +10,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
         {
             For<IAuthorizationContextProvider>().Use<TestAuthorizationContextProvider>();
             For<IAuthorizationHandler>().Add<TestAuthorizationHandler>();;
-            For<ICommitmentPermissionsApiClientFactory>().Use<CommitmentPermissionsApiClientFactory>();
             
             Scan(s =>
             {
