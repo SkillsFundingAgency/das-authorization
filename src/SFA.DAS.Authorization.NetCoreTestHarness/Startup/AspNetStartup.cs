@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.Mvc;
+using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution;
 using StructureMap;
 
@@ -13,12 +10,10 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(o => o.LoginPath = new PathString("/account/http401"));
-
-            services.AddMvc(o => o.AddAuthorization())
-                .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDasConfiguration()
+                .AddDasAuthentication()
+                .AddDasAuthorization()
+                .AddDasMvc();
         }
 
         public void ConfigureContainer(Registry registry)

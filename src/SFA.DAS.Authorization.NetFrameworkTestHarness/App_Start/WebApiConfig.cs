@@ -1,12 +1,13 @@
 using System.Web.Http;
-using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.EmployerUserRoles;
-using SFA.DAS.Authorization.Features;
+using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
+using SFA.DAS.Authorization.DependencyResolution;
+using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution;
+using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution;
+using SFA.DAS.Authorization.Features.DependencyResolution;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution;
-using SFA.DAS.Authorization.ProviderFeatures;
-using SFA.DAS.Authorization.ProviderPermissions;
-using SFA.DAS.Authorization.WebApi;
-using SFA.DAS.AutoConfiguration.DependencyResolution;
+using SFA.DAS.Authorization.ProviderFeatures.DependencyResolution;
+using SFA.DAS.Authorization.ProviderPermissions.DependencyResolution;
+using SFA.DAS.Authorization.WebApi.Extensions;
 using WebApi.StructureMap;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness
@@ -27,13 +28,14 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness
             
             config.UseStructureMap(c =>
             {
-                c.AddRegistry<AutoConfigurationRegistry>();
+                c.AddRegistry<AuthorizationRegistry>();
+                c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
+                c.AddRegistry<ConfigurationRegistry>();
                 c.AddRegistry<EmployerFeaturesAuthorizationRegistry>();
                 c.AddRegistry<EmployerUserRolesAuthorizationRegistry>();
                 c.AddRegistry<FeaturesAuthorizationRegistry>();
                 c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
                 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
-                c.AddRegistry<TestAuthorizationRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }

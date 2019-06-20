@@ -1,8 +1,9 @@
 using System.Web.Http;
-using SFA.DAS.Authorization.EmployerUserRoles;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
-using SFA.DAS.Authorization.ProviderPermissions;
-using SFA.DAS.Authorization.WebApi;
+using SFA.DAS.Authorization.ProviderPermissions.Options;
+using SFA.DAS.Authorization.WebApi.Attributes;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Api.Controllers
 {
@@ -31,6 +32,13 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Api.Controllers
         [HttpGet]
         [DasAuthorize(TestOption.UnauthorizedMultipleErrors)]
         public IHttpActionResult TestOptionUnauthorizedMultipleErrors()
+        {
+            return Ok("Authorized");
+        }
+
+        [HttpGet]
+        [DasAuthorize(CommitmentOperation.AccessCohort)]
+        public IHttpActionResult CommitmentOperationAccessCohort()
         {
             return Ok("Authorized");
         }

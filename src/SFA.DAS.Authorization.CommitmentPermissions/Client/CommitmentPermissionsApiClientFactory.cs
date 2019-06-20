@@ -1,23 +1,25 @@
-﻿using SFA.DAS.Http;
-using SFA.DAS.Http.Configuration;
+﻿using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Client
 {
     public class  CommitmentPermissionsApiClientFactory : ICommitmentPermissionsApiClientFactory
     {
-        private readonly IAzureActiveDirectoryClientConfiguration _config;
+        private readonly CommitmentPermissionsApiClientConfiguration _configuration;
 
-        public CommitmentPermissionsApiClientFactory(IAzureActiveDirectoryClientConfiguration config)
+        public CommitmentPermissionsApiClientFactory(CommitmentPermissionsApiClientConfiguration configuration)
         {
-            _config = config;
+            _configuration = configuration;
         }
 
         public ICommitmentPermissionsApiClient CreateClient()
         {
-            var httpClientFactory = new AzureActiveDirectoryHttpClientFactory(_config);
+            var httpClientFactory = new AzureActiveDirectoryHttpClientFactory(_configuration);
             var httpClient = httpClientFactory.CreateHttpClient();
             var restHttpClient = new RestHttpClient(httpClient);
-            return new CommitmentPermissionsApiClient(restHttpClient);
+            var apiClient = new CommitmentPermissionsApiClient(restHttpClient);
+            
+            return apiClient;
         }
     }
 }

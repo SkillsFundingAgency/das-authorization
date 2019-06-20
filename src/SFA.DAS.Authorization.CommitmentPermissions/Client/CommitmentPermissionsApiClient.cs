@@ -13,6 +13,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
         {
             _restClient = restClient;
         }
+        
         public Task<bool> CanAccessCohort(CohortAccessRequest request, CancellationToken cancellationToken = default)
         {
             return _restClient.Get<bool>("api/authorization/access-cohort", request, cancellationToken);

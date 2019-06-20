@@ -1,10 +1,5 @@
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.EmployerUserRoles;
-using SFA.DAS.Authorization.Features;
-using SFA.DAS.Authorization.ProviderFeatures;
-using SFA.DAS.Authorization.ProviderPermissions;
-using SFA.DAS.AutoConfiguration.DependencyResolution;
+using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution;
+using SFA.DAS.Authorization.ProviderPermissions.DependencyResolution;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
@@ -13,16 +8,8 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution
     {
         public static void Initialize(Registry registry)
         {
-            registry.IncludeRegistry<AuthorizationRegistry>();
-            registry.IncludeRegistry<AutoConfigurationRegistry>();
-            registry.IncludeRegistry<CommitmentPermissionsAuthorizationRegistry>();
-            registry.IncludeRegistry<EmployerFeaturesAuthorizationRegistry>();
             registry.IncludeRegistry<EmployerUserRolesAuthorizationRegistry>();
-            registry.IncludeRegistry<FeaturesAuthorizationRegistry>();
-            registry.IncludeRegistry<ProviderFeaturesAuthorizationRegistry>();
             registry.IncludeRegistry<ProviderPermissionsAuthorizationRegistry>();
-            registry.IncludeRegistry<TestAuthorizationRegistry>();
-            registry.IncludeRegistry<DefaultRegistry>();
         }
     }
 }

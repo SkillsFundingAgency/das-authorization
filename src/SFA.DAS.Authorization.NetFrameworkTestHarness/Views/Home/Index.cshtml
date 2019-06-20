@@ -1,8 +1,7 @@
-﻿@using SFA.DAS.Authorization.CommitmentPermissions
-@using SFA.DAS.Authorization.EmployerFeatures
-@using SFA.DAS.Authorization.EmployerUserRoles
+﻿@using SFA.DAS.Authorization.CommitmentPermissions.Options
+@using SFA.DAS.Authorization.EmployerUserRoles.Options
 @using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
-@using SFA.DAS.Authorization.ProviderPermissions
+@using SFA.DAS.Authorization.ProviderPermissions.Options
 
 @{
     ViewBag.Title = "Home";
@@ -27,8 +26,4 @@
     <li>@Html.ActionLink("Feature.ProviderRelationships", "FeatureProviderRelationships")</li>
     <li>@Html.ActionLink("ProviderFeature.ProviderRelationships", "ProviderFeatureProviderRelationships")</li>
     <li>@Html.ActionLink(ProviderOperation.CreateCohort, "ProviderOperationCreateCohort")</li>
-    
-    <HR />
-
-    <li>@Html.ActionLink("Test IoC", "Index", "OtherTests")</li>
 </ul>
