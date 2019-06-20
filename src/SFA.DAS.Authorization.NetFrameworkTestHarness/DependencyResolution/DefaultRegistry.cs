@@ -1,4 +1,6 @@
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization;
 using StructureMap;
 

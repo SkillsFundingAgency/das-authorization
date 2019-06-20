@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.Mvc;
+using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution;
 using StructureMap;
 

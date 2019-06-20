@@ -1,4 +1,4 @@
-using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Configuration
 {

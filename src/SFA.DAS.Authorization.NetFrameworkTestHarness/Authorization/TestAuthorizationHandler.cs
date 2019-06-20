@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.Logging;
+using SFA.DAS.Authorization.Results;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
 {

@@ -1,5 +1,5 @@
-using SFA.DAS.Authorization.EmployerUserRoles;
-using SFA.DAS.Authorization.ProviderPermissions;
+using SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution;
+using SFA.DAS.Authorization.ProviderPermissions.DependencyResolution;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.DependencyResolution

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.EmployerUserRoles;
-using SFA.DAS.Authorization.Mvc;
+using SFA.DAS.Authorization.CommitmentPermissions.Options;
+using SFA.DAS.Authorization.EmployerUserRoles.Options;
+using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
-using SFA.DAS.Authorization.ProviderPermissions;
+using SFA.DAS.Authorization.ProviderPermissions.Options;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.Controllers
 {

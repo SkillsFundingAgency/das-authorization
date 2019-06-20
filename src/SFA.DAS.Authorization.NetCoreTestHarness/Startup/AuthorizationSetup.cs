@@ -1,9 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.CommitmentPermissions;
-using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.Features;
+using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
+using SFA.DAS.Authorization.DependencyResolution;
+using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution;
+using SFA.DAS.Authorization.Features.DependencyResolution;
+using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
-using SFA.DAS.Authorization.ProviderFeatures;
+using SFA.DAS.Authorization.ProviderFeatures.DependencyResolution;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
 {

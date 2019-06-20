@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.CommitmentPermissions.Client;
+using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
 using SFA.DAS.Authorization.EmployerFeatures;
-using SFA.DAS.Authorization.Features;
+using SFA.DAS.Authorization.EmployerFeatures.Configuration;
+using SFA.DAS.Authorization.Features.Configuration;
+using SFA.DAS.Authorization.Features.Models;
 using SFA.DAS.Authorization.NetCoreTestHarness.Models;
-using SFA.DAS.Authorization.ProviderFeatures;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
+using SFA.DAS.Authorization.ProviderFeatures.Models;
 using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Http.Configuration;
-using SFA.DAS.ProviderRelationships.Api.Client.Configuration;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
 {

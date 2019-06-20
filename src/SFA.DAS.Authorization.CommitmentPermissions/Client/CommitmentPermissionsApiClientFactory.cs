@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Http;
+﻿using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
+using SFA.DAS.Http;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Client
 {

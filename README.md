@@ -76,11 +76,11 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 
 ## SFA.DAS.Authorization.CommitmentPermissions
 
-`SFA.DAS.Authorization.CommitmentPermissions` requires an instance of `SFA.DAS.Authorization.CommitmentPermissions.Client.CommitmentPermissionsApiClientConfiguration` registering in your application's container.
+`SFA.DAS.Authorization.CommitmentPermissions` requires an instance of `SFA.DAS.Authorization.CommitmentPermissions.Configuration.CommitmentPermissionsApiClientConfiguration` registering in your application's container.
 
 ### SFA.DAS.Authorization.Features
 
-`SFA.DAS.Authorization.Features` requires an instance of `SFA.DAS.Authorization.Features.FeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `FeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+`SFA.DAS.Authorization.Features` requires an instance of `SFA.DAS.Authorization.Features.Configuration.FeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `FeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
 
 ```json
 {
@@ -93,7 +93,7 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 
 ### SFA.DAS.Authorization.EmployerFeatures
 
-`SFA.DAS.Authorization.EmployerFeatures` requires an instance of `SFA.DAS.Authorization.EmployerFeatures.EmployerFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+`SFA.DAS.Authorization.EmployerFeatures` requires an instance of `SFA.DAS.Authorization.EmployerFeatures.Configuration.EmployerFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `EmployerFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
 
 ```json
 {
@@ -113,7 +113,7 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 
 ### SFA.DAS.Authorization.ProviderFeatures
 
-`SFA.DAS.Authorization.ProviderFeatures` requires an instance of `SFA.DAS.Authorization.ProviderFeatures.ProviderFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `ProviderFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
+`SFA.DAS.Authorization.ProviderFeatures` requires an instance of `SFA.DAS.Authorization.ProviderFeatures.Configuration.ProviderFeaturesConfiguration` registering in your application's container. If you're looking to deserialize an instance of `ProviderFeaturesConfiguration` from table storage and then register it in your container the JSON should look similar to the following: 
 
 ```json
 {
