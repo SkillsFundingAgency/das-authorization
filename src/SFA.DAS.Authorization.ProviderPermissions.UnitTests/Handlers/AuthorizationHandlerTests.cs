@@ -56,14 +56,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
             return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingUkprn(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
         
-        [TestCase(1L, null)]
-        [TestCase(null, 1L)]
-        [TestCase(null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? accountLegalEntityId, long? ukprn)
-        {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(accountLegalEntityId, ukprn), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
-        }
-        
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
@@ -139,7 +131,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
             return this;
         }
         
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountLegalEntityId = AccountLegalEntityId, long? ukprn = Ukprn)
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long accountLegalEntityId = AccountLegalEntityId, long ukprn = Ukprn)
         {
             AuthorizationContext.AddProviderPermissionValues(accountLegalEntityId, ukprn);
             

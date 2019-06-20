@@ -58,18 +58,6 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests.Handlers
                 (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
-        [TestCase(1, null)]
-        [TestCase(1, "")]
-        [TestCase(null, "foo@bar.com")]
-        [TestCase(null, null)]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsAvailableButContainsInvalidValues_ThenShouldThrowInvalidOperationException(long? ukprn, string userEmail)
-        {
-            return TestExceptionAsync(
-                f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextValues(ukprn, userEmail), 
-                f => f.GetAuthorizationResult(), 
-                (f, r) => r.Should().Throw<InvalidOperationException>());
-        }
-
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabled_ThenShouldReturnAuthorizedAuthorizationResult()
         {
@@ -180,7 +168,7 @@ namespace SFA.DAS.Authorization.ProviderFeatures.UnitTests.Handlers
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? ukprn = Ukprn, string userEmail = UserEmail)
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long ukprn = Ukprn, string userEmail = UserEmail)
         {
             AuthorizationContext.AddProviderFeatureValues(ukprn, userEmail);
             

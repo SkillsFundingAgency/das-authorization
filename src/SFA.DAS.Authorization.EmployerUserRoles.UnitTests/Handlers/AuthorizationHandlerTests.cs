@@ -46,18 +46,6 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests.Handlers
         {
             return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValuesMissingUserRef(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
-        
-        [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidAccountId_ThenShouldThrowInvalidOperationException()
-        {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(null, Guid.NewGuid()), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
-        }
-        
-        [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableButContainsInvalidUserRef_ThenShouldThrowInvalidOperationException()
-        {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextValues(1L, null), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<InvalidOperationException>());
-        }
 
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndUserIsInRole_ThenShouldReturnValidAuthorizationResult()
@@ -141,7 +129,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests.Handlers
             return this;
         }
 
-        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountId, Guid? userRef)
+        public EmployerUserRolesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long accountId, Guid userRef)
         {
             AuthorizationContext.AddEmployerUserRoleValues(accountId, userRef);
 
