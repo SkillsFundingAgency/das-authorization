@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.EmployerFeatures.Context;
 using SFA.DAS.Authorization.EmployerFeatures.Errors;
+using SFA.DAS.Authorization.EmployerFeatures.Models;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.EmployerFeatures.Models
 {
     public class EmployerFeatureToggleWhitelistItem
     {

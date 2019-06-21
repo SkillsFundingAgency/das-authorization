@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SFA.DAS.Authorization.EmployerFeatures.Models;
 using SFA.DAS.Authorization.Features.Configuration;
 
 namespace SFA.DAS.Authorization.EmployerFeatures.Configuration

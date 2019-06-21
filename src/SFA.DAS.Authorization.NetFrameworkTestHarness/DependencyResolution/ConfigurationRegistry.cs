@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
-using SFA.DAS.Authorization.EmployerFeatures;
 using SFA.DAS.Authorization.EmployerFeatures.Configuration;
+using SFA.DAS.Authorization.EmployerFeatures.Models;
 using SFA.DAS.Authorization.Features.Configuration;
 using SFA.DAS.Authorization.Features.Models;
 using SFA.DAS.Authorization.NetFrameworkTestHarness.Configuration;

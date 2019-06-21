@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Authorization.EmployerFeatures.Configuration;
+using SFA.DAS.Authorization.EmployerFeatures.Models;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
 using StructureMap;

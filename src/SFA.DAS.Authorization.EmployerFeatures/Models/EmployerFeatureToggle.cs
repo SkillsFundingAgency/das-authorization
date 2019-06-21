@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Authorization.Features.Models;
 
-namespace SFA.DAS.Authorization.EmployerFeatures
+namespace SFA.DAS.Authorization.EmployerFeatures.Models
 {
     public class EmployerFeatureToggle : FeatureToggle
     {
