@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Caching;
 using SFA.DAS.Authorization.CommitmentPermissions.Caching;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.CommitmentPermissions.Handlers;
-using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.DependencyResolution;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution
 {
@@ -12,9 +11,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution
     {
         public static IServiceCollection AddCommitmentPermissionsAuthorization(this IServiceCollection services)
         {
-            return services.AddMemoryCache()
-                .AddScoped<AuthorizationHandler>()
-                .AddScoped<IAuthorizationHandler>(p => new AuthorizationResultCache(p.GetService<AuthorizationHandler>(), p.GetServices<IAuthorizationResultCacheConfigurationProvider>(), p.GetService<IMemoryCache>()))
+            return services.AddAuthorizationHandler<AuthorizationHandler>(true)
                 .AddSingleton<IAuthorizationResultCacheConfigurationProvider, AuthorizationResultCacheConfigurationProvider>()
                 .AddSingleton(p => p.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient())
                 .AddScoped<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();

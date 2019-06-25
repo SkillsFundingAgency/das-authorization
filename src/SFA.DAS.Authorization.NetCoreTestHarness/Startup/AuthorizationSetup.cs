@@ -3,7 +3,6 @@ using SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution;
 using SFA.DAS.Authorization.DependencyResolution;
 using SFA.DAS.Authorization.EmployerFeatures.DependencyResolution;
 using SFA.DAS.Authorization.Features.DependencyResolution;
-using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.NetCoreTestHarness.Authorization;
 using SFA.DAS.Authorization.ProviderFeatures.DependencyResolution;
 
@@ -18,7 +17,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
                 .AddEmployerFeaturesAuthorization()
                 .AddFeaturesAuthorization()
                 .AddProviderFeaturesAuthorization()
-                .AddScoped<IAuthorizationHandler, TestAuthorizationHandler>();
+                .AddAuthorizationHandler<TestAuthorizationHandler>();
         }
     }
 }

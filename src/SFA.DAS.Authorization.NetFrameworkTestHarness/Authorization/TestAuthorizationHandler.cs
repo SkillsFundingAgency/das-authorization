@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Results;
 
 namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
@@ -13,13 +11,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
     public class TestAuthorizationHandler : IAuthorizationHandler
     {
         public string Prefix => TestOption.Prefix;
-        
-        private readonly ILogger<TestAuthorizationHandler> _logger;
-
-        public TestAuthorizationHandler(ILogger<TestAuthorizationHandler> logger)
-        {
-            _logger = logger;
-        }
 
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
@@ -42,8 +33,6 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.Authorization
                         throw new ArgumentOutOfRangeException(nameof(options));
                 }
             }
-            
-            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return Task.FromResult(authorizationResult);
         }

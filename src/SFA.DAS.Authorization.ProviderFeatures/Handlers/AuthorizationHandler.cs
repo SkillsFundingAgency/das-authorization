@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.ProviderFeatures.Context;
 using SFA.DAS.Authorization.ProviderFeatures.Errors;
 using SFA.DAS.Authorization.ProviderFeatures.Models;
@@ -19,12 +17,10 @@ namespace SFA.DAS.Authorization.ProviderFeatures.Handlers
         public string Prefix => "ProviderFeature.";
         
         private readonly IFeatureTogglesService<ProviderFeatureToggle> _featureTogglesService;
-        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IFeatureTogglesService<ProviderFeatureToggle> featureTogglesService, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IFeatureTogglesService<ProviderFeatureToggle> featureTogglesService)
         {
             _featureTogglesService = featureTogglesService;
-            _logger = logger;
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -53,8 +49,6 @@ namespace SFA.DAS.Authorization.ProviderFeatures.Handlers
                     }
                 }
             }
-            
-            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return Task.FromResult(authorizationResult);
         }

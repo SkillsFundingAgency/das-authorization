@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Context;
@@ -82,7 +81,6 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public Mock<IEmployerAccountsApiClient> EmployerAccountsApiClient { get; set; }
         public AuthorizationHandler Handler { get; set; }
-        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
 
         public const long AccountId = 112L;
         public static readonly Guid UserRef = Guid.NewGuid();
@@ -92,8 +90,7 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.UnitTests.Handlers
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             EmployerAccountsApiClient = new Mock<IEmployerAccountsApiClient>();
-            Logger = new Mock<ILogger<AuthorizationHandler>>();
-            Handler = new AuthorizationHandler(EmployerAccountsApiClient.Object, Logger.Object);
+            Handler = new AuthorizationHandler(EmployerAccountsApiClient.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
