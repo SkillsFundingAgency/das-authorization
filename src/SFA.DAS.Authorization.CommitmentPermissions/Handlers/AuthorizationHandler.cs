@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
 using SFA.DAS.Authorization.CommitmentPermissions.Context;
 using SFA.DAS.Authorization.CommitmentPermissions.Errors;
@@ -11,7 +10,6 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Results;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
@@ -22,12 +20,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
         public string Prefix => CommitmentOperation.Prefix;
 
         private readonly ICommitmentPermissionsApiClient _commitmentsApiClient;
-        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(ICommitmentPermissionsApiClient commitmentsApiClient, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(ICommitmentPermissionsApiClient commitmentsApiClient)
         {
             _commitmentsApiClient = commitmentsApiClient;
-            _logger = logger;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -64,8 +60,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
                         throw new ArgumentOutOfRangeException(nameof(operation), operation, "The operation is not currently supported");
                 }
             }
-            
-            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
             
             return authorizationResult;
         }

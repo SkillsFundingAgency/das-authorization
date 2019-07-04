@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.EmployerUserRoles.Context;
 using SFA.DAS.Authorization.EmployerUserRoles.Errors;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Results;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerAccounts.Types.Models;
@@ -21,12 +19,10 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.Handlers
         public string Prefix => EmployerUserRole.Prefix;
 
         private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
-        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IEmployerAccountsApiClient employerAccountsApiClient)
         {
             _employerAccountsApiClient = employerAccountsApiClient;
-            _logger = logger;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -69,8 +65,6 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.Handlers
                     authorizationResult.AddError(new EmployerUserRoleNotAuthorized());
                 }
             }
-            
-            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
 
             return authorizationResult;
         }

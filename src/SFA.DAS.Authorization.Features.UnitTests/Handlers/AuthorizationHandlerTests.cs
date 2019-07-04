@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Context;
@@ -60,15 +59,13 @@ namespace SFA.DAS.Authorization.Features.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IFeatureTogglesService<FeatureToggle>> FeatureTogglesService { get; set; }
-        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public EmployerFeaturesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             FeatureTogglesService = new Mock<IFeatureTogglesService<FeatureToggle>>();
-            Logger = new Mock<ILogger<AuthorizationHandler>>();
-            Handler = new AuthorizationHandler(FeatureTogglesService.Object, Logger.Object);
+            Handler = new AuthorizationHandler(FeatureTogglesService.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()

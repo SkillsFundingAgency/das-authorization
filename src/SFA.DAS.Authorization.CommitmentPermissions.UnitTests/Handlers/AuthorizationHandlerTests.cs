@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.CommitmentPermissions.Client;
@@ -82,7 +81,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<ICommitmentPermissionsApiClient> CommitmentPermissionsApiClient { get; set; }
-        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long CohortId = 1L;
         public const Party Party = CommitmentsV2.Types.Party.Employer;
@@ -93,8 +91,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             CommitmentPermissionsApiClient = new Mock<ICommitmentPermissionsApiClient>();
-            Logger = new Mock<ILogger<AuthorizationHandler>>();
-            Handler = new AuthorizationHandler(CommitmentPermissionsApiClient.Object, Logger.Object);
+            Handler = new AuthorizationHandler(CommitmentPermissionsApiClient.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()

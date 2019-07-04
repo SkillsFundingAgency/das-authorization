@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Context;
@@ -77,7 +76,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
-        public Mock<ILogger<AuthorizationHandler>> Logger { get; set; }
         
         public const long AccountLegalEntityId = 22L;
         public const long Ukprn = 333L;
@@ -87,8 +85,7 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             ProviderRelationshipsApiClient = new Mock<IProviderRelationshipsApiClient>();
-            Logger = new Mock<ILogger<AuthorizationHandler>>();
-            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object, Logger.Object);
+            Handler = new AuthorizationHandler(ProviderRelationshipsApiClient.Object);
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()

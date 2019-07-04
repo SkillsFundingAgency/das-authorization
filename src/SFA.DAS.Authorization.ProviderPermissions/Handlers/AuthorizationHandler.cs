@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.ProviderPermissions.Context;
 using SFA.DAS.Authorization.ProviderPermissions.Errors;
 using SFA.DAS.Authorization.ProviderPermissions.Options;
@@ -21,12 +19,10 @@ namespace SFA.DAS.Authorization.ProviderPermissions.Handlers
         public string Prefix => ProviderOperation.Prefix;
         
         private readonly IProviderRelationshipsApiClient _providerRelationshipsApiClient;
-        private readonly ILogger<AuthorizationHandler> _logger;
 
-        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient, ILogger<AuthorizationHandler> logger)
+        public AuthorizationHandler(IProviderRelationshipsApiClient providerRelationshipsApiClient)
         {
             _providerRelationshipsApiClient = providerRelationshipsApiClient;
-            _logger = logger;
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -55,8 +51,6 @@ namespace SFA.DAS.Authorization.ProviderPermissions.Handlers
                     authorizationResult.AddError(new ProviderPermissionNotGranted());
                 }
             }
-            
-            _logger.LogAuthorizationResult(this, options, authorizationContext, authorizationResult);
 
             return authorizationResult;
         }
