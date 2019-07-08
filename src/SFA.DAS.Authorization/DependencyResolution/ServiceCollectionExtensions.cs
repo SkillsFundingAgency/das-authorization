@@ -20,10 +20,10 @@ namespace SFA.DAS.Authorization.DependencyResolution
         public static IServiceCollection AddAuthorization<T>(this IServiceCollection services) where T : class, IAuthorizationContextProvider
         {
             return services.AddMemoryCache()
-                .AddScoped<IAuthorizationContext, AuthorizationContext>()
                 .AddScoped<IAuthorizationContextProvider>(p => new AuthorizationContextCache(p.GetService<T>()))
                 .AddScoped<IAuthorizationService, AuthorizationService>()
-                .AddScoped<T>();
+                .AddScoped<T>()
+                .AddScoped(p => p.GetService<IAuthorizationContextProvider>().GetAuthorizationContext());
         }
 
         public static IServiceCollection AddAuthorizationHandler<T>(this IServiceCollection services, bool enableAuthorizationResultCache = false) where T : class, IAuthorizationHandler

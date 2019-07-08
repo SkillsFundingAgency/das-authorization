@@ -11,7 +11,7 @@ namespace SFA.DAS.Authorization.DependencyResolution
     {
         public AuthorizationRegistry()
         {
-            For<IAuthorizationContext>().Use<AuthorizationContext>();
+            For<IAuthorizationContext>().Use(c => c.GetInstance<IAuthorizationContextProvider>().GetAuthorizationContext());
             For<IAuthorizationContextProvider>().Use<DefaultAuthorizationContextProvider>();
             For<IAuthorizationContextProvider>().DecorateAllWith<AuthorizationContextCache>();
             For<IAuthorizationHandler>().DecorateAllWith<AuthorizationResultLogger>();
