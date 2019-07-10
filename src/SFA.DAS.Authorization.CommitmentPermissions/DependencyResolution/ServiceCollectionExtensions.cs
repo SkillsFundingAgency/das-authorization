@@ -14,7 +14,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution
             return services.AddAuthorizationHandler<AuthorizationHandler>(true)
                 .AddSingleton<IAuthorizationResultCacheConfigurationProvider, AuthorizationResultCacheConfigurationProvider>()
                 .AddSingleton(p => p.GetService<ICommitmentPermissionsApiClientFactory>().CreateClient())
-                .AddScoped<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
+                .AddTransient<ICommitmentPermissionsApiClientFactory, CommitmentPermissionsApiClientFactory>();
         }
     }
 }
