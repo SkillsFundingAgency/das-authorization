@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
+﻿using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.CommitmentPermissions.Configuration;
 using SFA.DAS.Http;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Client
@@ -6,15 +7,17 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
     public class  CommitmentPermissionsApiClientFactory : ICommitmentPermissionsApiClientFactory
     {
         private readonly CommitmentPermissionsApiClientConfiguration _configuration;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public CommitmentPermissionsApiClientFactory(CommitmentPermissionsApiClientConfiguration configuration)
+        public CommitmentPermissionsApiClientFactory(CommitmentPermissionsApiClientConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _configuration = configuration;
+            _loggerFactory = loggerFactory;
         }
 
         public ICommitmentPermissionsApiClient CreateClient()
         {
-            var httpClientFactory = new AzureActiveDirectoryHttpClientFactory(_configuration);
+            var httpClientFactory = new AzureActiveDirectoryHttpClientFactory(_configuration, _loggerFactory);
             var httpClient = httpClientFactory.CreateHttpClient();
             var restHttpClient = new RestHttpClient(httpClient);
             var apiClient = new CommitmentPermissionsApiClient(restHttpClient);

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Authorization.Logging;
+using NLog.Extensions.Logging;
 using StructureMap;
 
 namespace SFA.DAS.Authorization.DependencyResolution
@@ -8,8 +8,8 @@ namespace SFA.DAS.Authorization.DependencyResolution
     {
         public LoggerRegistry()
         {
-            For<ILoggerFactoryManager>().Use(c => new LoggerFactoryManager(c.TryGetInstance<ILoggerFactory>())).Singleton();
-            For(typeof(ILogger<>)).Use(typeof(Logger<>)).Ctor<ILoggerFactory>().Is(c => c.GetInstance<ILoggerFactoryManager>().GetLoggerFactory());
+            For<ILoggerFactory>().Use(() => new LoggerFactory().AddNLog()).Singleton();
+            For(typeof(ILogger<>)).Use(typeof(Logger<>)).Singleton();
         }
     }
 }

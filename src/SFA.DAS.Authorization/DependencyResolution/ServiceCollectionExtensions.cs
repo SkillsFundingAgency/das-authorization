@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Caching;
@@ -19,7 +18,8 @@ namespace SFA.DAS.Authorization.DependencyResolution
         
         public static IServiceCollection AddAuthorization<T>(this IServiceCollection services) where T : class, IAuthorizationContextProvider
         {
-            return services.AddMemoryCache()
+            return services.AddLogging()
+                .AddMemoryCache()
                 .AddScoped<IAuthorizationContextProvider>(p => new AuthorizationContextCache(p.GetService<T>()))
                 .AddScoped<IAuthorizationService, AuthorizationService>()
                 .AddScoped<T>()
