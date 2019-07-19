@@ -12,7 +12,7 @@ namespace SFA.DAS.Authorization.DependencyResolution
                 ? new AuthorizationResultLogger(authorizationHandler, context.GetInstance<ILogger<AuthorizationResultLogger>>())
                 : authorizationHandler) 
         {
-            // TODO: Delete this class when SFA.DAS.Authorization.EmployerUserRoles & SFA.DAS.Authorization.ProviderPermissions have IServiceCollection extensions 
+            // TODO: Delete this class when SFA.DAS.Authorization.EmployerUserRoles has IServiceCollection extensions
         }
     }
 }
