@@ -10,8 +10,8 @@ namespace SFA.DAS.Authorization.EmployerUserRoles.DependencyResolution
     {
         public EmployerUserRolesAuthorizationRegistry()
         {
-            IncludeRegistry<EmployerAccountsApiClientRegistry>();
             For<IAuthorizationHandler>().Add<AuthorizationHandler>().InterceptWith(new AuthorizationResultLoggerInterceptor());
+            IncludeRegistry<EmployerAccountsApiClientRegistry>();
         }
     }
 }

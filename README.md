@@ -56,9 +56,10 @@ services.AddCommitmentPermissionsAuthorization();
 services.AddEmployerFeaturesAuthorization();
 services.AddFeaturesAuthorization();
 services.AddProviderFeaturesAuthorization();
+services.AddProviderPermissionsAuthorization();
 ```
 
-> Please note, the `SFA.DAS.Authorization.EmployerUserRoles` & `SFA.DAS.Authorization.ProviderPermissions` packages don't currently include .NET Core DI `IServiceCollection` extensions.
+> Please note, the `SFA.DAS.Authorization.EmployerUserRoles` package doesn't currently include .NET Core DI `IServiceCollection` extensions.
 
 ### StructureMap
 
