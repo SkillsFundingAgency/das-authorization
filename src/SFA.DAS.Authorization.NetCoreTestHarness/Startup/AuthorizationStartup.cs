@@ -9,7 +9,7 @@ using SFA.DAS.Authorization.ProviderPermissions.DependencyResolution;
 
 namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
 {
-    public static class AuthorizationSetup
+    public static class AuthorizationStartup
     {
         public static IServiceCollection AddDasAuthorization(this IServiceCollection services)
         {
