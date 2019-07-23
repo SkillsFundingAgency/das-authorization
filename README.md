@@ -75,7 +75,7 @@ c.AddRegistry<ProviderFeaturesAuthorizationRegistry>();
 c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
 ```
 
-## SFA.DAS.Authorization.CommitmentPermissions
+### SFA.DAS.Authorization.CommitmentPermissions
 
 `SFA.DAS.Authorization.CommitmentPermissions` requires an instance of `SFA.DAS.Authorization.CommitmentPermissions.Configuration.CommitmentPermissionsApiClientConfiguration` registering in your application's container.
 
