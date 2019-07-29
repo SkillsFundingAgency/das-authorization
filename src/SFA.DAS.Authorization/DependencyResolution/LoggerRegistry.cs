@@ -4,7 +4,7 @@ using StructureMap;
 
 namespace SFA.DAS.Authorization.DependencyResolution
 {
-    public class LoggerRegistry : Registry
+    internal class LoggerRegistry : Registry
     {
         public LoggerRegistry()
         {

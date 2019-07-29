@@ -3,7 +3,7 @@ using StructureMap;
 
 namespace SFA.DAS.Authorization.DependencyResolution
 {
-    public class OptionsRegistry : Registry
+    internal class OptionsRegistry : Registry
     {
         public OptionsRegistry()
         {

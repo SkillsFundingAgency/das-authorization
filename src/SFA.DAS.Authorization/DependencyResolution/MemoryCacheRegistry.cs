@@ -3,7 +3,7 @@ using StructureMap;
 
 namespace SFA.DAS.Authorization.DependencyResolution
 {
-    public class MemoryCacheRegistry : Registry
+    internal class MemoryCacheRegistry : Registry
     {
         public MemoryCacheRegistry()
         {
