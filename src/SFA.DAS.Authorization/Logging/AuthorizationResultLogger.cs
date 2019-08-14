@@ -23,8 +23,16 @@ namespace SFA.DAS.Authorization.Logging
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = await _authorizationHandler.GetAuthorizationResult(options, authorizationContext);
-            
-            _logger.LogInformation($"Finished running handler with prefix '{Prefix}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'");
+            var message = $"Finished running handler with prefix '{Prefix}' for options '{string.Join(", ", options)}' and context '{authorizationContext}' with result '{authorizationResult}'";
+
+            if (authorizationResult.IsAuthorized)
+            {
+                _logger.LogInformation(message);
+            }
+            else
+            {
+                _logger.LogWarning(message);
+            }
 
             return authorizationResult;
         }
