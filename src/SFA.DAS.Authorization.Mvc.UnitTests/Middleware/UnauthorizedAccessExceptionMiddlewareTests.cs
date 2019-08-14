@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Mvc.Middleware;
@@ -51,7 +52,7 @@ namespace SFA.DAS.Authorization.Mvc.UnitTests.Middleware
         {
             Context = new DefaultHttpContext();
             NextTask = new Mock<RequestDelegate>();
-            UnauthorizedAccessExceptionMiddleware = new UnauthorizedAccessExceptionMiddleware(NextTask.Object);
+            UnauthorizedAccessExceptionMiddleware = new UnauthorizedAccessExceptionMiddleware(NextTask.Object, Mock.Of<ILogger<UnauthorizedAccessExceptionMiddleware>>());
         }
 
         public Task InvokeAsync()
