@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.ProviderFeatures.Handlers;
 using SFA.DAS.Authorization.ProviderFeatures.Models;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.ProviderFeatures.DependencyResolution
+namespace SFA.DAS.Authorization.ProviderFeatures.DependencyResolution.StructureMap
 {
     public class ProviderFeaturesAuthorizationRegistry : Registry
     {

@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.Features.DependencyResolution
+namespace SFA.DAS.Authorization.Features.DependencyResolution.StructureMap
 {
     public class FeaturesAuthorizationRegistry : Registry
     {

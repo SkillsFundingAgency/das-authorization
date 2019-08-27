@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Features.Errors;
 using SFA.DAS.Authorization.Features.Models;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.Results;
 
 namespace SFA.DAS.Authorization.Features.Handlers

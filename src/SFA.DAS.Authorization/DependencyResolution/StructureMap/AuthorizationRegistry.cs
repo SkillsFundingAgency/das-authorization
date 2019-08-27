@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Services;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.DependencyResolution
+namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
 {
     public class AuthorizationRegistry : Registry
     {

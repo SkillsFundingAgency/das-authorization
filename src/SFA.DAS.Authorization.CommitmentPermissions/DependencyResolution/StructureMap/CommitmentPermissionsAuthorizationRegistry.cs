@@ -6,7 +6,7 @@ using SFA.DAS.Authorization.CommitmentPermissions.Handlers;
 using SFA.DAS.Authorization.Handlers;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution
+namespace SFA.DAS.Authorization.CommitmentPermissions.DependencyResolution.StructureMap
 {
     public class CommitmentPermissionsAuthorizationRegistry : Registry
     {

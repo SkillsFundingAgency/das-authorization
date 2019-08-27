@@ -8,6 +8,7 @@ using SFA.DAS.Authorization.EmployerUserRoles.Errors;
 using SFA.DAS.Authorization.EmployerUserRoles.Options;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.Results;
 using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.EmployerAccounts.Types.Models;

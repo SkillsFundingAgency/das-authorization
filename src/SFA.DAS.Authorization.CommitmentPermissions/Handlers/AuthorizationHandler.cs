@@ -10,6 +10,7 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.Results;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 

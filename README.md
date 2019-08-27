@@ -47,9 +47,9 @@ config.Filters.AddAuthorizationFilter();
 config.Filters.AddUnauthorizedAccessExceptionFilter();
 ```
 
-### .NET Core DI
+### Microsoft Dependency Injection
 
-If you're using .NET Core DI then the authorization packages also include `IServiceCollection` extensions for wiring up their components:
+If you're using Microsoft Dependency Injection then the authorization packages also include `IServiceCollection` extensions for wiring up their components:
 
 ```c#
 services.AddCommitmentPermissionsAuthorization();

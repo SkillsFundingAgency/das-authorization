@@ -2,6 +2,7 @@
 using SFA.DAS.Authorization.CommitmentPermissions.Context;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
+using SFA.DAS.Authorization.Options;
 using SFA.DAS.CommitmentsV2.Types;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Caching

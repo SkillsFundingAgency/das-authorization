@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.DependencyResolution;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Authorization.ProviderFeatures.Handlers;
 using SFA.DAS.Authorization.ProviderFeatures.Models;
 
-namespace SFA.DAS.Authorization.ProviderFeatures.DependencyResolution
+namespace SFA.DAS.Authorization.ProviderFeatures.DependencyResolution.Microsoft
 {
     public static class ServiceCollectionExtensions
     {

@@ -3,7 +3,7 @@ using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Logging;
 using StructureMap.Building.Interception;
 
-namespace SFA.DAS.Authorization.DependencyResolution
+namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
 {
     public class AuthorizationResultLoggerInterceptor : FuncInterceptor<IAuthorizationHandler>
     {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.DependencyResolution
+namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
 {
     internal class OptionsRegistry : Registry
     {

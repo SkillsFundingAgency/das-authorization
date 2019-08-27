@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.ProviderPermissions.Context;
 using SFA.DAS.Authorization.ProviderPermissions.Errors;
 using SFA.DAS.Authorization.ProviderPermissions.Options;

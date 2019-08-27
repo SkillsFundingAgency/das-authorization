@@ -5,7 +5,7 @@ using SFA.DAS.Authorization.Handlers;
 using StructureMap;
 using AuthorizationHandler = SFA.DAS.Authorization.EmployerFeatures.Handlers.AuthorizationHandler;
 
-namespace SFA.DAS.Authorization.EmployerFeatures.DependencyResolution
+namespace SFA.DAS.Authorization.EmployerFeatures.DependencyResolution.StructureMap
 {
     public class EmployerFeaturesAuthorizationRegistry : Registry
     {

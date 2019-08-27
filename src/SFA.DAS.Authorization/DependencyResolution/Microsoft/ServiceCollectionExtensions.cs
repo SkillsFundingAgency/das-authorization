@@ -7,7 +7,7 @@ using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Services;
 
-namespace SFA.DAS.Authorization.DependencyResolution
+namespace SFA.DAS.Authorization.DependencyResolution.Microsoft
 {
     public static class ServiceCollectionExtensions
     {

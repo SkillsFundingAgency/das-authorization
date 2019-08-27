@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using StructureMap;
 
-namespace SFA.DAS.Authorization.DependencyResolution
+namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
 {
     internal class LoggerRegistry : Registry
     {
