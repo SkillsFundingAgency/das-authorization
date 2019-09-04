@@ -28,9 +28,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         }
         
         [Test]
-        public Task GetAuthorizationResult_WhenAndedOptionsAreAvailable_ThenShouldThrowNotImplementedException()
+        public Task GetAuthorizationResult_WhenAndedOptionsAreAvailable_ThenShouldReturnExpectedNumberOfErrors()
         {
-            return TestExceptionAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
+            const int expectedNumberOfErrors = 2;
+            return TestAsync(f => f.SetAndedOptions().SetAllOptionsToBeDisabledFeatures(), 
+                            f => f.GetAuthorizationResult(), 
+                            (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.Errors.Count() == expectedNumberOfErrors));
         }
         
         [Test]
@@ -134,6 +137,15 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         {
             Options.AddRange(new [] { "ProviderRelationships", "Tickles" });
             
+            return this;
+        }
+
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAllOptionsToBeDisabledFeatures()
+        {
+            FeatureTogglesService
+                .Setup(s => s.GetFeatureToggle(It.IsAny<string>()))
+                .Returns<string>(option => new EmployerFeatureToggle { Feature = option, IsEnabled = false});
+
             return this;
         }
 

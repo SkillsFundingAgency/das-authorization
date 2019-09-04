@@ -37,6 +37,8 @@ namespace SFA.DAS.Authorization.Results
             return _errors.OfType<T>().Any();
         }
 
+        public bool HasAnyError => _errors.Count > 0;
+
         public override string ToString()
         {
             return $"{nameof(IsAuthorized)}: {IsAuthorized}, {nameof(Errors)}: {(_errors.Count > 0 ? string.Join(", ", _errors.Select(e => e.Message)) : "None")}";

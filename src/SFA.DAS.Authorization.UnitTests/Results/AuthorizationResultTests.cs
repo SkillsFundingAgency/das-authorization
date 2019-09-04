@@ -91,6 +91,18 @@ namespace SFA.DAS.Authorization.UnitTests.Results
         {
             Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized).AddError(f.ProviderPermissionNotGranted).ToString(), (f, r) => r.Should().Be($"IsAuthorized: False, Errors: {f.EmployerUserRoleNotAuthorized.Message}, {f.ProviderPermissionNotGranted.Message}"));
         }
+
+        [Test]
+        public void HasAnyErrors_WhenHasError_ThenShouldReturnTrue()
+        {
+            Test(f => new AuthorizationResult().AddError(f.EmployerUserRoleNotAuthorized), (f, r) => r.Should().Match<AuthorizationResult>(r2 => r2.HasAnyError));
+        }
+
+        [Test]
+        public void HasAnyErrors_WhenHasNoError_ThenShouldReturnFalse()
+        {
+            Test(f => new AuthorizationResult(), (f, r) => r.Should().Match<AuthorizationResult>(r2 => !r2.HasAnyError));
+        }
     }
 
     public class AuthorizationResultTestsFixture
