@@ -53,12 +53,12 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
                     }
                 }
                 else if (
-                    authorizationContext.TryGet<int>(AuthorizationContextKey.AgreementVersion, out var agreementVersion) &&
+                    (featureToggle.AgreementType != null || featureToggle.AgreementVersion != null) &&
                     !_employerAccountsApiClient.HasAgreementBeenSigned(
                              new HasAgreementBeenSignedRequest {
                                  AccountId = authorizationContext.GetEmployerFeatureValues().AccountId,
-                                 AgreementType = authorizationContext.Get<string>(AuthorizationContextKey.AgreementType),
-                                 AgreementVersion = agreementVersion
+                                 AgreementType = featureToggle.AgreementType,
+                                 AgreementVersion = featureToggle.AgreementVersion.Value
                              }, CancellationToken.None).Result)
                 {
                     authorizationResult.AddError(new EmployerFeatureAgreementNotSigned());

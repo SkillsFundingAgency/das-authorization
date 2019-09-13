@@ -104,14 +104,14 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAgreementValuesOnContextAndAgreementHasNotBeenSigned_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAuthorizationContextAgreementValues().SetAgreementNotBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAgreementValues().SetAgreementNotBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureAgreementNotSigned>()));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAgreementValuesOnContextAndAgreementHasBeenSigned_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAgreementValuesOnContextAndAgreementHasBeenSigned_ThenShouldReturnAuthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAuthorizationContextAgreementValues().SetAgreementHasBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAgreementValues().SetAgreementHasBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
     }
@@ -128,6 +128,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         public const string UserEmail = "foo@bar.com";
         public const string AgreementType = "Levy";
         public const int AgreementVersion = 4;
+        public EmployerFeatureToggle EmployerFeatureToggle { get; set; }
         
         public EmployerFeaturesAuthorizationHandlerTestsFixture()
         {
@@ -136,6 +137,8 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
             FeatureTogglesService = new Mock<IFeatureTogglesService<EmployerFeatureToggle>>();
             EmployerAccountsApiClient = new Mock<IEmployerAccountsApiClient>();
             Handler = new AuthorizationHandler(FeatureTogglesService.Object, EmployerAccountsApiClient.Object);
+            EmployerFeatureToggle = new EmployerFeatureToggle{ Feature = "ProviderRelationships" };
+            
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -192,10 +195,10 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextAgreementValues()
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAgreementValues()
         {
-            AuthorizationContext.Set(AuthorizationContextKey.AgreementType, AgreementType);
-            AuthorizationContext.Set(AuthorizationContextKey.AgreementVersion, AgreementVersion);
+            EmployerFeatureToggle.AgreementVersion = AgreementVersion;
+            EmployerFeatureToggle.AgreementType = AgreementType;
 
             return this;
         }
@@ -217,8 +220,11 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
                 whitelist.Add(new EmployerFeatureToggleWhitelistItem { AccountId = isAccountIdWhitelisted == true ? AccountId : 0, UserEmails = userEmails });
             }
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new EmployerFeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled, Whitelist = whitelist });
-            
+            EmployerFeatureToggle.IsEnabled = isEnabled;
+            EmployerFeatureToggle.Whitelist = whitelist;
+
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(EmployerFeatureToggle);
+
             return this;
         }
 
