@@ -52,7 +52,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
                         authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                     }
                 }
-                else if (
+                if (
                     (featureToggle.AgreementType != null || featureToggle.AgreementVersion != null) &&
                     !_employerAccountsApiClient.HasAgreementBeenSigned(
                              new HasAgreementBeenSignedRequest {
