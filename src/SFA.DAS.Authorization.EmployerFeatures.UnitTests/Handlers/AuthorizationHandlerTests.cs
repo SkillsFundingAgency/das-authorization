@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -12,6 +13,7 @@ using SFA.DAS.Authorization.EmployerFeatures.Models;
 using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Results;
+using SFA.DAS.EmployerAccounts.Api.Client;
 using SFA.DAS.Testing;
 using AuthorizationHandler = SFA.DAS.Authorization.EmployerFeatures.Handlers.AuthorizationHandler;
 
@@ -98,6 +100,20 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true, false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureUserNotWhitelisted>()));
         }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAgreementValuesOnContextAndAgreementHasNotBeenSigned_ThenShouldReturnUnauthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAgreementValues().SetAgreementNotBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureAgreementNotSigned>()));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAgreementValuesOnContextAndAgreementHasBeenSigned_ThenShouldReturnAuthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true).SetAgreementValues().SetAgreementHasBeenSigned(), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
     }
 
     public class EmployerFeaturesAuthorizationHandlerTestsFixture
@@ -106,16 +122,23 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IFeatureTogglesService<EmployerFeatureToggle>> FeatureTogglesService { get; set; }
-        
+        public Mock<IEmployerAccountsApiClient> EmployerAccountsApiClient { get; set; }
+
         public const long AccountId = 1;
         public const string UserEmail = "foo@bar.com";
+        public const string AgreementType = "Levy";
+        public const int AgreementVersion = 4;
+        public EmployerFeatureToggle EmployerFeatureToggle { get; set; }
         
         public EmployerFeaturesAuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
             AuthorizationContext = new AuthorizationContext();
             FeatureTogglesService = new Mock<IFeatureTogglesService<EmployerFeatureToggle>>();
-            Handler = new AuthorizationHandler(FeatureTogglesService.Object);
+            EmployerAccountsApiClient = new Mock<IEmployerAccountsApiClient>();
+            Handler = new AuthorizationHandler(FeatureTogglesService.Object, EmployerAccountsApiClient.Object);
+            EmployerFeatureToggle = new EmployerFeatureToggle{ Feature = "ProviderRelationships" };
+            
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult()
@@ -172,6 +195,14 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
             return this;
         }
 
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAgreementValues()
+        {
+            EmployerFeatureToggle.AgreementVersion = AgreementVersion;
+            EmployerFeatureToggle.AgreementType = AgreementType;
+
+            return this;
+        }
+
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetFeatureToggle(bool isEnabled, bool? isAccountIdWhitelisted = null, bool? isUserEmailWhitelisted = null)
         {
             var option = Options.Single();
@@ -189,8 +220,29 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
                 whitelist.Add(new EmployerFeatureToggleWhitelistItem { AccountId = isAccountIdWhitelisted == true ? AccountId : 0, UserEmails = userEmails });
             }
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new EmployerFeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled, Whitelist = whitelist });
-            
+            EmployerFeatureToggle.IsEnabled = isEnabled;
+            EmployerFeatureToggle.Whitelist = whitelist;
+
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(EmployerFeatureToggle);
+
+            return this;
+        }
+
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAgreementNotBeenSigned()
+        {
+            EmployerAccountsApiClient.Setup(x =>
+                    x.HasAgreementBeenSigned(It.IsAny<HasAgreementBeenSignedRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            return this;
+        }
+
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAgreementHasBeenSigned()
+        {
+            EmployerAccountsApiClient.Setup(x =>
+                    x.HasAgreementBeenSigned(It.IsAny<HasAgreementBeenSignedRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
             return this;
         }
     }

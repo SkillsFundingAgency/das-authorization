@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.EmployerFeatures.Context;
@@ -9,18 +10,21 @@ using SFA.DAS.Authorization.Features.Services;
 using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.Results;
+using SFA.DAS.EmployerAccounts.Api.Client;
 
 namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
         public string Prefix => "EmployerFeature.";
-        
-        private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
 
-        public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService)
+        private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
+        private readonly IEmployerAccountsApiClient _employerAccountsApiClient;
+
+        public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService, IEmployerAccountsApiClient employerAccountsApiClient)
         {
             _featureTogglesService = featureTogglesService;
+            _employerAccountsApiClient = employerAccountsApiClient;
         }
 
         public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
@@ -47,6 +51,17 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
                     {
                         authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                     }
+                }
+                if (
+                    (featureToggle.AgreementType != null || featureToggle.AgreementVersion != null) &&
+                    !_employerAccountsApiClient.HasAgreementBeenSigned(
+                             new HasAgreementBeenSignedRequest {
+                                 AccountId = authorizationContext.GetEmployerFeatureValues().AccountId,
+                                 AgreementType = featureToggle.AgreementType,
+                                 AgreementVersion = featureToggle.AgreementVersion.Value
+                             }, CancellationToken.None).Result)
+                {
+                    authorizationResult.AddError(new EmployerFeatureAgreementNotSigned());
                 }
             }
             
