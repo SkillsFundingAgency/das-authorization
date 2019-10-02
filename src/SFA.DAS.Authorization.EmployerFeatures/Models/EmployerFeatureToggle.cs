@@ -12,7 +12,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Models
 
         public bool IsUserWhitelisted(long accountId, string userEmail)
         {
-            return Whitelist.Any(w => w.AccountId == accountId && (w.UserEmails == null || w.UserEmails.Count == 0 || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
+            return Whitelist.Any(w => (w.AccountId == accountId || w.AccountId == null) && (w.UserEmails == null || w.UserEmails.Count == 0 || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase)));
         }
     }
 }
