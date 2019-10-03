@@ -40,21 +40,21 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsIsMissingAccountId_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsIsMissingAccountId_ThenShouldNotThrowAndReturnUnauthorized()
         {
-            return TestExceptionAsync(
+            return TestAsync(
                 f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingAccountId(),
                 f => f.GetAuthorizationResult(),
-                (f, r) => r.Should().Throw<KeyNotFoundException>());
+                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized));
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingUserEmail_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndFeatureIsEnabledAndWhitelistIsEnabledAndAuthorizationContextIsMissingUserEmail_ThenShouldNotThrowAndReturnUnauthorized()
         {
-            return TestExceptionAsync(
+            return TestAsync(
                 f => f.SetOption().SetFeatureToggle(true, false, false).SetAuthorizationContextMissingUserEmail(),
                 f => f.GetAuthorizationResult(),
-                (f, r) => r.Should().Throw<KeyNotFoundException>());
+                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized));
         }
 
         [Test]
