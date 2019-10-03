@@ -15,7 +15,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
     public class AuthorizationHandler : IAuthorizationHandler
     {
         public string Prefix => "EmployerFeature.";
-        
+
         private readonly IFeatureTogglesService<EmployerFeatureToggle> _featureTogglesService;
 
         public AuthorizationHandler(IFeatureTogglesService<EmployerFeatureToggle> featureTogglesService)
@@ -31,7 +31,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
             {
                 options.EnsureNoAndOptions();
                 options.EnsureNoOrOptions();
-                
+
                 var feature = options.Single();
                 var featureToggle = _featureTogglesService.GetFeatureToggle(feature);
 
@@ -41,15 +41,14 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Handlers
                 }
                 else if (featureToggle.IsWhitelistEnabled)
                 {
-                    var values = authorizationContext.GetEmployerFeatureValues();
-                    
-                    if (!featureToggle.IsUserWhitelisted(values.AccountId, values.UserEmail))
+                    var (accountId, userEmail) = authorizationContext.GetEmployerFeatureValues();
+                    if (!featureToggle.IsUserWhitelisted(accountId, userEmail))
                     {
                         authorizationResult.AddError(new EmployerFeatureUserNotWhitelisted());
                     }
                 }
             }
-            
+
             return Task.FromResult(authorizationResult);
         }
     }
