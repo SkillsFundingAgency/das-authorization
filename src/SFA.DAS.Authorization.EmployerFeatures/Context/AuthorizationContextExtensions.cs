@@ -12,8 +12,9 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Context
         
         internal static (long AccountId, string UserEmail) GetEmployerFeatureValues(this IAuthorizationContext authorizationContext)
         {
-            return (authorizationContext.Get<long>(AuthorizationContextKey.AccountId),
-                authorizationContext.Get<string>(AuthorizationContextKey.UserEmail));
+            authorizationContext.TryGet<long>(AuthorizationContextKey.AccountId, out var accountId);
+            authorizationContext.TryGet<string>(AuthorizationContextKey.UserEmail, out var email);
+            return (accountId, email);
         }
     }
 }
