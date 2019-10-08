@@ -1,26 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using SFA.DAS.Authorization.Features.Models;
 
 namespace SFA.DAS.Authorization.EmployerFeatures.Models
 {
     public class EmployerFeatureToggle : FeatureToggle
     {
-        public List<EmployerFeatureToggleWhitelistItem> Whitelist { get; set; }
-        public bool IsWhitelistEnabled => Whitelist != null && Whitelist.Count > 0;
+        public List<long> AccountWhitelist { get; set; } = new List<long>();
+        public List<string> EmailWhitelist { get; set; } = new List<string>();
+        public bool IsWhitelistEnabled =>
+            (AccountWhitelist != null && AccountWhitelist.Count > 0)
+            ||
+            (EmailWhitelist != null && EmailWhitelist.Count > 0);
 
         public bool IsUserWhitelisted(long? accountId, string userEmail)
         {
-            return accountId.HasValue
-                ? Whitelist.Any(w => (w.AccountId == accountId || w.AccountId == null) && IsUserWhitelisted(userEmail))
-                : IsUserWhitelisted(userEmail);
-        }
+            return (accountId.HasValue && AccountWhitelist.Contains(accountId.Value))
+                ||
+                (!string.IsNullOrWhiteSpace(userEmail) && EmailWhitelist.Any(email => Regex.IsMatch(userEmail, email, RegexOptions.IgnoreCase)));
 
-        public bool IsUserWhitelisted(string userEmail)
-        {
-            return Whitelist.Any
-                (w => w.UserEmails == null || w.UserEmails.Count == 0 || w.UserEmails.Contains(userEmail, StringComparer.InvariantCultureIgnoreCase));
         }
     }
 }
