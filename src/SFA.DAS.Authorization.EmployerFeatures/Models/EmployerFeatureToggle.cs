@@ -15,12 +15,24 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Models
             ||
             (EmailWhitelist != null && EmailWhitelist.Count > 0);
 
-        public bool IsUserWhitelisted(long? accountId, string userEmail)
-        {
-            return (accountId.HasValue && AccountWhitelist.Contains(accountId.Value))
-                ||
-                (!string.IsNullOrWhiteSpace(userEmail) && EmailWhitelist.Any(email => Regex.IsMatch(userEmail, email, RegexOptions.IgnoreCase)));
+        public bool IsUserWhitelisted(long? accountId, string userEmail) =>
+            IsAccountWhitelisted(accountId) || IsEmailWhitelisted(userEmail);
 
+        private bool IsAccountWhitelisted(long? accountId)
+            => accountId.HasValue && AccountWhitelist.Contains(accountId.Value);
+
+        private bool IsEmailWhitelisted(string userEmail)
+        {
+            var wildcards = EmailWhitelist.Where(s => s.Contains("*"));
+            var emails = EmailWhitelist.Except(wildcards);
+
+            if(string.IsNullOrWhiteSpace(userEmail))
+            {
+                return false;
+            }
+
+            return emails.Any(email => email.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase))
+                    || wildcards.Any(pattern => Regex.IsMatch(userEmail, pattern, RegexOptions.IgnoreCase));
         }
     }
 }
