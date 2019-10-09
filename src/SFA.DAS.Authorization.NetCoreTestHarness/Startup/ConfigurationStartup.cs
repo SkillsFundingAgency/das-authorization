@@ -18,9 +18,8 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
     {
         public static IServiceCollection AddDasConfiguration(this IServiceCollection services)
         {
-            return services.AddSingleton(new FeaturesConfiguration
-                {
-                    FeatureToggles = new List<FeatureToggle> 
+            return services.AddSingleton(new FeaturesConfiguration {
+                FeatureToggles = new List<FeatureToggle>
                     {
                         new FeatureToggle
                         {
@@ -28,29 +27,21 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
                             IsEnabled = true
                         }
                     }
-                })
-                .AddSingleton(new EmployerFeaturesConfiguration
-                {
-                    FeatureToggles = new List<EmployerFeatureToggle> 
+            })
+                .AddSingleton(new EmployerFeaturesConfiguration {
+                    FeatureToggles = new List<EmployerFeatureToggle>
                     {
                         new EmployerFeatureToggle
                         {
                             Feature = "ProviderRelationships",
                             IsEnabled = true,
-                            Whitelist = new List<EmployerFeatureToggleWhitelistItem>
-                            {
-                                new EmployerFeatureToggleWhitelistItem
-                                {
-                                    AccountId = Account.Id,
-                                    UserEmails = new List<string> { User.Email }
-                                }
-                            }
+                            EmailWhitelist = new List<string>(){ User.Email },
+                            AccountWhitelist = new List<long>(){ Account.Id }
                         }
                     }
                 })
-                .AddSingleton(new ProviderFeaturesConfiguration
-                {
-                    FeatureToggles = new List<ProviderFeatureToggle> 
+                .AddSingleton(new ProviderFeaturesConfiguration {
+                    FeatureToggles = new List<ProviderFeatureToggle>
                     {
                         new ProviderFeatureToggle
                         {
@@ -69,7 +60,7 @@ namespace SFA.DAS.Authorization.NetCoreTestHarness.Startup
                 })
                 .AddSingleton(p => p.GetService<IConfiguration>().GetSection("SFA.DAS.ProviderCommitments:CommitmentsClientApi").Get<CommitmentPermissionsApiClientConfiguration>());
         }
-        
+
         public static IWebHostBuilder ConfigureDasAppConfiguration(this IWebHostBuilder hostBuilder)
         {
             return hostBuilder.ConfigureAppConfiguration(c => c.AddAzureTableStorage("SFA.DAS.ProviderCommitments"));

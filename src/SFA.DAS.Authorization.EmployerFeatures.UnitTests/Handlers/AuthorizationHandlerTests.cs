@@ -93,10 +93,10 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelistedAndUserEmailIsNotWhitelisted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsWhitelistedAndUserEmailIsNotWhitelisted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true, false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
-                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<EmployerFeatureUserNotWhitelisted>()));
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsAvailableAndFeatureIsEnabledAndAccountIdIsNullAndEmailIsWhiteListed_ThenShouldReturnAuthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetFeatureToggle(true, true, true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues(null).SetFeatureToggle(true, true, true, true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                   .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
     }
@@ -179,7 +179,7 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
             return this;
         }
 
-        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long accountId = AccountId, string userEmail = UserEmail)
+        public EmployerFeaturesAuthorizationHandlerTestsFixture SetAuthorizationContextValues(long? accountId = AccountId, string userEmail = UserEmail)
         {
             AuthorizationContext.AddEmployerFeatureValues(accountId, userEmail);
 
@@ -189,24 +189,23 @@ namespace SFA.DAS.Authorization.EmployerFeatures.UnitTests.Handlers
         public EmployerFeaturesAuthorizationHandlerTestsFixture SetFeatureToggle(bool isEnabled, bool? isAccountIdWhitelisted = null, bool? isUserEmailWhitelisted = null, bool isAccountIdNull = false)
         {
             var option = Options.Single();
-            var whitelist = new List<EmployerFeatureToggleWhitelistItem>();
+            var accountWhitelist = new List<long>();
+            var emailWhitelist = new List<string>();
 
             if (isAccountIdWhitelisted != null)
             {
-                var userEmails = new List<string>();
-
-                if (isUserEmailWhitelisted != null)
+                if (isUserEmailWhitelisted.HasValue)
                 {
-                    userEmails.Add(isUserEmailWhitelisted == true ? UserEmail : "");
+                    emailWhitelist.Add(isUserEmailWhitelisted.Value ? UserEmail : "UnknownEmailAddress@hello.com");
                 }
 
-                // For Registrations, AccountId Can be Null and still have whitelisted emails.
-                long? accountId = isAccountIdNull ? null : (long?)(isAccountIdWhitelisted == true ? AccountId : 0);
-
-                whitelist.Add(new EmployerFeatureToggleWhitelistItem { AccountId = accountId, UserEmails = userEmails });
+                if (isAccountIdWhitelisted.HasValue)
+                {
+                    accountWhitelist.Add(isAccountIdWhitelisted.Value ? AccountId : -100);
+                }
             }
 
-            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new EmployerFeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled, Whitelist = whitelist });
+            FeatureTogglesService.Setup(s => s.GetFeatureToggle(option)).Returns(new EmployerFeatureToggle { Feature = "ProviderRelationships", IsEnabled = isEnabled, EmailWhitelist = emailWhitelist, AccountWhitelist = accountWhitelist });
 
             return this;
         }

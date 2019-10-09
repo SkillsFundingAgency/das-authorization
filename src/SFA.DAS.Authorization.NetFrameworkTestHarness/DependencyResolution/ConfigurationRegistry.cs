@@ -31,12 +31,8 @@ namespace SFA.DAS.Authorization.NetFrameworkTestHarness.DependencyResolution
                     new EmployerFeatureToggle {
                         Feature = "ProviderRelationships",
                         IsEnabled = true,
-                        Whitelist = new List<EmployerFeatureToggleWhitelistItem> {
-                            new EmployerFeatureToggleWhitelistItem {
-                                AccountId = Account.Id,
-                                UserEmails = new List<string> {User.Email}
-                            }
-                        }
+                        EmailWhitelist = new List<string> { User.Email },
+                        AccountWhitelist = new List<long> { Account.Id }
                     }
                 }
             });
