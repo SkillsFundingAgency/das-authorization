@@ -10,26 +10,27 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Models
     {
         public List<long> AccountWhitelist { get; set; } = new List<long>();
         public List<string> EmailWhitelist { get; set; } = new List<string>();
-        public bool IsWhitelistEnabled =>
-            (AccountWhitelist != null && AccountWhitelist.Count > 0)
-            ||
-            (EmailWhitelist != null && EmailWhitelist.Count > 0);
+
+        public bool IsWhitelistEnabled => IsEmailWhitelistEnabled || IsAccountWhitelistEnabled;
+        private bool IsEmailWhitelistEnabled => EmailWhitelist != null && EmailWhitelist.Count > 0;
+        private bool IsAccountWhitelistEnabled => AccountWhitelist != null && AccountWhitelist.Count > 0;
 
         public bool IsUserWhitelisted(long? accountId, string userEmail) =>
             IsAccountWhitelisted(accountId) || IsEmailWhitelisted(userEmail);
 
         private bool IsAccountWhitelisted(long? accountId)
-            => accountId.HasValue && AccountWhitelist.Contains(accountId.Value);
+            => IsAccountWhitelistEnabled && accountId.HasValue && AccountWhitelist.Contains(accountId.Value);
 
         private bool IsEmailWhitelisted(string userEmail)
         {
-            var wildcards = EmailWhitelist.Where(s => s.Contains("*"));
-            var emails = EmailWhitelist.Except(wildcards);
-
-            if(string.IsNullOrWhiteSpace(userEmail))
+            if(!IsEmailWhitelistEnabled || string.IsNullOrWhiteSpace(userEmail))
             {
                 return false;
             }
+
+            var wildcards = EmailWhitelist.Where(s => s.Contains("*"));
+            var emails = EmailWhitelist.Except(wildcards);
+
 
             return emails.Any(email => email.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase))
                     || wildcards.Any(pattern => Regex.IsMatch(userEmail, pattern, RegexOptions.IgnoreCase));
