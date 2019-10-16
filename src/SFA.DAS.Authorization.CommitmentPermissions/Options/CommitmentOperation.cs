@@ -4,7 +4,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Options
     {
         internal const string Prefix = "CommitmentOperation.";
         internal const string AccessCohortOption = "AccessCohort";
+        internal const string IgnoreEmptyCohortOption = "IgnoreEmptyCohort";
         
         public const string AccessCohort = Prefix + AccessCohortOption;
+
+        public const string AllowEmptyCohort = Prefix + IgnoreEmptyCohortOption;
     }
 }
