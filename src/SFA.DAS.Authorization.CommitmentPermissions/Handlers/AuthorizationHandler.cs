@@ -37,9 +37,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
 
                 if (operations.Contains(Operation.IgnoreEmptyCohort))
                 {
-                    authorizationContext.TryGet(AuthorizationContextKey.CohortId, out long cohortId);
-
-                    if (cohortId == 0L)
+                    if (!authorizationContext.TryGet(AuthorizationContextKey.CohortId, out long _))
                     {
                         return authorizationResult;
                     }
