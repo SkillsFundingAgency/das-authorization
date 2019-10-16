@@ -32,34 +32,43 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
             var authorizationResult = new AuthorizationResult();
 
             if (options.Count > 0)
-            {
-                options.EnsureNoAndOptions();
-                options.EnsureNoOrOptions();
-                
-                var values = authorizationContext.GetCommitmentPermissionValues();
-                var operation = options.Select(o => o.ToEnum<Operation>()).Single();
+            {   
+                var operations = options.Select(o => o.ToEnum<Operation>()).ToList();
 
-                switch (operation)
+                if (operations.Contains(Operation.IgnoreEmptyCohort))
                 {
-                    case Operation.AccessCohort:
-                        var canAccessCohortRequest = new CohortAccessRequest
-                        {
-                            CohortId = values.CohortId,
-                            Party = values.Party,
-                            PartyId = values.PartyId
-                        };
+                    authorizationContext.TryGet(AuthorizationContextKey.CohortId, out long cohortId);
 
-                        var canAccessCohort = await _commitmentsApiClient.CanAccessCohort(canAccessCohortRequest).ConfigureAwait(false);
-
-                        if (!canAccessCohort)
-                        {
-                            authorizationResult.AddError(new CommitmentPermissionNotGranted());
-                        }
-                        
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(operation), operation, "The operation is not currently supported");
+                    if (cohortId == 0L)
+                    {
+                        return authorizationResult;
+                    }
                 }
+
+                var values = authorizationContext.GetCommitmentPermissionValues();
+
+                foreach (var operation in operations)
+                {
+                    switch (operation)
+                    {
+                        case Operation.AccessCohort:
+                            var canAccessCohortRequest = new CohortAccessRequest {
+                                CohortId = values.CohortId,
+                                Party = values.Party,
+                                PartyId = values.PartyId
+                            };
+
+                            var canAccessCohort = await _commitmentsApiClient.CanAccessCohort(canAccessCohortRequest).ConfigureAwait(false);
+
+                            if (!canAccessCohort)
+                            {
+                                authorizationResult.AddError(new CommitmentPermissionNotGranted());
+                            }
+
+                            break;
+                    }
+                }
+                
             }
             
             return authorizationResult;

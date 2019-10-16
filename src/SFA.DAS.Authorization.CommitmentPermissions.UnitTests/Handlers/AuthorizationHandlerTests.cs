@@ -31,21 +31,16 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenAndedOptionsAreAvailable_ThenShouldThrowNotImplementedException()
-        {
-            return TestExceptionAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
-        }
-
-        [Test]
-        public Task GetAuthorizationResult_WhenOredOptionIsAvailable_ThenShouldThrowNotImplementedException()
-        {
-            return TestExceptionAsync(f => f.SetOredOption(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
-        }
-
-        [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingCohortId_ThenShouldThrowKeyNotFoundException()
         {
             return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingCohortId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+
+        [Test]
+        public Task Then_The_AuthorizationResult_Is_Returned_When_No_CohortId_And_Set_To_Ignore_Missing_Params()
+        {
+            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetAuthorizationContextMissingCohortId().SetPermissionGrantedFromNoCohort(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
@@ -65,6 +60,13 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         {
             return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsNotGrantedAndAllowedEmptyCohort_ThenShouldReturnUnauthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<CommitmentPermissionNotGranted>()));
         }
 
         [Test]
@@ -112,7 +114,15 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
             
             return this;
         }
-        
+
+        public AuthorizationHandlerTestsFixture SetAccessCohortAndAllowEmptyCohortId()
+        {
+            Options.AddRange(new[] { CommitmentOperation.AccessCohortOption, CommitmentOperation.IgnoreEmptyCohortOption });
+
+            return this;
+        }
+
+
         public AuthorizationHandlerTestsFixture SetOption()
         {
             Options.AddRange(new [] { CommitmentOperation.AccessCohortOption });
@@ -148,6 +158,11 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         {
             AuthorizationContext.AddCommitmentPermissionValues(cohortId, party, partyId);
             
+            return this;
+        }
+
+        public AuthorizationHandlerTestsFixture SetPermissionGrantedFromNoCohort(bool result)
+        {
             return this;
         }
 
