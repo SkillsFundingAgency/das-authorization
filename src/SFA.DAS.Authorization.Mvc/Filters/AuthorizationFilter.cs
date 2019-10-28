@@ -23,9 +23,16 @@ namespace SFA.DAS.Authorization.Mvc.Filters
         {
             var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             var dasAuthorizeAttributes = controllerActionDescriptor.GetDasAuthorizeAttributes();
-
+            var staffAuthorizeAttributes = controllerActionDescriptor.GetStaffAuthorizeAttributes();
+           
+                       
             if (dasAuthorizeAttributes.Count > 0)
             {
+                if (staffAuthorizeAttributes.Count > 0)
+                {
+                    return;
+                }
+
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 var isAuthorized = await _authorizationService.IsAuthorizedAsync(options).ConfigureAwait(false);
 
