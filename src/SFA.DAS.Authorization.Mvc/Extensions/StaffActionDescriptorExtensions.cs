@@ -46,7 +46,7 @@ namespace SFA.DAS.Authorization.Mvc.Extensions
             return Cache.GetOrAdd(key, k =>
             {
                 var actionAttributes = actionDescriptor.GetCustomAttributes(typeof(StaffAuthorizeAttribute), true).Cast<StaffAuthorizeAttribute>();
-                var controllerAttributes = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(DasAuthorizeAttribute), true).Cast<StaffAuthorizeAttribute>();
+                var controllerAttributes = actionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(StaffAuthorizeAttribute), true).Cast<StaffAuthorizeAttribute>();
                 var attributes = actionAttributes.Concat(controllerAttributes).ToList();
                 
                 return attributes;
