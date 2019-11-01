@@ -13,7 +13,8 @@ namespace SFA.DAS.Authorization.Services
         private readonly IAuthorizationContextProvider _authorizationContextProvider;
         private readonly IEnumerable<IAuthorizationHandler> _handlers;
 
-        public AuthorizationService(IAuthorizationContextProvider authorizationContextProvider, IEnumerable<IAuthorizationHandler> handlers)
+        public AuthorizationService(IAuthorizationContextProvider authorizationContextProvider, 
+            IEnumerable<IAuthorizationHandler> handlers)
         {
             _authorizationContextProvider = authorizationContextProvider;
             _handlers = handlers;
@@ -53,9 +54,9 @@ namespace SFA.DAS.Authorization.Services
                 from h in _handlers
                 let o = options.Where(o => o.StartsWith(h.Prefix)).Select(o => o.Replace(h.Prefix, "")).ToList()
                 select h.GetAuthorizationResult(o, authorizationContext)).ConfigureAwait(false);
-            
-            var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
-            
+
+            var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors)); 
+
             return authorizationResult;
         }
 

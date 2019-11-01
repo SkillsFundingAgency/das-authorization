@@ -5,6 +5,12 @@ using SFA.DAS.Authorization.Results;
 
 namespace SFA.DAS.Authorization.Handlers
 {
+
+    public interface IDefaultAuthorizationHandler
+    {
+        Task<AuthorizationResult> GetAuthorizationResultDefault(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext);
+    }
+
     public interface IAuthorizationHandler
     {
         string Prefix { get; }
