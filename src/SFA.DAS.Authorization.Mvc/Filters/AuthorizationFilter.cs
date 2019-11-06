@@ -34,6 +34,7 @@ namespace SFA.DAS.Authorization.Mvc.Filters
                 }
 
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
+                options.ToList().Add("Default.");
                 var isAuthorized = await _authorizationService.IsAuthorizedAsync(options).ConfigureAwait(false);
 
                 if (!isAuthorized)

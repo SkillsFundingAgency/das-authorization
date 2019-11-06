@@ -4,7 +4,6 @@ using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Logging;
 using SFA.DAS.Authorization.Services;
 using StructureMap;
-using AuthorizationServiceWithDefaultHandler = SFA.DAS.Authorization.Handlers.AuthorizationServiceWithDefaultHandler;
 
 namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
 {
@@ -16,12 +15,16 @@ namespace SFA.DAS.Authorization.DependencyResolution.StructureMap
             For<IAuthorizationContextProvider>().Use<DefaultAuthorizationContextProvider>();
             For<IAuthorizationContextProvider>().DecorateAllWith<AuthorizationContextCache>();
             For<IAuthorizationHandler>().DecorateAllWith<AuthorizationResultLogger>();
-            
-            //For<IAuthorizationService>().Use<AuthorizationService>();
+
+            //TODO : Default Handler
+            //var authorizationService = For<IAuthorizationService>().Use<AuthorizationService>();
+            //For<IDefaultAuthorizationHandler>().Use<DefaultAuthorizationHandler>();
+            //For<IAuthorizationService>().Use<AuthorizationServiceWithDefaultHandler>()
+            //.Ctor<IAuthorizationService>().Is(authorizationService);
 
             var authorizationService = For<IAuthorizationService>().Use<AuthorizationService>();
-            For<IAuthorizationService>().Use<AuthorizationServiceWithDefaultHandler>()
-           .Ctor<IAuthorizationService>().Is(authorizationService);
+            For<IAuthorizationService>().Use<AuthorizationServiceWithDefaultHandler>().Ctor<IAuthorizationService>().Is(authorizationService);
+
 
             ForConcreteType<object>().Configure.Named(nameof(AuthorizationRegistry));
 #if NET462

@@ -52,10 +52,12 @@ namespace SFA.DAS.Authorization.Services
             
             var authorizationResults = await Task.WhenAll(
                 from h in _handlers
-                let o = options.Where(o => o.StartsWith(h.Prefix)).Select(o => o.Replace(h.Prefix, "")).ToList()
+                let o = options.Where(o => o.StartsWith(h.Prefix)).Select(o => o.Replace(h.Prefix, "")).ToList()                
                 select h.GetAuthorizationResult(o, authorizationContext)).ConfigureAwait(false);
 
-            var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors)); 
+            var authorizationResult = new AuthorizationResult(authorizationResults.SelectMany(r => r.Errors));
+
+            //let o = options.Where(o => o.StartsWith(h.Prefix) || o.StartsWith("Default.")).Select(o => o.Replace(h.Prefix, "")).ToList()
 
             return authorizationResult;
         }
