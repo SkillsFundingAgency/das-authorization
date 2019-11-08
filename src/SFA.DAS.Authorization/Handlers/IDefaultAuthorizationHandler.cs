@@ -6,7 +6,7 @@ using SFA.DAS.Authorization.Results;
 namespace SFA.DAS.Authorization.Handlers
 {
     public interface IDefaultAuthorizationHandler
-    {
-        Task<AuthorizationResult> GetDefaultAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext);
+    {        
+        Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext);
     }  
 }

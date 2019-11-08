@@ -7,9 +7,9 @@ namespace SFA.DAS.Authorization.Handlers
 {
     public class DefaultAuthorizationHandler : IDefaultAuthorizationHandler
     {
-        public Task<AuthorizationResult> GetDefaultAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
+        public Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             return Task.FromResult(new AuthorizationResult());
-        }
+        }      
     }
 }

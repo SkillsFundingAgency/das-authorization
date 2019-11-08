@@ -41,7 +41,7 @@ namespace SFA.DAS.Authorization.Services
         {
             var authorizationResult = await _authorizationService.GetAuthorizationResultAsync();
 
-            var defaultAuthorizationResult = await _defaultAuthorizationHandler.GetDefaultAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
+            var defaultAuthorizationResult = await _defaultAuthorizationHandler.GetAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
 
             if (defaultAuthorizationResult != null)
             {

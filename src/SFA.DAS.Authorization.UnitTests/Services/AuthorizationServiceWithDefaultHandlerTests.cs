@@ -71,7 +71,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
             AuthorizationService.Setup(a => a.GetAuthorizationResultAsync()).ReturnsAsync(new AuthorizationResult());
             AuthorizationService.Setup(a => a.IsAuthorized(Options)).Returns(true);
             AuthorizationService.Setup(a => a.IsAuthorizedAsync(Options)).Returns(Task.FromResult(true));            
-            DefaultAuthorizationHandler.Setup(d => d.GetDefaultAuthorizationResult(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+            DefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, AuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
 
             AuthorizationServiceWithDefaultHandler = new AuthorizationServiceWithDefaultHandler(
                                                         AuthorizationContextProvider.Object,
@@ -120,27 +120,10 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizedOptions()
         {
-            DefaultAuthorizationHandler.Setup(d => d.GetDefaultAuthorizationResult(new[] { "Test"} , AuthorizationContext.Object))
+            DefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "Test"} , AuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult());
             
             return this;
         }
-
-        public AuthorizationServiceWithDefaultHandlerTestsFixture SetUnauthorizedOptions()
-        {
-            DefaultAuthorizationHandler.Setup(d => d.GetDefaultAuthorizationResult(new[] { "TestUnAuthorised" }, AuthorizationContext.Object))
-                .ReturnsAsync(new AuthorizationResult().AddError(new Tier2UserAccesNotGranted()));
-            
-            return this;
-        }
-
-    }
-
-    public class Tier2UserAccesNotGranted : AuthorizationError
-    {
-        public Tier2UserAccesNotGranted() : base("Tier2 User permission is not granted")
-        {
-
-        }
-    }
+    }    
 }
