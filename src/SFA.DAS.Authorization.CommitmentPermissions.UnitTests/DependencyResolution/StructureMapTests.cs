@@ -15,7 +15,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.DependencyResolu
         [Test]
         public void AssertConfigurationIsValid()
         {
-            using (var container = new Container(c =>
+            using var container = new Container(c =>
             {
                 c.AddRegistry<AuthorizationRegistry>();
                 c.AddRegistry<CommitmentPermissionsAuthorizationRegistry>();
@@ -23,10 +23,8 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.DependencyResolu
                 c.AddRegistry<MemoryCacheRegistry>();
                 c.AddRegistry<OptionsRegistry>();
                 c.AddRegistry<DefaultRegistry>();
-            }))
-            {
-                container.AssertConfigurationIsValid();
-            }
+            });
+            container.AssertConfigurationIsValid();
         }
 
         private class DefaultRegistry : Registry
