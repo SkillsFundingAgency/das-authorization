@@ -32,22 +32,30 @@ namespace SFA.DAS.Authorization.Services
             await _authorizationService.AuthorizeAsync(options);
         }
 
-        public AuthorizationResult GetAuthorizationResult(params string[] options)
+        public virtual AuthorizationResult GetAuthorizationResult(params string[] options)
         {
             return _authorizationService.GetAuthorizationResult(options);
         }
 
         public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
         {
-            var authorizationResult = await _authorizationService.GetAuthorizationResultAsync();
+            var authorizationTask =  _authorizationService.GetAuthorizationResultAsync();
 
-            var defaultAuthorizationResult = await _defaultAuthorizationHandler.GetAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
+            var defaultAuthorizationTask  =  _defaultAuthorizationHandler.GetAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
+
+            await Task.WhenAll(authorizationTask, defaultAuthorizationTask);
+
+            var authorizationResult = authorizationTask.Result;
+            var defaultAuthorizationResult = defaultAuthorizationTask.Result;
 
             if (defaultAuthorizationResult != null)
             {
-                authorizationResult.Errors.ToList().AddRange(defaultAuthorizationResult.Errors);              
-            }            
-            
+                foreach (var err in defaultAuthorizationResult.Errors)
+                {
+                    authorizationResult.AddError(err);
+                }
+            }
+
             return authorizationResult;
         }
 
