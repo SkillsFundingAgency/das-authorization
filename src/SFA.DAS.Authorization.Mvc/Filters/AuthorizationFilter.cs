@@ -23,10 +23,18 @@ namespace SFA.DAS.Authorization.Mvc.Filters
         {
             var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             var dasAuthorizeAttributes = controllerActionDescriptor.GetDasAuthorizeAttributes();
-
+            var staffAuthorizeAttributes = controllerActionDescriptor.GetStaffAuthorizeAttributes();
+           
+                       
             if (dasAuthorizeAttributes.Count > 0)
             {
+                if (staffAuthorizeAttributes.Count > 0)
+                {
+                    return;
+                }
+
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
+                options.ToList().Add("Default.");
                 var isAuthorized = await _authorizationService.IsAuthorizedAsync(options).ConfigureAwait(false);
 
                 if (!isAuthorized)
@@ -59,9 +67,15 @@ namespace SFA.DAS.Authorization.Mvc.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var dasAuthorizeAttributes = filterContext.ActionDescriptor.GetDasAuthorizeAttributes();
+            var staffAuthorizeAttributes = filterContext.ActionDescriptor.GetStaffAuthorizeAttributes();
 
             if (dasAuthorizeAttributes.Count > 0)
             {
+                if (staffAuthorizeAttributes.Count > 0)
+                {
+                    return;
+                }
+
                 var options = dasAuthorizeAttributes.SelectMany(a => a.Options).ToArray();
                 var isAuthorized = _authorizationService().IsAuthorized(options);
 

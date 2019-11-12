@@ -21,7 +21,8 @@ namespace SFA.DAS.Authorization.DependencyResolution.Microsoft
             return services.AddLogging()
                 .AddMemoryCache()
                 .AddScoped<IAuthorizationContextProvider>(p => new AuthorizationContextCache(p.GetService<T>()))
-                .AddScoped<IAuthorizationService, AuthorizationService>()
+                .AddScoped<IAuthorizationService, AuthorizationService>()   
+                .AddScoped<IAuthorizationService, AuthorizationServiceWithDefaultHandler>()
                 .AddScoped<T>()
                 .AddScoped(p => p.GetService<IAuthorizationContextProvider>().GetAuthorizationContext());
         }
