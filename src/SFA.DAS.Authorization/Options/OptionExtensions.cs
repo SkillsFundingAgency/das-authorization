@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SFA.DAS.Authorization.Options
 {
-    internal static class OptionExtensions
+    public static class OptionExtensions
     {
         public static void EnsureNoAndOptions(this IReadOnlyCollection<string> options)
         {
