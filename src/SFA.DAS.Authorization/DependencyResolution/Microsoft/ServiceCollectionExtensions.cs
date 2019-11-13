@@ -28,11 +28,6 @@ namespace SFA.DAS.Authorization.DependencyResolution.Microsoft
 
             services.Decorate<IAuthorizationService, AuthorizationServiceWithDefaultHandler>();
 
-            services.Scan(scan => scan.FromAssemblyOf<IAuthorizationService>()
-            .AddClasses(c => c.AssignableTo<IAuthorizationService>())            
-            .As<IAuthorizationService>()
-            .WithScopedLifetime());
-
             return services;
         }
 
