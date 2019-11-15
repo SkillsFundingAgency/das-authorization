@@ -15,19 +15,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
     [TestFixture]
     [Parallelizable]
     public class AuthorizationServiceWithDefaultHandlerTests : FluentTest<AuthorizationServiceWithDefaultHandlerTestsFixture>
-    {
-        [Test]
-        public void Authorize_WhenOperationIsAuthorized_ThenShouldNotThrowException()
-        {           
-            Test(
-                //Arrange
-                f => f.SetAuthorizedOptions(),
-                //Act
-                f => f.Authorize(),
-                //Assert
-                f => { });
-        }
-
+    {       
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsAuthorized_ThenShouldReturnTrue()
         {
@@ -63,19 +51,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
                  f => f.IsAuthorized(),
                  //Assert
                  (f, r) => r.Should().BeTrue()); 
-        }
-
-        [Test]
-        public Task AuthorizeAsync_WhenOperationIsAuthorized_ThenShouldNotThrowException()
-        {
-            return TestAsync(
-                    //Arrange
-                    f => f.SetAuthorizedOptions(),
-                    //Act
-                    f => f.AuthorizeAsync(),
-                    //Assert
-                    f => { }); 
-        }
+        }        
 
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsUnauthorized_ThenShouldReturnFalse()
@@ -119,7 +95,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
          
         [Test]
-        public void GetAuthorizationResult_WhenOperationisAuthorized_ThenVerifyMethodCalledOnce()
+        public void GetAuthorizationResult_WhenOperationisAuthorized_ThenVerifyAuthorizationServiceCalledOnce()
         {
             Test(
                 //Arrange
@@ -131,7 +107,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
         }
 
         [Test]
-        public void GetAuthorizationResultAsync_WhenOperationisAuthorized_ThenVerifyMethodCalledOnce()
+        public void GetAuthorizationResultAsync_WhenOperationisAuthorized_ThenVerifyAuthorizationResultAsyncServiceCalledOnce()
         {
             Test(
                 //Arrange
@@ -143,7 +119,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
         }
 
         [Test]
-        public void GetAuthorizationResultAsync_WhenOperationisUnAuthorized_ThenVerifyMethodCalledOnce()
+        public void GetAuthorizationResultAsync_WhenOperationisUnAuthorized_ThenVerifyAuthorizationResultAsyncServiceCalledOnce()
         {
             Test(
                 //Arrange
@@ -157,7 +133,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
 
         [Test]
-        public void AuthorizeAsync_WhenOperationisAuthorized_ThenVerifyMethodCalledOnce()
+        public void AuthorizeAsync_WhenOperationisAuthorized_ThenVerifyAuthorizeAsyncServiceCalledOnce()
         {
             Test(
                 //Arrange
@@ -169,7 +145,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
         }
 
         [Test]
-        public void AuthorizeAsync_WhenOperationisUnAuthorized_ThenVerifyMethodCalledOnce()
+        public void AuthorizeAsync_WhenOperationisUnAuthorized_ThenVerifyAuthorizeAsyncServiceCalledOnce()
         {
             Test(
                 //Arrange
@@ -182,7 +158,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
 
         [Test]
-        public void Authorize_WhenOperationisAuthorized_ThenVerifyMethodCalledOnce()
+        public void Authorize_WhenOperationisAuthorized_ThenVerifyAuthorizeCalledOnce()
         {
             Test(
                 //Act
