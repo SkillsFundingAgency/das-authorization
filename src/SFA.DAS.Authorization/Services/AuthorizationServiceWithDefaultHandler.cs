@@ -39,7 +39,7 @@ namespace SFA.DAS.Authorization.Services
 
         public async Task<AuthorizationResult> GetAuthorizationResultAsync(params string[] options)
         {
-            var authorizationTask =  _authorizationService.GetAuthorizationResultAsync();
+            var authorizationTask =  _authorizationService.GetAuthorizationResultAsync(options);
 
             var defaultAuthorizationTask  =  _defaultAuthorizationHandler.GetAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
 

@@ -4,6 +4,8 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.EmployerFeatures.Errors;
+using SFA.DAS.Authorization.EmployerUserRoles.Errors;
 using SFA.DAS.Authorization.Errors;
 using SFA.DAS.Authorization.Handlers;
 using SFA.DAS.Authorization.Results;
@@ -51,8 +53,8 @@ namespace SFA.DAS.Authorization.UnitTests.Services
                  f => f.IsAuthorized(),
                  //Assert
                  (f, r) => r.Should().BeTrue()); 
-        }        
-
+        } 
+       
         [Test]
         public Task IsAuthorizedAsync_WhenOperationIsUnauthorized_ThenShouldReturnFalse()
         {
@@ -167,6 +169,63 @@ namespace SFA.DAS.Authorization.UnitTests.Services
                 f => f.VerifyAuthorize());
         }
 
+
+        [Test]
+        public Task GetAuthorizationResultAsync_WhenOperationFeatureToggleIsUnauthorized_ThenShouldReturnErrorFromAuthorizationService()
+        {
+            return TestAsync(
+                //Arrange
+                f => f.SetAuthorizationResultAsyncWithEmployerFeatureNotEnabledErrors(),
+                // Act
+                f => f.GetAuthorizationResultAsync(),
+                //Assert
+                (f, r) => r.Should().NotBeNull()
+               .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false
+               && r2.Errors.Count() == 1
+               && r2.HasError<EmployerFeatureNotEnabled>()));
+        }
+
+
+        [Test]
+        public Task GetAuthorizationResultAsync_WhenOperationUserRoleIsUnauthorized_ThenShouldReturnErrorFromAuthorizationAndDefaultAuthorizationService()
+        {
+            return TestAsync(
+                //Arrange
+                f => f.SetAuthorizationResultAsyncWithEmployerUserRoleNotAuthorizedErrors(),
+                // Act
+                f => f.GetAuthorizationResultAsync(),
+                //Assert
+                (f, r) => r.Should().NotBeNull()
+               .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized == false
+               && r2.Errors.Count() == 1
+               && r2.HasError<EmployerUserRoleNotAuthorized>()));
+        }
+
+
+        [Test]
+        public void IsAuthorized_WhenFeatureToggleFeatureIsNotEnabled_ThenShouldReturnFalse()
+        {
+            Test(
+                 //Arrange
+                 f => f.SetAuthorizedOptionsWithEmployerFeatureNotEnabled(),
+                 //Act
+                 f => f.IsAuthorized(),
+                 //Assert
+                 (f, r) => r.Should().BeFalse());
+        }
+
+        [Test]
+        public void IsAuthorized_WhenSetAuthorizedOptionsWithEmployerUserRoleNotAuthorized_ThenShouldReturnFalse()
+        {
+            Test(
+                 //Arrange
+                 f => f.SetAuthorizedOptionsWithEmployerUserRoleNotAuthorized(),
+                 //Act
+                 f => f.IsAuthorized(),
+                 //Assert
+                 (f, r) => r.Should().BeFalse());
+        }
+
     }
 
     public class AuthorizationServiceWithDefaultHandlerTestsFixture
@@ -239,6 +298,8 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizedOptions()
         {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult());
+
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
 
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "Test"} , MockAuthorizationContext.Object))
@@ -251,7 +312,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
         {
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult().AddError(new TestTier2UserAccesNotGranted()));
 
-            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync()).ReturnsAsync(new AuthorizationResult().AddError(new TestEmployerUserRoleNotAuthorized()));
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new TestEmployerUserRoleNotAuthorized()));
 
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "TestUnAuthorised" }, MockAuthorizationContext.Object))
                 .ReturnsAsync(new AuthorizationResult().AddError(new TestTier2UserAccesNotGranted()));
@@ -262,6 +323,8 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture SetUnauthorizedOptionsforDefaultHandler()
         {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult());
+
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult().AddError(new TestTier2UserAccesNotGranted()));
                         
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "TestUnAuthorised" }, MockAuthorizationContext.Object))
@@ -279,7 +342,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizationResultAsync()
         {
-            MockAuthorizationService.Setup(x => x.GetAuthorizationResultAsync()).ReturnsAsync(new AuthorizationResult());
+            MockAuthorizationService.Setup(x => x.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult());
 
             MockDefaultAuthorizationHandler.Setup(x => x.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
 
@@ -291,11 +354,54 @@ namespace SFA.DAS.Authorization.UnitTests.Services
         {
             MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult().AddError(new TestTier2UserAccesNotGranted()));
 
-            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync()).ReturnsAsync(new AuthorizationResult().AddError(new TestEmployerUserRoleNotAuthorized()));
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new TestEmployerUserRoleNotAuthorized()));
                        
             return this;
         }
 
+        public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizedOptionsWithEmployerFeatureNotEnabled()
+        {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new EmployerFeatureNotEnabled()));
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "Test" }, MockAuthorizationContext.Object))
+                .ReturnsAsync(new AuthorizationResult());
+
+            return this;
+        }
+
+        public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizedOptionsWithEmployerUserRoleNotAuthorized()
+        {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new EmployerUserRoleNotAuthorized()));
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(new[] { "Test" }, MockAuthorizationContext.Object))
+                .ReturnsAsync(new AuthorizationResult());
+
+            return this;
+        }
+
+
+        public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizationResultAsyncWithEmployerFeatureNotEnabledErrors()
+        {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new EmployerFeatureNotEnabled()));
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+            
+            return this;
+        }
+
+
+        public AuthorizationServiceWithDefaultHandlerTestsFixture SetAuthorizationResultAsyncWithEmployerUserRoleNotAuthorizedErrors()
+        {
+            MockAuthorizationService.Setup(a => a.GetAuthorizationResultAsync(Options)).ReturnsAsync(new AuthorizationResult().AddError(new EmployerUserRoleNotAuthorized()));
+
+            MockDefaultAuthorizationHandler.Setup(d => d.GetAuthorizationResult(Options, MockAuthorizationContext.Object)).ReturnsAsync(new AuthorizationResult());
+
+            return this;
+        }
 
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture VerifyAuthorizationService()
@@ -308,7 +414,7 @@ namespace SFA.DAS.Authorization.UnitTests.Services
 
         public AuthorizationServiceWithDefaultHandlerTestsFixture VerifyAuthorizationResultAsyncService()
         {
-            MockAuthorizationService.Verify(x => x.GetAuthorizationResultAsync(), Times.Once);
+            MockAuthorizationService.Verify(x => x.GetAuthorizationResultAsync(Options), Times.Once);
 
             MockDefaultAuthorizationHandler.Verify(x => x.GetAuthorizationResult(Options, MockAuthorizationContext.Object), Times.Once);
 
