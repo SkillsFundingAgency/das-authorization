@@ -10,8 +10,10 @@ namespace SFA.DAS.Authorization.EmployerFeatures.Models
     {
         public List<long> AccountWhitelist { get; set; } = new List<long>();
         public List<string> EmailWhitelist { get; set; } = new List<string>();
+        public long? EnabledByAgreementVersion { get; set; }
 
         public bool IsWhitelistEnabled => IsEmailWhitelistEnabled || IsAccountWhitelistEnabled;
+        
         private bool IsEmailWhitelistEnabled => EmailWhitelist != null && EmailWhitelist.Count > 0;
         private bool IsAccountWhitelistEnabled => AccountWhitelist != null && AccountWhitelist.Count > 0;
 
