@@ -23,9 +23,10 @@ namespace SFA.DAS.Authorization.Logging
         public async Task<AuthorizationResult> GetAuthorizationResult(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             var authorizationResult = await _authorizationHandler.GetAuthorizationResult(options, authorizationContext).ConfigureAwait(false);
-            authorizationContext.TryGet("AccountId", out string AccountId);
-            authorizationContext.TryGet("HashedAccountId", out string HashedAccountId);
-            var message = $"Finished running handler with prefix '{Prefix}' for options '{string.Join(", ", options)}' and context  AccountId: '{AccountId}' HashedAccountId: '{HashedAccountId}' with result '{authorizationResult}'";
+            authorizationContext.TryGet("AccountId", out string accountId);
+            authorizationContext.TryGet("HashedAccountId", out string hashedAccountId);
+            authorizationContext.TryGet("UserRef", out string userRef);
+            var message = $"Finished running handler with prefix '{Prefix}' for options '{string.Join(", ", options)}' and context  AccountId: '{accountId}' HashedAccountId: '{hashedAccountId}' UserRef: '{userRef}'  with result '{authorizationResult}'";
 
             if (authorizationResult.IsAuthorized)
             {
