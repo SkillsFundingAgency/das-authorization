@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,7 @@ namespace SFA.DAS.Authorization.Logging
             authorizationContext.TryGet("AccountId", out long? accountId);
             accountId = accountId.HasValue ? accountId : 0;
             authorizationContext.TryGet("HashedAccountId", out string hashedAccountId);
-            authorizationContext.TryGet("UserRef", out string userRef);
+            authorizationContext.TryGet("UserRef", out Guid userRef);
             var message = $"Finished running handler with prefix '{Prefix}' for options '{string.Join(", ", options)}' and context  AccountId: '{accountId }' HashedAccountId: '{hashedAccountId}' UserRef: '{userRef}'  with result '{authorizationResult}'";
 
             if (authorizationResult.IsAuthorized)
