@@ -7,7 +7,7 @@ namespace SFA.DAS.Authorization.Mvc.Filters
 {
     public class UnauthorizedAccessExceptionFilter : IExceptionFilter
     {
-        public void OnException(ExceptionContext filterContext)
+        public virtual void OnException(ExceptionContext filterContext)
         {
             if (filterContext.Exception is UnauthorizedAccessException)
             {
