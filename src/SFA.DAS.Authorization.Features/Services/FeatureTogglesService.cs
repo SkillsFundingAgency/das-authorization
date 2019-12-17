@@ -13,7 +13,14 @@ namespace SFA.DAS.Authorization.Features.Services
 
         public FeatureTogglesService(TConfiguration configuration)
         {
-            _featureToggles = new ConcurrentDictionary<string, TFeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
+            if (configuration?.FeatureToggles == null)
+            {
+                _featureToggles = new ConcurrentDictionary<string, TFeatureToggle>();
+            }
+            else
+            {
+                _featureToggles = new ConcurrentDictionary<string, TFeatureToggle>(configuration.FeatureToggles.ToDictionary(t => t.Feature));
+            }
         }
 
         public TFeatureToggle GetFeatureToggle(string feature)
