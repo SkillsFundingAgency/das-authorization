@@ -19,6 +19,12 @@ namespace SFA.DAS.Authorization.Features.UnitTests.Services
         }
         
         [Test]
+        public void GetFeatureToggle_WhenFeatureConfigurationIsNull_ThenShouldReturnDisabledFeatureToggle()
+        {
+            Test(f => f.SetFeatureConfigurationToNull().GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.Match<FeatureToggle>(t => t.Feature == f.Feature && t.IsEnabled == false));
+        }
+
+        [Test]
         public void GetFeatureToggle_WhenFeatureToggleDoesNotExistForFeature_ThenShouldReturnDisabledFeatureToggle()
         {
             Test(f => f.GetFeatureToggle(), (f, r) => r.Should().NotBeNull().And.Match<FeatureToggle>(t => t.Feature == f.Feature && t.IsEnabled == false));
@@ -45,6 +51,12 @@ namespace SFA.DAS.Authorization.Features.UnitTests.Services
             FeatureToggleService = new FeatureTogglesService<FeaturesConfiguration, FeatureToggle>(FeaturesConfiguration);
             
             return FeatureToggleService.GetFeatureToggle(Feature);
+        }
+
+        public FeatureTogglesServiceTestsFixture SetFeatureConfigurationToNull()
+        {
+            FeaturesConfiguration = null;
+            return this;
         }
 
         public FeatureTogglesServiceTestsFixture SetFeatureToggle()
