@@ -31,49 +31,73 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingCohortId_ThenShouldThrowKeyNotFoundException()
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingCohortIdAndApprenticeshipId_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingCohortId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetAccessCohortOption().SetAuthorizationContextMissingCohortIdAndApprenticeshipId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
         public Task Then_The_AuthorizationResult_Is_Returned_When_No_CohortId_And_Set_To_Ignore_Missing_Params()
         {
-            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetAuthorizationContextMissingCohortId().SetPermissionGrantedFromNoCohort(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetAuthorizationContextMissingCohortIdAndApprenticeshipId().SetPermissionGrantedFromNoCohort(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingParty_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingParty(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetAccessCohortOption().SetAuthorizationContextMissingParty(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
         
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingPartyId_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingPartyId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetAccessCohortOption().SetAuthorizationContextMissingPartyId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
-        
+
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetAccessCohortOption().SetCohortAuthorizationContextValues().SetCohortPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsNotGrantedAndAllowedEmptyCohort_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetAccessCohortAndAllowEmptyCohortId().SetCohortAuthorizationContextValues().SetCohortPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<CommitmentPermissionNotGranted>()));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+            return TestAsync(f => f.SetAccessCohortOption().SetCohortAuthorizationContextValues().SetCohortPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
                 .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<CommitmentPermissionNotGranted>()));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessApprenticeshipPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetAccessApprenticeshipOption().SetApprenticeshipAuthorizationContextValues().SetApprenticeshipPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndAccessApprenticeshipPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetAccessApprenticeshipOption().SetApprenticeshipAuthorizationContextValues().SetApprenticeshipPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ApprenticeshipPermissionNotGranted>()));
+        }
+
+        [Test]
+        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndBothAccessApprenticeshipPermissionAndAccessCohortPermissionAreGranted_ThenShouldReturnAuthorizedAuthorizationResultForApprenticeshipPermission()
+        {
+            return TestAsync(f => f.SetAccessCohortOption().SetAccessApprenticeshipOption()
+                .SetCohortAuthorizationContextValues().SetApprenticeshipAuthorizationContextValues()
+                .SetCohortPermissionGranted(true).SetApprenticeshipPermissionGranted(true), 
+                f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
     }
 
@@ -85,6 +109,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
         public Mock<ICommitmentPermissionsApiClient> CommitmentPermissionsApiClient { get; set; }
         
         public const long CohortId = 1L;
+        public const long ApprenticeshipId = 1010L;
         public const Party Party = CommitmentsV2.Types.Party.Employer;
         public const long PartyId = 2;
 
@@ -122,15 +147,21 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
             return this;
         }
 
-
-        public AuthorizationHandlerTestsFixture SetOption()
+        public AuthorizationHandlerTestsFixture SetAccessCohortOption()
         {
             Options.AddRange(new [] { CommitmentOperation.AccessCohortOption });
             
             return this;
         }
 
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingCohortId()
+        public AuthorizationHandlerTestsFixture SetAccessApprenticeshipOption()
+        {
+            Options.AddRange(new[] { CommitmentOperation.AccessApprenticeshipOption });
+
+            return this;
+        }
+
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingCohortIdAndApprenticeshipId()
         {
             AuthorizationContext.Set(AuthorizationContextKey.Party, Party);
             AuthorizationContext.Set(AuthorizationContextKey.PartyId, PartyId);
@@ -154,19 +185,27 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
             return this;
         }
         
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long cohortId = CohortId, Party party = Party, long partyId = PartyId)
+        public AuthorizationHandlerTestsFixture SetCohortAuthorizationContextValues(long cohortId = CohortId, Party party = Party, long partyId = PartyId)
         {
             AuthorizationContext.AddCommitmentPermissionValues(cohortId, party, partyId);
             
             return this;
         }
 
+        public AuthorizationHandlerTestsFixture SetApprenticeshipAuthorizationContextValues(long apprenticeshipId = ApprenticeshipId, Party party = Party, long partyId = PartyId)
+        {
+            AuthorizationContext.AddApprenticeshipPermissionValues(apprenticeshipId, party, partyId);
+
+            return this;
+        }
+
+
         public AuthorizationHandlerTestsFixture SetPermissionGrantedFromNoCohort(bool result)
         {
             return this;
         }
 
-        public AuthorizationHandlerTestsFixture SetPermissionGranted(bool result)
+        public AuthorizationHandlerTestsFixture SetCohortPermissionGranted(bool result)
         {            
             CommitmentPermissionsApiClient.Setup(c => c.CanAccessCohort(
                     It.Is<CohortAccessRequest>(r =>
@@ -176,6 +215,19 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Handlers
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(result);
             
+            return this;
+        }
+
+        public AuthorizationHandlerTestsFixture SetApprenticeshipPermissionGranted(bool result)
+        {
+            CommitmentPermissionsApiClient.Setup(c => c.CanAccessApprenticeship(
+                    It.Is<ApprenticeshipAccessRequest>(r =>
+                        r.ApprenticeshipId == ApprenticeshipId &&
+                        r.Party == Party &&
+                        r.PartyId == PartyId),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
             return this;
         }
     }

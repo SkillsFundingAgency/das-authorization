@@ -18,5 +18,10 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
         {
             return _restClient.Get<bool>("api/authorization/access-cohort", request, cancellationToken);
         }
+
+        public Task<bool> CanAccessApprenticeship(ApprenticeshipAccessRequest request, CancellationToken cancellationToken = default)
+        {
+            return _restClient.Get<bool>("api/authorization/access-apprenticeship", request, cancellationToken);
+        }
     }
 }

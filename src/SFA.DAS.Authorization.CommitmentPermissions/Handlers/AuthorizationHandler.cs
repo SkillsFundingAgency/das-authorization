@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using SFA.DAS.Authorization.CommitmentPermissions.Options;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
-using SFA.DAS.Authorization.Options;
 using SFA.DAS.Authorization.Results;
 using SFA.DAS.CommitmentsV2.Api.Types.Requests;
 
@@ -42,7 +40,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
                         return authorizationResult;
                     }
                 }
-
                 var values = authorizationContext.GetCommitmentPermissionValues();
 
                 foreach (var operation in operations)
@@ -50,6 +47,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
                     switch (operation)
                     {
                         case Operation.AccessCohort:
+
                             var canAccessCohortRequest = new CohortAccessRequest {
                                 CohortId = values.CohortId,
                                 Party = values.Party,
@@ -61,6 +59,23 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
                             if (!canAccessCohort)
                             {
                                 authorizationResult.AddError(new CommitmentPermissionNotGranted());
+                            }
+
+                            break;
+
+                        case Operation.AccessApprenticeship:
+
+                            var canAccessRequest = new ApprenticeshipAccessRequest {
+                                ApprenticeshipId = values.ApprenticeshipId,
+                                Party = values.Party,
+                                PartyId = values.PartyId
+                            };
+
+                            var canAccessApprenticeship = await _commitmentsApiClient.CanAccessApprenticeship(canAccessRequest).ConfigureAwait(false);
+
+                            if (!canAccessApprenticeship)
+                            {
+                                authorizationResult.AddError(new ApprenticeshipPermissionNotGranted());
                             }
 
                             break;
