@@ -133,7 +133,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.Caching
 
             if (apprenticeshipId != 0)
             {
-                authorizationContext.AddCommitmentPermissionValues(cohortId, party, partyId);
+                authorizationContext.AddApprenticeshipPermissionValues(apprenticeshipId, party, partyId);
             }
 
             return new CacheKey(options, authorizationContext);
