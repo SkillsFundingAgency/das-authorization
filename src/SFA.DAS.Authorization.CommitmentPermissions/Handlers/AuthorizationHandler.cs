@@ -40,7 +40,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Handlers
                         return authorizationResult;
                     }
                 }
-                var values = authorizationContext.GetCommitmentPermissionValues();
+                var values = authorizationContext.GetPermissionValues();
 
                 foreach (var operation in operations)
                 {

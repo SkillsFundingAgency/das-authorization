@@ -20,7 +20,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Caching
         {
             Options = options;
             
-            if (authorizationContext.TryGetCommitmentPermissionValues(out var cohortId, out var apprenticeshipId, out var party, out var partyId))
+            if (authorizationContext.TryGetPermissionValues(out var cohortId, out var apprenticeshipId, out var party, out var partyId))
             {
                 CohortId = cohortId;
                 ApprenticeshipId = apprenticeshipId;
