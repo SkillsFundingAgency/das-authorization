@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Authorization.CommitmentPermissions.Context;
 using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Options;
 using SFA.DAS.CommitmentsV2.Types;
 
@@ -11,18 +10,20 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Caching
     {
         public IReadOnlyCollection<string> Options { get; }
         public long CohortId { get; }
+        public long ApprenticeshipId { get; }
         public Party Party { get; }
         public long PartyId { get; }
-        
+
         private readonly int _hashCode;
 
         public CacheKey(IReadOnlyCollection<string> options, IAuthorizationContext authorizationContext)
         {
             Options = options;
             
-            if (authorizationContext.TryGetCommitmentPermissionValues(out var cohortId, out var party, out var partyId))
+            if (authorizationContext.TryGetPermissionValues(out var cohortId, out var apprenticeshipId, out var party, out var partyId))
             {
                 CohortId = cohortId;
+                ApprenticeshipId = apprenticeshipId;
                 Party = party;
                 PartyId = partyId;
             }
@@ -36,7 +37,8 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Caching
                    other.Options.IsSameAs(Options) &&
                    other.Party == Party &&
                    other.PartyId == PartyId &&
-                   other.CohortId == CohortId;
+                   other.CohortId == CohortId &&
+                   other.ApprenticeshipId == ApprenticeshipId;
         }
 
         public override int GetHashCode()
@@ -73,6 +75,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Caching
                 hash = (hash * 16777619) ^ Party.GetHashCode();
                 hash = (hash * 16777619) ^ PartyId.GetHashCode();
                 hash = (hash * 16777619) ^ CohortId.GetHashCode();
+                hash = (hash * 16777619) ^ ApprenticeshipId.GetHashCode();
                 
                 if (Options != null)
                 {

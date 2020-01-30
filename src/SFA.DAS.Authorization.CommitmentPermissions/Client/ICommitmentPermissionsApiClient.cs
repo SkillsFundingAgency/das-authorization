@@ -7,5 +7,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
     public interface ICommitmentPermissionsApiClient
     {
         Task<bool> CanAccessCohort(CohortAccessRequest request, CancellationToken cancellationToken = default);
+        Task<bool> CanAccessApprenticeship(ApprenticeshipAccessRequest request, CancellationToken cancellationToken = default);
     }
 }
