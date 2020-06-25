@@ -10,7 +10,7 @@ namespace SFA.DAS.Authorization.Mvc.Extensions
         public static void AddAuthorization(this MvcOptions mvcOptions)
         {
             mvcOptions.Filters.Add<AuthorizationFilter>(int.MaxValue);
-            mvcOptions.ModelBinderProviders.Insert(int.MaxValue, new AuthorizationModelBinderProvider());
+            mvcOptions.ModelBinderProviders.Insert(int.MaxValue-1, new AuthorizationModelBinderProvider());
         }
     }
 }
