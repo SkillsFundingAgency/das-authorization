@@ -1,19 +1,25 @@
 ﻿#if NETCOREAPP2_0
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.Mvc.Attributes;
 
 namespace SFA.DAS.Authorization.Mvc.ModelBinding
 {
     public class AuthorizationModelBinder : IModelBinder
     {
         private readonly IModelBinder _fallbackModelBinder;
+        private readonly IModelBinder _errorSuppresArgumentExceptionBinder;
 
-        public AuthorizationModelBinder(IModelBinder fallbackModelBinder)
+        public AuthorizationModelBinder(IModelBinder fallbackModelBinder, IModelBinder errorSuppresArgumentExceptionBinder = null)
         {
             _fallbackModelBinder = fallbackModelBinder;
+            _errorSuppresArgumentExceptionBinder = errorSuppresArgumentExceptionBinder;
         }
+
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -26,6 +32,15 @@ namespace SFA.DAS.Authorization.Mvc.ModelBinding
                 bindingContext.Result = ModelBindingResult.Success(value);
 
                 return Task.CompletedTask;
+            }
+            else if (_errorSuppresArgumentExceptionBinder != null)
+            {
+                bool isErrroSuppressProperty = ((bindingContext.ModelMetadata as DefaultModelMetadata)?.Attributes?.PropertyAttributes?.Where(x => x.GetType() == typeof(ErrorSuppressArgumentExceptionAttribute))?.Count() ?? 0) > 0 ;
+                if (isErrroSuppressProperty)
+                {
+                    _errorSuppresArgumentExceptionBinder.BindModelAsync(bindingContext);
+                    return Task.CompletedTask;
+                }
             }
 
             return _fallbackModelBinder.BindModelAsync(bindingContext);

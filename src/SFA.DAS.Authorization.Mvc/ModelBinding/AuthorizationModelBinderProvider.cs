@@ -15,7 +15,8 @@ namespace SFA.DAS.Authorization.Mvc.ModelBinding
             {
                 var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
                 var simpleTypeModelBinder = new SimpleTypeModelBinder(context.Metadata.ModelType, loggerFactory);
-                var authorizationModelBinder = new AuthorizationModelBinder(simpleTypeModelBinder);
+                var errorSuppressModelBinder = new ErrorSuppressModelBinder();
+                var authorizationModelBinder = new AuthorizationModelBinder(simpleTypeModelBinder, errorSuppressModelBinder);
 
                 return authorizationModelBinder;
             }
