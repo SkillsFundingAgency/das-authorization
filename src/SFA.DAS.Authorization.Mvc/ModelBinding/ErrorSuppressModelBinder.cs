@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETCOREAPP2_0
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -25,3 +26,4 @@ namespace SFA.DAS.Authorization.Mvc.ModelBinding
         }
     }
 }
+#endif
