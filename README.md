@@ -101,8 +101,8 @@ c.AddRegistry<ProviderPermissionsAuthorizationRegistry>();
     "FeatureToggles": [{
         "Feature": "ProviderRelationships",
         "IsEnabled": true,
-      	"AccountWhitelist": [32967,28952],
-		"EmailWhitelist" : ["foo1@foo.com", "foo2@foo.com"]
+      	"AccountWhitelist": [11111,22222],
+	"EmailWhitelist" : ["foo1@foo.com", "foo2@foo.com"]
     }]
 }
 ```
