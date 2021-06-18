@@ -2,7 +2,7 @@ using SFA.DAS.Http.Configuration;
 
 namespace SFA.DAS.Authorization.CommitmentPermissions.Configuration
 {
-    public class CommitmentPermissionsApiClientConfiguration : IAzureActiveDirectoryClientConfiguration
+    public class CommitmentPermissionsApiClientConfiguration : IManagedIdentityClientConfiguration
     {
         public string ApiBaseUrl { get; set; }
         public string Tenant { get; set; }
