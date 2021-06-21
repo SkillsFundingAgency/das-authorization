@@ -17,7 +17,7 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.Client
 
         public ICommitmentPermissionsApiClient CreateClient()
         {
-            var httpClientFactory = new AzureActiveDirectoryHttpClientFactory(_configuration, _loggerFactory);
+            var httpClientFactory = new ManagedIdentityHttpClientFactory(_configuration, _loggerFactory);
             var httpClient = httpClientFactory.CreateHttpClient();
             var restHttpClient = new RestHttpClient(httpClient);
             var apiClient = new CommitmentPermissionsApiClient(restHttpClient);

@@ -19,7 +19,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="4.1.763" />
-        <PackageReference Include="SFA.DAS.Http" Version="3.2.5" />
+        <PackageReference Include="SFA.DAS.Http" Version="3.2.62" />
     </ItemGroup>
 
     <ItemGroup>

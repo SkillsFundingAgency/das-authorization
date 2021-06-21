@@ -36,9 +36,6 @@ namespace SFA.DAS.Authorization.CommitmentPermissions.UnitTests.DependencyResolu
                 For<CommitmentPermissionsApiClientConfiguration>().Use(new CommitmentPermissionsApiClientConfiguration
                 {
                     ApiBaseUrl = "https://localhost",
-                    Tenant = "",
-                    ClientId = "",
-                    ClientSecret = "",
                     IdentifierUri = ""
                 });
             }
