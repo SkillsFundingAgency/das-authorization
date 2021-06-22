@@ -7,7 +7,7 @@
         
         <Authors>DAS</Authors>
         <Description>Authorization integration for SFA.DAS</Description>
-        <PackageLicenseUrl>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageLicense>https://github.com/SkillsFundingAgency/das-authorization/blob/master/LICENSE</PackageLicense>
         <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-authorization</PackageProjectUrl>
         
         <EmbedUntrackedSources>false</EmbedUntrackedSources>
