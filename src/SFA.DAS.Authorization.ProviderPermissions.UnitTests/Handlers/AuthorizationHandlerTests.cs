@@ -9,14 +9,14 @@ using NUnit.Framework;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Extensions;
 using SFA.DAS.Authorization.Handlers;
+using SFA.DAS.Authorization.ProviderPermissions.Client;
 using SFA.DAS.Authorization.ProviderPermissions.Context;
 using SFA.DAS.Authorization.ProviderPermissions.Errors;
 using SFA.DAS.Authorization.ProviderPermissions.Handlers;
 using SFA.DAS.Authorization.ProviderPermissions.Options;
+using SFA.DAS.Authorization.ProviderPermissions.Types;
 using SFA.DAS.Authorization.Results;
-using SFA.DAS.ProviderRelationships.Api.Client;
-using SFA.DAS.ProviderRelationships.Types.Dtos;
-using SFA.DAS.ProviderRelationships.Types.Models;
+
 using SFA.DAS.Testing;
 
 namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
@@ -28,45 +28,57 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
         [Test]
         public Task GetAuthorizationResult_WhenOptionsAreNotAvailable_ThenShouldReturnValidAuthorizationResult()
         {
-            return TestAsync(f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return TestAsync(f => f.GetAuthorizationResult(),
+                (f, r) => r.Should().NotBeNull().And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenAndedOptionsAreAvailable_ThenShouldThrowNotImplementedException()
         {
-            return TestExceptionAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
+            return TestExceptionAsync(f => f.SetAndedOptions(), f => f.GetAuthorizationResult(),
+                (f, r) => r.Should().Throw<NotImplementedException>());
         }
 
         [Test]
         public Task GetAuthorizationResult_WhenOredOptionIsAvailable_ThenShouldThrowNotImplementedException()
         {
-            return TestExceptionAsync(f => f.SetOredOption(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<NotImplementedException>());
-        }
-        
-        [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingAccountLegalEntityId_ThenShouldThrowKeyNotFoundException()
-        {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingAccountLegalEntityId(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+            return TestExceptionAsync(f => f.SetOredOption(), f => f.GetAuthorizationResult(),
+                (f, r) => r.Should().Throw<NotImplementedException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingUkprn_ThenShouldThrowKeyNotFoundException()
+        public Task
+            GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingAccountLegalEntityId_ThenShouldThrowKeyNotFoundException()
         {
-            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingUkprn(), f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
-        }
-        
-        [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
-        {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
-                .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingAccountLegalEntityId(),
+                f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
         }
 
         [Test]
-        public Task GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        public Task
+            GetAuthorizationResult_WhenOptionsAreAvailableAndAuthorizationContextIsMissingUkprn_ThenShouldThrowKeyNotFoundException()
         {
-            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false), f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
-                .And.Match<AuthorizationResult>(r2 => !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderPermissionNotGranted>()));
+            return TestExceptionAsync(f => f.SetOption().SetAuthorizationContextMissingUkprn(),
+                f => f.GetAuthorizationResult(), (f, r) => r.Should().Throw<KeyNotFoundException>());
+        }
+
+        [Test]
+        public Task
+            GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsGranted_ThenShouldReturnAuthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(true),
+                f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                    .And.Match<AuthorizationResult>(r2 => r2.IsAuthorized));
+        }
+
+        [Test]
+        public Task
+            GetAuthorizationResult_WhenOptionsAreAvailableAndContextIsAvailableAndCreateCohortPermissionIsNotGranted_ThenShouldReturnUnauthorizedAuthorizationResult()
+        {
+            return TestAsync(f => f.SetOption().SetAuthorizationContextValues().SetPermissionGranted(false),
+                f => f.GetAuthorizationResult(), (f, r) => r.Should().NotBeNull()
+                    .And.Match<AuthorizationResult>(r2 =>
+                        !r2.IsAuthorized && r2.Errors.Count() == 1 && r2.HasError<ProviderPermissionNotGranted>()));
         }
     }
 
@@ -76,10 +88,10 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
         public IAuthorizationContext AuthorizationContext { get; set; }
         public IAuthorizationHandler Handler { get; set; }
         public Mock<IProviderRelationshipsApiClient> ProviderRelationshipsApiClient { get; set; }
-        
+
         public const long AccountLegalEntityId = 22L;
         public const long Ukprn = 333L;
-        
+
         public AuthorizationHandlerTestsFixture()
         {
             Options = new List<string>();
@@ -96,57 +108,58 @@ namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Handlers
         public AuthorizationHandlerTestsFixture SetAndedOptions()
         {
             Options.AddRange(new[] { ProviderOperation.CreateCohortOption, "TickleCohort" });
-            
+
             return this;
         }
 
         public AuthorizationHandlerTestsFixture SetOredOption()
         {
             Options.Add($"{ProviderOperation.CreateCohortOption},{ProviderOperation.CreateCohortOption}");
-            
+
             return this;
         }
-        
+
         public AuthorizationHandlerTestsFixture SetOption()
         {
-            Options.AddRange(new [] { ProviderOperation.CreateCohortOption });
-            
+            Options.AddRange(new[] { ProviderOperation.CreateCohortOption });
+
             return this;
         }
 
         public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingAccountLegalEntityId()
         {
             AuthorizationContext.Set(AuthorizationContextKey.Ukprn, Ukprn);
-            
+
             return this;
         }
-        
+
         public AuthorizationHandlerTestsFixture SetAuthorizationContextMissingUkprn()
         {
             AuthorizationContext.Set(AuthorizationContextKey.AccountLegalEntityId, AccountLegalEntityId);
-            
+
             return this;
         }
-        
-        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(long accountLegalEntityId = AccountLegalEntityId, long ukprn = Ukprn)
+
+        public AuthorizationHandlerTestsFixture SetAuthorizationContextValues(
+            long accountLegalEntityId = AccountLegalEntityId, long ukprn = Ukprn)
         {
             AuthorizationContext.AddProviderPermissionValues(accountLegalEntityId, ukprn);
-            
+
             return this;
         }
 
         public AuthorizationHandlerTestsFixture SetPermissionGranted(bool result)
         {
             var option = Options.Select(o => o.ToEnum<Operation>()).Single();
-            
+
             ProviderRelationshipsApiClient.Setup(c => c.HasPermission(
-                    It.Is<HasPermissionRequest>(r => 
+                    It.Is<HasPermissionRequest>(r =>
                         r.AccountLegalEntityId == AccountLegalEntityId &&
                         r.Ukprn == Ukprn &&
-                        r.Operation == option),
+                        r.Operations == option),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(result);
-            
+
             return this;
         }
     }

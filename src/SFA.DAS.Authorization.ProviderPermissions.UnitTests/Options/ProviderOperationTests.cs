@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.Authorization.ProviderPermissions.Options;
-using SFA.DAS.ProviderRelationships.Types.Models;
+using SFA.DAS.Authorization.ProviderPermissions.Types;
+
 
 namespace SFA.DAS.Authorization.ProviderPermissions.UnitTests.Options
 {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.ProviderPermissions.Handlers;
-using SFA.DAS.ProviderRelationships.Api.Client.DependencyResolution.Microsoft;
+using SFA.DAS.AutoConfiguration.DependencyResolution;
 
 namespace SFA.DAS.Authorization.ProviderPermissions.DependencyResolution.Microsoft
 {
@@ -10,7 +10,8 @@ namespace SFA.DAS.Authorization.ProviderPermissions.DependencyResolution.Microso
         public static IServiceCollection AddProviderPermissionsAuthorization(this IServiceCollection services)
         {
             return services.AddAuthorizationHandler<AuthorizationHandler>()
-                .AddProviderRelationshipsApiClient();
+                .AddAutoConfiguration()
+                .AddHttp();
         }
     }
 }
