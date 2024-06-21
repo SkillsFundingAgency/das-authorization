@@ -43,7 +43,7 @@ namespace SFA.DAS.Authorization.Services
 
             var defaultAuthorizationTask  =  _defaultAuthorizationHandler.GetAuthorizationResult(options, _authorizationContextProvider.GetAuthorizationContext());
 
-            await Task.WhenAll(authorizationTask, defaultAuthorizationTask);
+            await Task.WhenAll(authorizationTask, defaultAuthorizationTask).ConfigureAwait(false);
 
             var authorizationResult = authorizationTask.Result;
             var defaultAuthorizationResult = defaultAuthorizationTask.Result;
