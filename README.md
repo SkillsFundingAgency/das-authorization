@@ -1,6 +1,6 @@
 # SFA.DAS.Authorization
 
-[![Build status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231&metric=alert_status)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231&metric=alert_status)
+[![Build status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FShared%20Packages%2Fdas-authorization?branchName=master)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FShared%20Packages%2Fdas-authorization?branchName=master)
 [![NuGet Badge](https://img.shields.io/nuget/v/SFA.DAS.Authorization.svg)](https://img.shields.io/nuget/v/SFA.DAS.Authorization.svg/)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
