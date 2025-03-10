@@ -1,5 +1,17 @@
 # SFA.DAS.Authorization
 
+[![Build status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231)
+[![NuGet Badge](https://www.nuget.org/packages/SFA.DAS.Authorization)](https://www.nuget.org/packages/SFA.DAS.Authorization/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
+
+The SFA.DAS.Authorization package provides a way to aggregate multiple authorization concerns into a single call. It also provides cross cutting authorization infrastructure for Mvc and WebApi.
+
+The project supports various configurations depending on the application's requirements, including:
+•	MVC Core: Integration with ASP.NET Core MVC.
+•	MVC: Integration with traditional ASP.NET MVC.
+•	WebApi: Integration with ASP.NET WebApi.
+•	Dependency Injection: Extensions for Microsoft Dependency Injection and StructureMap.
+
 This package includes:
 
 * Facade to aggregate multiple authorization concerns into a single call including:
@@ -11,6 +23,18 @@ This package includes:
   * Provider permissions - Provider permission checks for an organisation.
 * Cross cutting authorization infrastructure for Mvc and WebApi.
 * Model binding infrastructure for Mvc and WebApi.
+
+## Installation
+
+### Pre-Requisites
+* A clone of this repository(https://github.com/SkillsFundingAgency/das-authorization)
+* A code editor that supports .Net standard 2.0 & .Net4.5 and above
+* A storage emulator like Azurite (https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
+* An Azure Active Directory account with the appropriate roles as per the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master)
+
+## Integration:
+
+The project includes attributes like DasAuthorizeAttribute for MVC Core, MVC, and WebApi to ensure user authentication and authorization at the controller level. It also supports model binding to automatically set authorization context values.
 
 ## Configuration
 
@@ -435,3 +459,7 @@ public class PostLegalEntityModel: IAuthorizationContextModel
     public string UserRef { get; set; }
 }
 ```
+
+## License
+
+Licensed under the [MIT license](LICENSE)
