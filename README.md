@@ -1,16 +1,16 @@
 # SFA.DAS.Authorization
 
-[![Build status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231)
-[![NuGet Badge](https://www.nuget.org/packages/SFA.DAS.Authorization)](https://www.nuget.org/packages/SFA.DAS.Authorization/)
+[![Build status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231&metric=alert_status)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build?definitionId=1231&metric=alert_status)
+[![NuGet Badge](https://img.shields.io/nuget/v/SFA.DAS.Authorization.svg)](https://img.shields.io/nuget/v/SFA.DAS.Authorization.svg/)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
 The SFA.DAS.Authorization package provides a way to aggregate multiple authorization concerns into a single call. It also provides cross cutting authorization infrastructure for Mvc and WebApi.
 
 The project supports various configurations depending on the application's requirements, including:
-•	MVC Core: Integration with ASP.NET Core MVC.
-•	MVC: Integration with traditional ASP.NET MVC.
-•	WebApi: Integration with ASP.NET WebApi.
-•	Dependency Injection: Extensions for Microsoft Dependency Injection and StructureMap.
+    * MVC Core: Integration with ASP.NET Core MVC.
+    * MVC: Integration with traditional ASP.NET MVC.
+    * WebApi: Integration with ASP.NET WebApi.
+    * Dependency Injection: Extensions for Microsoft Dependency Injection and StructureMap.
 
 This package includes:
 
